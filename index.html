@@ -1,0 +1,5898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>emLee — Emlieey AI Community</title>
+
+<meta name="description"
+content="emLee — Emlieey AI-powered YouTube live chat community with AI chat, games, points, XP, levels, achievements and leaderboard.">
+
+<meta name="theme-color" content="#090611">
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "Segoe UI",
+    sans-serif;
+
+  background:#07050d;
+  color:#f8f4ff;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+button,
+input{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+a{
+  color:inherit;
+}
+
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+body::before{
+  content:"";
+  position:fixed;
+
+  width:500px;
+  height:500px;
+
+  top:-220px;
+  left:-180px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(168,85,247,.25),
+      transparent 68%
+    );
+
+  filter:blur(30px);
+
+  pointer-events:none;
+  z-index:-5;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+
+  width:550px;
+  height:550px;
+
+  right:-250px;
+  top:35%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(236,72,153,.18),
+      transparent 68%
+    );
+
+  filter:blur(40px);
+
+  pointer-events:none;
+  z-index:-5;
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+nav{
+  position:fixed;
+
+  top:0;
+  left:0;
+  right:0;
+
+  height:70px;
+
+  z-index:1000;
+
+  background:
+    rgba(7,5,13,.58);
+
+  border-bottom:
+    1px solid rgba(255,255,255,.07);
+
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+}
+
+.nav-inner{
+  width:100%;
+  max-width:1180px;
+
+  height:100%;
+
+  margin:auto;
+
+  padding:0 22px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo{
+  font-size:23px;
+  font-weight:900;
+
+  letter-spacing:-1px;
+}
+
+.logo span{
+  color:#c084fc;
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+.nav-links a{
+  text-decoration:none;
+
+  color:#aaa2b4;
+
+  font-size:13px;
+
+  padding:8px 12px;
+
+  border-radius:12px;
+
+  transition:.25s;
+}
+
+.nav-links a:hover{
+  color:#fff;
+
+  background:
+    rgba(255,255,255,.07);
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+  min-height:100svh;
+
+  position:relative;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  text-align:center;
+
+  overflow:hidden;
+
+  isolation:isolate;
+
+  padding:
+    100px 20px
+    70px;
+}
+
+.hero-image{
+  position:absolute;
+
+  inset:0;
+
+  z-index:-4;
+
+  overflow:hidden;
+}
+
+.hero-image img{
+  width:100%;
+  height:100%;
+
+  object-fit:cover;
+
+  object-position:center center;
+
+  transform:scale(1.04);
+
+  filter:
+    saturate(.92)
+    brightness(.62)
+    contrast(1.05);
+
+  opacity:.94;
+
+  transition:
+    transform .2s linear,
+    filter .2s linear,
+    opacity .2s linear;
+}
+
+.hero-overlay{
+  position:absolute;
+
+  inset:0;
+
+  z-index:-3;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(7,5,13,.10),
+      rgba(7,5,13,.22) 35%,
+      rgba(7,5,13,.66) 72%,
+      #07050d 100%
+    );
+}
+
+.hero-glow{
+  position:absolute;
+
+  inset:0;
+
+  z-index:-2;
+
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(177,80,255,.19),
+      transparent 38%
+    );
+
+  pointer-events:none;
+}
+
+.hero-content{
+  width:100%;
+  max-width:920px;
+
+  position:relative;
+  z-index:5;
+
+  margin-top:25px;
+
+  transition:
+    transform .2s linear,
+    opacity .2s linear;
+}
+
+.hero-welcome{
+  display:inline-block;
+
+  margin-bottom:17px;
+
+  padding:
+    8px 16px;
+
+  border:
+    1px solid rgba(255,255,255,.13);
+
+  border-radius:999px;
+
+  background:
+    rgba(10,7,18,.38);
+
+  backdrop-filter:blur(15px);
+  -webkit-backdrop-filter:blur(15px);
+
+  color:#e8dff1;
+
+  font-size:14px;
+
+  box-shadow:
+    0 10px 40px rgba(0,0,0,.25);
+
+  animation:
+    welcomeIn 1s ease both;
+}
+
+@keyframes welcomeIn{
+  from{
+    opacity:0;
+    transform:
+      translateY(12px)
+      scale(.96);
+  }
+
+  to{
+    opacity:1;
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+.hero h1{
+  font-size:
+    clamp(80px,17vw,170px);
+
+  line-height:.86;
+
+  letter-spacing:-9px;
+
+  font-weight:950;
+
+  margin-bottom:26px;
+
+  background:
+    linear-gradient(
+      120deg,
+      #fff,
+      #efd7ff,
+      #b875ff,
+      #ff8ddd,
+      #fff
+    );
+
+  background-size:250% auto;
+
+  -webkit-background-clip:text;
+  background-clip:text;
+
+  color:transparent;
+
+  animation:
+    shine 7s linear infinite;
+
+  text-shadow:
+    0 0 60px
+    rgba(191,104,255,.22);
+}
+
+@keyframes shine{
+  to{
+    background-position:250% center;
+  }
+}
+
+.hero-sub{
+  color:#eee7f4;
+
+  font-size:18px;
+
+  max-width:670px;
+
+  margin:auto;
+
+  text-shadow:
+    0 3px 25px rgba(0,0,0,.7);
+}
+
+.creator{
+  margin-top:23px;
+
+  color:#c8becf;
+
+  font-size:14px;
+
+  text-shadow:
+    0 2px 15px rgba(0,0,0,.8);
+}
+
+.creator strong{
+  color:#fff;
+}
+
+
+/* =========================================================
+   SOCIALS
+========================================================= */
+
+.socials{
+  display:flex;
+
+  justify-content:center;
+
+  gap:10px;
+
+  margin-top:20px;
+
+  flex-wrap:wrap;
+}
+
+.social{
+  display:flex;
+
+  align-items:center;
+
+  gap:8px;
+
+  padding:
+    9px 14px;
+
+  border:
+    1px solid rgba(255,255,255,.12);
+
+  background:
+    rgba(10,7,18,.40);
+
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+
+  border-radius:14px;
+
+  color:#eee7f5;
+
+  text-decoration:none;
+
+  font-size:13px;
+
+  transition:.25s;
+}
+
+.social:hover{
+  transform:translateY(-3px);
+
+  background:
+    rgba(255,255,255,.09);
+
+  border-color:
+    rgba(190,120,255,.5);
+}
+
+
+/* =========================================================
+   HERO BUTTONS
+========================================================= */
+
+.hero-buttons{
+  display:flex;
+
+  justify-content:center;
+
+  flex-wrap:wrap;
+
+  gap:12px;
+
+  margin-top:32px;
+}
+
+.btn{
+  display:inline-flex;
+
+  align-items:center;
+  justify-content:center;
+
+  padding:
+    13px 21px;
+
+  border-radius:15px;
+
+  text-decoration:none;
+
+  font-weight:750;
+
+  font-size:14px;
+
+  transition:.25s;
+}
+
+.btn-primary{
+  color:#fff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #8b5cf6,
+      #d946ef
+    );
+
+  box-shadow:
+    0 12px 40px
+    rgba(168,85,247,.35);
+}
+
+.btn-secondary{
+  color:#eee5f5;
+
+  border:
+    1px solid rgba(255,255,255,.12);
+
+  background:
+    rgba(255,255,255,.05);
+
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+
+.btn:hover{
+  transform:translateY(-3px);
+}
+
+
+/* =========================================================
+   SCROLL
+========================================================= */
+
+.scroll-hint{
+  position:absolute;
+
+  bottom:27px;
+  left:50%;
+
+  transform:translateX(-50%);
+
+  color:
+    rgba(255,255,255,.52);
+
+  font-size:10px;
+
+  letter-spacing:3px;
+
+  text-transform:uppercase;
+
+  animation:
+    scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse{
+  0%,100%{
+    opacity:.35;
+    transform:
+      translateX(-50%)
+      translateY(0);
+  }
+
+  50%{
+    opacity:1;
+    transform:
+      translateX(-50%)
+      translateY(6px);
+  }
+}
+
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+.container{
+  width:100%;
+  max-width:1120px;
+
+  margin:auto;
+
+  padding:
+    0 20px;
+}
+
+section{
+  padding:
+    90px 0;
+}
+
+.section-title{
+  text-align:center;
+
+  margin-bottom:42px;
+}
+
+.section-title h2{
+  font-size:
+    clamp(30px,5vw,42px);
+
+  letter-spacing:-1.5px;
+
+  margin-bottom:8px;
+}
+
+.section-title p{
+  color:#918799;
+
+  font-size:14px;
+}
+
+
+/* =========================================================
+   GLASS CARD
+========================================================= */
+
+.card{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.065),
+      rgba(255,255,255,.022)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.085);
+
+  border-radius:25px;
+
+  padding:30px;
+
+  margin-bottom:18px;
+
+  box-shadow:
+    0 20px 70px
+    rgba(0,0,0,.20);
+
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+
+.card h3{
+  font-size:20px;
+
+  margin-bottom:10px;
+
+  color:#eee4f7;
+}
+
+.card p{
+  color:#aaa0b3;
+
+  font-size:14px;
+}
+
+
+/* =========================================================
+   FEATURE GRID
+========================================================= */
+
+.feature-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:15px;
+}
+
+.feature{
+  min-height:170px;
+
+  padding:24px;
+
+  border-radius:22px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.065),
+      rgba(255,255,255,.025)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  backdrop-filter:blur(15px);
+  -webkit-backdrop-filter:blur(15px);
+
+  transition:
+    transform .25s,
+    border-color .25s;
+}
+
+.feature:hover{
+  transform:translateY(-5px);
+
+  border-color:
+    rgba(192,132,252,.35);
+}
+
+.feature-icon{
+  font-size:30px;
+
+  margin-bottom:13px;
+}
+
+.feature h3{
+  font-size:16px;
+
+  margin-bottom:6px;
+}
+
+.feature p{
+  color:#93899c;
+
+  font-size:13px;
+}
+
+
+/* =========================================================
+   CHAT
+========================================================= */
+
+.chat-wrap{
+  max-width:760px;
+
+  margin:auto;
+}
+
+.chat-box{
+  background:
+    rgba(255,255,255,.045);
+
+  border:
+    1px solid rgba(255,255,255,.09);
+
+  border-radius:26px;
+
+  overflow:hidden;
+
+  box-shadow:
+    0 25px 90px
+    rgba(0,0,0,.3);
+
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+
+.chat-head{
+  padding:19px 20px;
+
+  border-bottom:
+    1px solid rgba(255,255,255,.07);
+
+  display:flex;
+
+  align-items:center;
+
+  gap:12px;
+}
+
+.chat-dot{
+  width:10px;
+  height:10px;
+
+  border-radius:50%;
+
+  background:#a855f7;
+
+  box-shadow:
+    0 0 15px #a855f7;
+
+  animation:
+    dotPulse 2s infinite;
+}
+
+@keyframes dotPulse{
+  0%,100%{
+    opacity:.55;
+  }
+
+  50%{
+    opacity:1;
+  }
+}
+
+.chat-head strong{
+  font-size:15px;
+}
+
+.chat-head small{
+  display:block;
+
+  color:#817788;
+
+  font-size:11px;
+}
+
+.messages{
+  min-height:320px;
+
+  max-height:420px;
+
+  overflow-y:auto;
+
+  padding:20px;
+}
+
+.message{
+  max-width:84%;
+
+  padding:
+    12px 15px;
+
+  border-radius:17px;
+
+  margin-bottom:12px;
+
+  font-size:14px;
+
+  animation:
+    messageIn .25s ease;
+}
+
+@keyframes messageIn{
+  from{
+    opacity:0;
+    transform:translateY(6px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.bot{
+  background:
+    rgba(168,85,247,.12);
+
+  border:
+    1px solid rgba(168,85,247,.15);
+
+  color:#eee7f6;
+}
+
+.user{
+  margin-left:auto;
+
+  background:
+    rgba(255,255,255,.08);
+
+  color:#ddd5e3;
+}
+
+.typing{
+  opacity:.65;
+
+  font-style:italic;
+}
+
+.chat-input{
+  display:flex;
+
+  gap:8px;
+
+  padding:14px;
+
+  border-top:
+    1px solid rgba(255,255,255,.07);
+}
+
+.chat-input input{
+  flex:1;
+
+  min-width:0;
+
+  padding:
+    13px 15px;
+
+  border-radius:14px;
+
+  border:
+    1px solid rgba(255,255,255,.09);
+
+  outline:none;
+
+  background:
+    rgba(0,0,0,.25);
+
+  color:#fff;
+
+  font-size:14px;
+}
+
+.chat-input input::placeholder{
+  color:#756b7c;
+}
+
+.chat-input button{
+  border:0;
+
+  border-radius:14px;
+
+  padding:
+    0 19px;
+
+  color:#fff;
+
+  font-weight:750;
+
+  background:
+    linear-gradient(
+      135deg,
+      #8b5cf6,
+      #d946ef
+    );
+
+  transition:.25s;
+}
+
+.chat-input button:hover{
+  transform:translateY(-2px);
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:14px;
+}
+
+.stat{
+  text-align:center;
+
+  padding:22px 14px;
+
+  border-radius:20px;
+
+  background:
+    rgba(255,255,255,.045);
+
+  border:
+    1px solid rgba(255,255,255,.07);
+
+  backdrop-filter:blur(14px);
+}
+
+.stat-value{
+  display:block;
+
+  font-size:27px;
+
+  font-weight:900;
+
+  color:#d8b4fe;
+}
+
+.stat-label{
+  color:#817788;
+
+  font-size:12px;
+
+  margin-top:3px;
+}
+
+
+/* =========================================================
+   LEADERBOARD
+========================================================= */
+
+.leaderboard{
+  max-width:800px;
+
+  margin:auto;
+}
+
+.leader-row{
+  display:grid;
+
+  grid-template-columns:
+    55px 1fr auto;
+
+  align-items:center;
+
+  gap:15px;
+
+  padding:
+    16px 18px;
+
+  margin-bottom:8px;
+
+  border-radius:17px;
+
+  background:
+    rgba(255,255,255,.045);
+
+  border:
+    1px solid rgba(255,255,255,.065);
+}
+
+.rank{
+  color:#b98cff;
+
+  font-weight:850;
+}
+
+.player-name{
+  font-weight:700;
+}
+
+.player-level{
+  display:block;
+
+  color:#817788;
+
+  font-size:11px;
+}
+
+.player-points{
+  color:#d8b4fe;
+
+  font-weight:800;
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.profile-card{
+  max-width:700px;
+
+  margin:auto;
+
+  text-align:center;
+}
+
+.profile-name{
+  font-size:25px;
+
+  font-weight:850;
+
+  margin-bottom:5px;
+}
+
+.profile-id{
+  color:#817788;
+
+  font-size:12px;
+}
+
+.profile-level{
+  margin-top:18px;
+
+  font-size:34px;
+
+  font-weight:900;
+
+  color:#c084fc;
+}
+
+.xp-bar{
+  width:100%;
+
+  height:8px;
+
+  margin-top:12px;
+
+  border-radius:999px;
+
+  background:
+    rgba(255,255,255,.07);
+
+  overflow:hidden;
+}
+
+.xp-fill{
+  width:0%;
+
+  height:100%;
+
+  border-radius:999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #8b5cf6,
+      #ec4899
+    );
+
+  transition:
+    width .5s ease;
+}
+
+
+/* =========================================================
+   GAMES
+========================================================= */
+
+.game-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:14px;
+}
+
+.game-card{
+  padding:24px;
+
+  text-align:center;
+
+  border-radius:22px;
+
+  background:
+    rgba(255,255,255,.045);
+
+  border:
+    1px solid rgba(255,255,255,.075);
+
+  transition:.25s;
+}
+
+.game-card:hover{
+  transform:translateY(-4px);
+
+  border-color:
+    rgba(192,132,252,.35);
+}
+
+.game-icon{
+  font-size:36px;
+
+  margin-bottom:10px;
+}
+
+.game-card h3{
+  font-size:16px;
+
+  margin-bottom:5px;
+}
+
+.game-card p{
+  color:#817788;
+
+  font-size:12px;
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.divider{
+  height:1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.1),
+      transparent
+    );
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+  padding:
+    60px 20px;
+
+  text-align:center;
+
+  border-top:
+    1px solid rgba(255,255,255,.06);
+}
+
+.footer-logo{
+  font-size:25px;
+
+  font-weight:900;
+}
+
+.footer-text{
+  margin-top:8px;
+
+  color:#817687;
+
+  font-size:13px;
+}
+
+.footer-socials{
+  display:flex;
+
+  justify-content:center;
+
+  gap:20px;
+
+  margin-top:18px;
+}
+
+.footer-socials a{
+  color:#9b91a4;
+
+  text-decoration:none;
+
+  font-size:13px;
+}
+
+.footer-socials a:hover{
+  color:#fff;
+}
+
+.copyright{
+  margin-top:25px;
+
+  color:#5f5665;
+
+  font-size:12px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:800px){
+
+  .feature-grid{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+  .game-grid{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+  .stats-grid{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+}
+
+@media(max-width:650px){
+
+  nav{
+    height:60px;
+  }
+
+  .nav-inner{
+    padding:
+      0 15px;
+  }
+
+  .logo{
+    font-size:20px;
+  }
+
+  .nav-links{
+    gap:1px;
+  }
+
+  .nav-links a{
+    padding:
+      7px 7px;
+
+    font-size:11px;
+  }
+
+  .hero{
+    min-height:100svh;
+
+    padding:
+      90px 18px
+      65px;
+  }
+
+  .hero h1{
+    font-size:
+      clamp(70px,22vw,110px);
+
+    letter-spacing:-6px;
+  }
+
+  .hero-sub{
+    font-size:15px;
+
+    max-width:340px;
+  }
+
+  .creator{
+    font-size:13px;
+  }
+
+  .hero-buttons{
+    flex-direction:column;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  section{
+    padding:
+      65px 0;
+  }
+
+  .card{
+    padding:22px;
+
+    border-radius:20px;
+  }
+
+  .feature-grid,
+  .game-grid{
+    grid-template-columns:1fr;
+  }
+
+  .leader-row{
+    grid-template-columns:
+      42px 1fr auto;
+
+    padding:
+      14px;
+  }
+
+  .chat-input button{
+    padding:
+      0 15px;
+  }
+}
+
+@media(max-width:380px){
+
+  .hero h1{
+    font-size:62px;
+  }
+
+  .nav-links a{
+    font-size:10px;
+
+    padding:
+      6px 5px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+
+  *{
+    animation-duration:.01ms !important;
+
+    animation-iteration-count:1 !important;
+
+    scroll-behavior:auto !important;
+
+    transition:none !important;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =======================================================
+     NAVIGATION
+======================================================= -->
+
+<nav id="navbar">
+
+  <div class="nav-inner">
+
+    <div class="logo">
+      em<span>Lee</span>
+    </div>
+
+    <div class="nav-links">
+
+      <a href="#chat">chat</a>
+      <a href="#features">features</a>
+      <a href="#games">games</a>
+      <a href="#leaderboard">rank</a>
+
+    </div>
+
+  </div>
+
+</nav>
+
+
+<!-- =======================================================
+     HERO
+======================================================= -->
+
+<header class="hero" id="home">
+
+  <div class="hero-image">
+
+    <img
+      id="heroCharacter"
+      src="emlee-character.PNG"
+      alt="Emlieey character"
+    >
+
+  </div>
+
+  <div class="hero-overlay"></div>
+
+  <div class="hero-glow"></div>
+
+
+  <div class="hero-content">
+
+    <div class="hero-welcome">
+      ah ijj vanno 😌
+    </div>
+
+    <h1>
+      emLee
+    </h1>
+
+    <p class="hero-sub">
+      AI-powered YouTube live chat assistant
+      built for fun conversations, games,
+      points and community vibes.
+    </p>
+
+    <div class="creator">
+      Created by
+      <strong>Lee (liyaasmv)</strong>
+
+      <br>
+
+      Creator & Owner of Emlieey
+    </div>
+
+
+    <div class="socials">
+
+      <a
+        class="social"
+        href="https://www.instagram.com/liyasmv"
+        target="_blank"
+        rel="noopener"
+      >
+        @liyasmv
+      </a>
+
+      <a
+        class="social"
+        href="https://youtube.com/@liyaasmv"
+        target="_blank"
+        rel="noopener"
+      >
+        @liyaasmv
+      </a>
+
+    </div>
+
+
+    <div class="hero-buttons">
+
+      <a
+        class="btn btn-primary"
+        href="#chat"
+      >
+        chat with emLee
+      </a>
+
+      <a
+        class="btn btn-secondary"
+        href="#features"
+      >
+        explore community
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <div class="scroll-hint">
+    scroll
+  </div>
+
+</header>
+
+
+<div class="divider"></div>
+
+
+<!-- =======================================================
+     FEATURES
+======================================================= -->
+
+<section id="features">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        everything in one place
+      </h2>
+
+      <p>
+        built around the Emlieey live community
+      </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+
+      <div class="feature">
+        <div class="feature-icon">🤖</div>
+
+        <h3>
+          real Groq → Emlieey AI
+        </h3>
+
+        <p>
+          Natural AI conversations powered
+          through the Emlieey backend.
+        </p>
+      </div>
+
+
+      <div class="feature">
+        <div class="feature-icon">👤</div>
+
+        <h3>
+          D1 user profiles
+        </h3>
+
+        <p>
+          Persistent community profiles,
+          stats and activity data.
+        </p>
+      </div>
+
+
+      <div class="feature">
+        <div class="feature-icon">⭐</div>
+
+        <h3>
+          points
+        </h3>
+
+        <p>
+          Earn community points through
+          interaction and activities.
+        </p>
+      </div>
+
+
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+
+        <h3>
+          XP + levels
+        </h3>
+
+        <p>
+          Gain XP and progress through
+          community levels.
+        </p>
+      </div>
+
+
+      <div class="feature">
+        <div class="feature-icon">🎁</div>
+
+        <h3>
+          daily reward
+        </h3>
+
+        <p>
+          Come back every day and claim
+          your daily community reward.
+        </p>
+      </div>
+
+
+      <div class="feature">
+        <div class="feature-icon">🔥</div>
+
+        <h3>
+          daily streak
+        </h3>
+
+        <p>
+          Keep your streak alive by
+          checking in regularly.
+        </p>
+      </div>
+
+
+      <div class="feature">
+        <div class="feature-icon">🏆</div>
+
+        <h3>
+          leaderboard
+        </h3>
+
+        <p>
+          See community rankings based
+          on earned points.
+        </p>
+      </div>
+
+
+      <div class="feature">
+        <div class="feature-icon">🏅</div>
+
+        <h3>
+          achievements
+        </h3>
+
+        <p>
+          Unlock achievements as your
+          community journey grows.
+        </p>
+      </div>
+
+
+      <div class="feature">
+        <div class="feature-icon">📊</div>
+
+        <h3>
+          stats & profile
+        </h3>
+
+        <p>
+          Track levels, XP, points,
+          games and activity.
+        </p>
+      </div>
+
+
+      <div class="feature">
+        <div class="feature-icon">🌐</div>
+
+        <h3>
+          online count
+        </h3>
+
+        <p>
+          View the current approximate
+          community activity.
+        </p>
+      </div>
+
+
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+
+        <h3>
+          protected API
+        </h3>
+
+        <p>
+          CORS controls, backend routing
+          and basic rate limiting.
+        </p>
+      </div>
+
+
+      <div class="feature">
+        <div class="feature-icon">⚙️</div>
+
+        <h3>
+          prepared D1 queries
+        </h3>
+
+        <p>
+          Persistent community data powered
+          by Cloudflare D1.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     AI CHAT
+======================================================= -->
+
+<section id="chat">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        chat with emLee
+      </h2>
+
+      <p>
+        talk directly with Emlieey AI
+      </p>
+
+    </div>
+
+
+    <div class="chat-wrap">
+
+      <div class="chat-box">
+
+        <div class="chat-head">
+
+          <div class="chat-dot"></div>
+
+          <div>
+
+            <strong>
+              Emlieey
+            </strong>
+
+            <small>
+              AI assistant · online
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="messages"
+          id="messages"
+        >
+
+          <div class="message bot">
+            ah ijj vanno 😌 entha parupadi?
+          </div>
+
+        </div>
+
+
+        <div class="chat-input">
+
+          <input
+            id="chatInput"
+            type="text"
+            placeholder="message Emlieey..."
+            autocomplete="off"
+          >
+
+          <button
+            id="sendButton"
+            onclick="sendMessage()"
+          >
+            send
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     LIVE STATS
+======================================================= -->
+
+<section>
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        community live stats
+      </h2>
+
+      <p>
+        connected to the Emlieey backend
+      </p>
+
+    </div>
+
+
+    <div class="stats-grid">
+
+      <div class="stat">
+
+        <span
+          class="stat-value"
+          id="onlineCount"
+        >
+          —
+        </span>
+
+        <span class="stat-label">
+          online
+        </span>
+
+      </div>
+
+
+      <div class="stat">
+
+        <span
+          class="stat-value"
+          id="profilePoints"
+        >
+          0
+        </span>
+
+        <span class="stat-label">
+          points
+        </span>
+
+      </div>
+
+
+      <div class="stat">
+
+        <span
+          class="stat-value"
+          id="profileLevel"
+        >
+          1
+        </span>
+
+        <span class="stat-label">
+          level
+        </span>
+
+      </div>
+
+
+      <div class="stat">
+
+        <span
+          class="stat-value"
+          id="profileXp"
+        >
+          0
+        </span>
+
+        <span class="stat-label">
+          xp
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     PROFILE
+======================================================= -->
+
+<section id="profile">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        your profile
+      </h2>
+
+      <p>
+        enter your username to load your community profile
+      </p>
+
+    </div>
+
+
+    <div class="card profile-card">
+
+      <input
+        id="usernameInput"
+        type="text"
+        placeholder="enter username"
+        autocomplete="off"
+        style="
+          width:100%;
+          padding:14px 16px;
+          border-radius:14px;
+          border:1px solid rgba(255,255,255,.09);
+          outline:none;
+          background:rgba(0,0,0,.25);
+          color:white;
+          margin-bottom:12px;
+        "
+      >
+
+
+      <button
+        onclick="loadProfile()"
+        class="btn btn-primary"
+        style="border:0;width:100%;"
+      >
+        load profile
+      </button>
+
+
+      <div
+        id="profileArea"
+        style="display:none;"
+      >
+
+        <div class="profile-level">
+          level <span id="levelNumber">1</span>
+        </div>
+
+        <div
+          class="profile-name"
+          id="profileName"
+        >
+          —
+        </div>
+
+        <div
+          class="profile-id"
+          id="profileUsername"
+        >
+          —
+        </div>
+
+        <div class="xp-bar">
+          <div
+            class="xp-fill"
+            id="xpFill"
+          ></div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     PART 1 END
+======================================================= -->
+
+<!-- =======================================================
+     PART 2/4
+     COMMUNITY GAMES + DAILY REWARD + STREAK
+======================================================= -->
+
+
+<!-- =======================================================
+     DAILY REWARD
+======================================================= -->
+
+<section id="rewards">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        daily rewards
+      </h2>
+
+      <p>
+        check in daily and keep your streak alive
+      </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          🎁
+        </div>
+
+        <h3>
+          daily reward
+        </h3>
+
+        <p>
+          claim your daily points from
+          the Emlieey community.
+        </p>
+
+        <button
+          class="btn btn-primary"
+          onclick="claimReward()"
+          style="
+            border:0;
+            margin-top:18px;
+            width:100%;
+          "
+        >
+          claim reward
+        </button>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          🔥
+        </div>
+
+        <h3>
+          daily streak
+        </h3>
+
+        <p>
+          Keep checking in every day
+          to build your streak.
+        </p>
+
+        <div
+          id="streakDisplay"
+          style="
+            margin-top:16px;
+            font-size:25px;
+            font-weight:900;
+            color:#d8b4fe;
+          "
+        >
+          0 days
+        </div>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          🎡
+        </div>
+
+        <h3>
+          spin wheel
+        </h3>
+
+        <p>
+          Daily spin with random
+          community rewards.
+        </p>
+
+        <button
+          class="btn btn-secondary"
+          onclick="spinWheel()"
+          style="
+            border:1px solid rgba(255,255,255,.12);
+            margin-top:18px;
+            width:100%;
+          "
+        >
+          spin
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="rewardResult"
+      style="
+        text-align:center;
+        margin-top:20px;
+        min-height:25px;
+        color:#c084fc;
+        font-size:14px;
+      "
+    ></div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     GAMES
+======================================================= -->
+
+<section id="games">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        mini games
+      </h2>
+
+      <p>
+        play, earn points and gain XP
+      </p>
+
+    </div>
+
+
+    <div class="game-grid">
+
+
+      <!-- DICE -->
+
+      <div class="game-card">
+
+        <div class="game-icon">
+          🎲
+        </div>
+
+        <h3>
+          dice
+        </h3>
+
+        <p>
+          roll the dice and test your luck
+        </p>
+
+        <button
+          class="btn btn-primary"
+          onclick="playDice()"
+          style="
+            border:0;
+            margin-top:16px;
+            width:100%;
+          "
+        >
+          roll
+        </button>
+
+        <div
+          id="diceResult"
+          style="
+            margin-top:12px;
+            color:#c084fc;
+            font-size:13px;
+          "
+        ></div>
+
+      </div>
+
+
+      <!-- COIN FLIP -->
+
+      <div class="game-card">
+
+        <div class="game-icon">
+          🪙
+        </div>
+
+        <h3>
+          coin flip
+        </h3>
+
+        <p>
+          heads or tails?
+        </p>
+
+        <button
+          class="btn btn-primary"
+          onclick="playFlip()"
+          style="
+            border:0;
+            margin-top:16px;
+            width:100%;
+          "
+        >
+          flip
+        </button>
+
+        <div
+          id="flipResult"
+          style="
+            margin-top:12px;
+            color:#c084fc;
+            font-size:13px;
+          "
+        ></div>
+
+      </div>
+
+
+      <!-- GUESS -->
+
+      <div class="game-card">
+
+        <div class="game-icon">
+          🎯
+        </div>
+
+        <h3>
+          guess
+        </h3>
+
+        <p>
+          guess a number from 1–10
+        </p>
+
+        <input
+          id="guessInput"
+          type="number"
+          min="1"
+          max="10"
+          placeholder="1 - 10"
+          style="
+            width:100%;
+            margin-top:16px;
+            padding:11px;
+            border-radius:12px;
+            border:1px solid rgba(255,255,255,.09);
+            background:rgba(0,0,0,.25);
+            color:white;
+            outline:none;
+            text-align:center;
+          "
+        >
+
+        <button
+          class="btn btn-primary"
+          onclick="playGuess()"
+          style="
+            border:0;
+            margin-top:9px;
+            width:100%;
+          "
+        >
+          guess
+        </button>
+
+        <div
+          id="guessResult"
+          style="
+            margin-top:12px;
+            color:#c084fc;
+            font-size:13px;
+          "
+        ></div>
+
+      </div>
+
+
+      <!-- QUIZ -->
+
+      <div class="game-card">
+
+        <div class="game-icon">
+          🧠
+        </div>
+
+        <h3>
+          quiz
+        </h3>
+
+        <p>
+          quick Emlieey community quiz
+        </p>
+
+        <button
+          class="btn btn-secondary"
+          onclick="playQuiz()"
+          style="
+            border:1px solid rgba(255,255,255,.12);
+            margin-top:16px;
+            width:100%;
+          "
+        >
+          start quiz
+        </button>
+
+        <div
+          id="quizResult"
+          style="
+            margin-top:12px;
+            color:#c084fc;
+            font-size:13px;
+          "
+        ></div>
+
+      </div>
+
+
+      <!-- WORD -->
+
+      <div class="game-card">
+
+        <div class="game-icon">
+          🔤
+        </div>
+
+        <h3>
+          word
+        </h3>
+
+        <p>
+          guess the hidden word
+        </p>
+
+        <button
+          class="btn btn-secondary"
+          onclick="playWord()"
+          style="
+            border:1px solid rgba(255,255,255,.12);
+            margin-top:16px;
+            width:100%;
+          "
+        >
+          play
+        </button>
+
+        <div
+          id="wordResult"
+          style="
+            margin-top:12px;
+            color:#c084fc;
+            font-size:13px;
+          "
+        ></div>
+
+      </div>
+
+
+      <!-- RACE -->
+
+      <div class="game-card">
+
+        <div class="game-icon">
+          🏎️
+        </div>
+
+        <h3>
+          race
+        </h3>
+
+        <p>
+          race against the community
+        </p>
+
+        <button
+          class="btn btn-secondary"
+          onclick="playRace()"
+          style="
+            border:1px solid rgba(255,255,255,.12);
+            margin-top:16px;
+            width:100%;
+          "
+        >
+          race
+        </button>
+
+        <div
+          id="raceResult"
+          style="
+            margin-top:12px;
+            color:#c084fc;
+            font-size:13px;
+          "
+        ></div>
+
+      </div>
+
+
+      <!-- JACKPOT -->
+
+      <div class="game-card">
+
+        <div class="game-icon">
+          🎰
+        </div>
+
+        <h3>
+          jackpot
+        </h3>
+
+        <p>
+          spin for a lucky result
+        </p>
+
+        <button
+          class="btn btn-primary"
+          onclick="playJackpot()"
+          style="
+            border:0;
+            margin-top:16px;
+            width:100%;
+          "
+        >
+          jackpot
+        </button>
+
+        <div
+          id="jackpotResult"
+          style="
+            margin-top:12px;
+            color:#c084fc;
+            font-size:13px;
+          "
+        ></div>
+
+      </div>
+
+
+      <!-- ACHIEVEMENTS -->
+
+      <div class="game-card">
+
+        <div class="game-icon">
+          🏅
+        </div>
+
+        <h3>
+          achievements
+        </h3>
+
+        <p>
+          unlock special community badges
+        </p>
+
+        <button
+          class="btn btn-secondary"
+          onclick="showAchievements()"
+          style="
+            border:1px solid rgba(255,255,255,.12);
+            margin-top:16px;
+            width:100%;
+          "
+        >
+          view
+        </button>
+
+        <div
+          id="achievementResult"
+          style="
+            margin-top:12px;
+            color:#c084fc;
+            font-size:13px;
+          "
+        ></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     GAME MODAL
+======================================================= -->
+
+<div
+  id="gameModal"
+  style="
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:5000;
+    background:rgba(0,0,0,.72);
+    backdrop-filter:blur(15px);
+    -webkit-backdrop-filter:blur(15px);
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  "
+>
+
+  <div
+    style="
+      width:100%;
+      max-width:460px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(30,20,42,.96),
+          rgba(12,8,20,.97)
+        );
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:25px;
+      padding:28px;
+      text-align:center;
+      box-shadow:
+        0 30px 100px rgba(0,0,0,.55);
+    "
+  >
+
+    <div
+      id="modalTitle"
+      style="
+        font-size:24px;
+        font-weight:900;
+        margin-bottom:12px;
+      "
+    >
+      game
+    </div>
+
+    <div
+      id="modalContent"
+      style="
+        color:#aaa0b3;
+        font-size:14px;
+        line-height:1.7;
+      "
+    ></div>
+
+    <button
+      class="btn btn-primary"
+      onclick="closeGameModal()"
+      style="
+        border:0;
+        margin-top:22px;
+        width:100%;
+      "
+    >
+      close
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =======================================================
+     COMMUNITY VIBE
+======================================================= -->
+
+<section id="vibe">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        Emlieey vibe
+      </h2>
+
+      <p>
+        what's the mood today?
+      </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          😌
+        </div>
+
+        <h3>
+          chill
+        </h3>
+
+        <p>
+          calm live-stream vibes.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          ⚡
+        </div>
+
+        <h3>
+          energetic
+        </h3>
+
+        <p>
+          fast chat and active community.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          😈
+        </div>
+
+        <h3>
+          chaotic
+        </h3>
+
+        <p>
+          games, jokes and random moments.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          💤
+        </div>
+
+        <h3>
+          sleepy
+        </h3>
+
+        <p>
+          late-night relaxing stream energy.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          💜
+        </div>
+
+        <h3>
+          cute
+        </h3>
+
+        <p>
+          soft community moments with Emlieey.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          🔥
+        </div>
+
+        <h3>
+          savage
+        </h3>
+
+        <p>
+          cheeky replies when the chat
+          gets interesting.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     QUICK COMMUNITY ACTIONS
+======================================================= -->
+
+<section>
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        community
+      </h2>
+
+      <p>
+        more ways to interact with Emlieey
+      </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          🎤
+        </div>
+
+        <h3>
+          voice room
+        </h3>
+
+        <p>
+          Voice-room support can be connected
+          through a realtime WebRTC backend.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          🎵
+        </div>
+
+        <h3>
+          live music
+        </h3>
+
+        <p>
+          Add your relaxing stream or
+          community vibe player here.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          💬
+        </div>
+
+        <h3>
+          Emlieey mentions
+        </h3>
+
+        <p>
+          Mention Emlieey in chat to
+          trigger an AI response.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          🗳️
+        </div>
+
+        <h3>
+          community polls
+        </h3>
+
+        <p>
+          Community poll functionality can
+          be connected to the D1 poll tables.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          👻
+        </div>
+
+        <h3>
+          anonymous message
+        </h3>
+
+        <p>
+          Anonymous community messages
+          can be added through the backend.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          👑
+        </div>
+
+        <h3>
+          wall of legends
+        </h3>
+
+        <p>
+          Highlight long-time community
+          members and special moments.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     CUSTOM TITLES
+======================================================= -->
+
+<section>
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        community titles
+      </h2>
+
+      <p>
+        progress through different viewer levels
+      </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+
+      <div class="feature">
+        <div class="feature-icon">🌱</div>
+        <h3>newbie</h3>
+        <p>just joined the Emlieey community.</p>
+      </div>
+
+
+      <div class="feature">
+        <div class="feature-icon">💬</div>
+        <h3>regular</h3>
+        <p>an active familiar face.</p>
+      </div>
+
+
+      <div class="feature">
+        <div class="feature-icon">✨</div>
+        <h3>vibe member</h3>
+        <p>part of the community atmosphere.</p>
+      </div>
+
+
+      <div class="feature">
+        <div class="feature-icon">😈</div>
+        <h3>chaos member</h3>
+        <p>brings the fun to the chat.</p>
+      </div>
+
+
+      <div class="feature">
+        <div class="feature-icon">🔥</div>
+        <h3>OG</h3>
+        <p>a long-time Emlieey community member.</p>
+      </div>
+
+
+      <div class="feature">
+        <div class="feature-icon">👑</div>
+        <h3>legend</h3>
+        <p>one of the community's recognised members.</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     PART 2 END
+======================================================= -->
+
+<!-- =======================================================
+     PART 3/4
+     LEADERBOARD + PROFILE + ACHIEVEMENTS
+======================================================= -->
+
+
+<!-- =======================================================
+     LEADERBOARD
+======================================================= -->
+
+<section id="leaderboard">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        global leaderboard
+      </h2>
+
+      <p>
+        top Emlieey community members
+      </p>
+
+    </div>
+
+
+    <div class="leaderboard" id="leaderboardList">
+
+      <div class="card" style="text-align:center;">
+        loading leaderboard...
+      </div>
+
+    </div>
+
+
+    <div style="text-align:center;margin-top:20px;">
+
+      <button
+        class="btn btn-secondary"
+        onclick="loadLeaderboard()"
+        style="
+          border:1px solid rgba(255,255,255,.12);
+        "
+      >
+        refresh leaderboard
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     FULL PROFILE
+======================================================= -->
+
+<section id="my-profile">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        community profile
+      </h2>
+
+      <p>
+        your Emlieey journey
+      </p>
+
+    </div>
+
+
+    <div class="profile-card card">
+
+      <div
+        id="fullProfileEmpty"
+        style="
+          color:#817788;
+          font-size:14px;
+        "
+      >
+        load your username above to see your profile
+      </div>
+
+
+      <div
+        id="fullProfile"
+        style="display:none;"
+      >
+
+        <div
+          class="profile-name"
+          id="fullProfileName"
+        >
+          —
+        </div>
+
+        <div
+          class="profile-id"
+          id="fullProfileUsername"
+        >
+          —
+        </div>
+
+
+        <div
+          class="profile-level"
+          style="margin-top:25px;"
+        >
+          level
+          <span id="fullLevel">
+            1
+          </span>
+        </div>
+
+
+        <div
+          style="
+            margin-top:8px;
+            color:#817788;
+            font-size:13px;
+          "
+        >
+          <span id="fullXp">
+            0
+          </span>
+          XP
+        </div>
+
+
+        <div class="xp-bar">
+
+          <div
+            class="xp-fill"
+            id="fullXpFill"
+          ></div>
+
+        </div>
+
+
+        <div
+          class="stats-grid"
+          style="
+            margin-top:25px;
+          "
+        >
+
+          <div class="stat">
+
+            <span
+              class="stat-value"
+              id="fullPoints"
+            >
+              0
+            </span>
+
+            <span class="stat-label">
+              points
+            </span>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span
+              class="stat-value"
+              id="fullGames"
+            >
+              0
+            </span>
+
+            <span class="stat-label">
+              games
+            </span>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span
+              class="stat-value"
+              id="fullWins"
+            >
+              0
+            </span>
+
+            <span class="stat-label">
+              wins
+            </span>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span
+              class="stat-value"
+              id="fullStreak"
+            >
+              0
+            </span>
+
+            <span class="stat-label">
+              streak
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div
+          style="
+            margin-top:28px;
+            text-align:left;
+          "
+        >
+
+          <h3
+            style="
+              font-size:16px;
+              margin-bottom:14px;
+            "
+          >
+            achievements
+          </h3>
+
+
+          <div
+            id="profileAchievements"
+            style="
+              display:flex;
+              flex-wrap:wrap;
+              gap:8px;
+            "
+          >
+            <span
+              style="
+                color:#817788;
+                font-size:13px;
+              "
+            >
+              no achievements yet
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     ACHIEVEMENT SHOWCASE
+======================================================= -->
+
+<section id="achievements">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        achievements
+      </h2>
+
+      <p>
+        collect badges by staying active
+      </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          🎲
+        </div>
+
+        <h3>
+          dice master
+        </h3>
+
+        <p>
+          Play dice games and become
+          a regular roller.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          💬
+        </div>
+
+        <h3>
+          chat addict
+        </h3>
+
+        <p>
+          Keep the conversation alive
+          with the community.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          🔥
+        </div>
+
+        <h3>
+          7 day streak
+        </h3>
+
+        <p>
+          Check in for seven consecutive
+          days.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          👑
+        </div>
+
+        <h3>
+          top regular
+        </h3>
+
+        <p>
+          Become one of the active
+          community members.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          😈
+        </div>
+
+        <h3>
+          chaos creator
+        </h3>
+
+        <p>
+          Bring games, jokes and chaos
+          into the chat.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          💜
+        </div>
+
+        <h3>
+          Emlieey regular
+        </h3>
+
+        <p>
+          Stay active and keep coming
+          back to the community.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     WALL OF LEGENDS
+======================================================= -->
+
+<section id="legends">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        wall of legends
+      </h2>
+
+      <p>
+        special members of the Emlieey community
+      </p>
+
+    </div>
+
+
+    <div
+      class="card"
+      style="
+        text-align:center;
+      "
+    >
+
+      <div
+        style="
+          font-size:42px;
+          margin-bottom:12px;
+        "
+      >
+        👑
+      </div>
+
+      <h3>
+        Emlieey legends
+      </h3>
+
+      <p style="margin-top:7px;">
+        legendary members will appear here
+        as the community grows.
+      </p>
+
+
+      <div
+        id="legendsList"
+        style="
+          margin-top:22px;
+          display:flex;
+          flex-wrap:wrap;
+          justify-content:center;
+          gap:10px;
+        "
+      >
+
+        <span
+          style="
+            padding:9px 14px;
+            border-radius:999px;
+            background:rgba(168,85,247,.1);
+            border:1px solid rgba(168,85,247,.16);
+            color:#c8a4ed;
+            font-size:12px;
+          "
+        >
+          community loading...
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     COMMUNITY POLL
+======================================================= -->
+
+<section id="polls">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        community poll
+      </h2>
+
+      <p>
+        choose the next Emlieey vibe
+      </p>
+
+    </div>
+
+
+    <div
+      class="card"
+      style="
+        max-width:700px;
+        margin:auto;
+      "
+    >
+
+      <h3>
+        what should emLee do next?
+      </h3>
+
+
+      <div
+        style="
+          display:grid;
+          gap:10px;
+          margin-top:20px;
+        "
+      >
+
+        <button
+          class="poll-option"
+          onclick="votePoll(0)"
+        >
+          🎮 more games
+        </button>
+
+        <button
+          class="poll-option"
+          onclick="votePoll(1)"
+        >
+          🎵 more music
+        </button>
+
+        <button
+          class="poll-option"
+          onclick="votePoll(2)"
+        >
+          🤖 more AI features
+        </button>
+
+        <button
+          class="poll-option"
+          onclick="votePoll(3)"
+        >
+          💬 more community features
+        </button>
+
+      </div>
+
+
+      <div
+        id="pollResult"
+        style="
+          text-align:center;
+          margin-top:17px;
+          color:#c084fc;
+          font-size:13px;
+        "
+      ></div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     INLINE POLL STYLE
+======================================================= -->
+
+<style>
+
+.poll-option{
+
+  width:100%;
+
+  padding:14px 16px;
+
+  border-radius:15px;
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  background:
+    rgba(255,255,255,.045);
+
+  color:#ddd5e5;
+
+  text-align:left;
+
+  transition:.25s;
+
+}
+
+.poll-option:hover{
+
+  transform:translateY(-2px);
+
+  background:
+    rgba(168,85,247,.11);
+
+  border-color:
+    rgba(168,85,247,.28);
+
+}
+
+</style>
+
+
+<!-- =======================================================
+     QUICK ACTION BAR
+======================================================= -->
+
+<section>
+
+  <div class="container">
+
+    <div
+      class="card"
+      style="
+        text-align:center;
+      "
+    >
+
+      <div
+        style="
+          font-size:30px;
+          margin-bottom:10px;
+        "
+      >
+        ✨
+      </div>
+
+      <h3>
+        keep the vibe alive
+      </h3>
+
+      <p>
+        Chat, play games, collect XP,
+        build your streak and climb the
+        Emlieey leaderboard.
+      </p>
+
+
+      <div
+        class="hero-buttons"
+        style="
+          margin-top:22px;
+        "
+      >
+
+        <a
+          href="#chat"
+          class="btn btn-primary"
+        >
+          chat with emLee
+        </a>
+
+        <a
+          href="#leaderboard"
+          class="btn btn-secondary"
+        >
+          view leaderboard
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     BACKEND STATUS
+======================================================= -->
+
+<section>
+
+  <div class="container">
+
+    <div
+      class="card"
+      style="
+        text-align:center;
+      "
+    >
+
+      <div
+        style="
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          gap:9px;
+        "
+      >
+
+        <span
+          id="backendDot"
+          style="
+            width:9px;
+            height:9px;
+            border-radius:50%;
+            display:inline-block;
+            background:#777;
+          "
+        ></span>
+
+        <strong>
+          Emlieey backend
+        </strong>
+
+      </div>
+
+
+      <div
+        id="backendStatus"
+        style="
+          margin-top:7px;
+          color:#817788;
+          font-size:12px;
+        "
+      >
+        checking connection...
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     PART 3 END
+======================================================= -->
+
+<!-- =======================================================
+     PART 4/4
+     PRIVACY + TERMS + FOOTER + JAVASCRIPT
+======================================================= -->
+
+
+<!-- =======================================================
+     PRIVACY POLICY
+======================================================= -->
+
+<section id="privacy">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        privacy policy
+      </h2>
+
+      <p>
+        how Emlieey handles community information
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        1. information we collect
+      </h3>
+
+      <p>
+        Emlieey may store information such as a
+        username, points, XP, level, game statistics,
+        streak information, achievements and activity
+        required to provide community features.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        2. AI conversations
+      </h3>
+
+      <p>
+        Messages submitted through the Emlieey website
+        may be processed by the Emlieey backend to
+        generate AI responses. The backend may use
+        Groq AI services for response generation.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        3. community data
+      </h3>
+
+      <p>
+        Points, XP, levels, games, achievements and
+        leaderboard information may be stored in
+        Cloudflare D1 to provide persistent community
+        functionality.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        4. cookies and local storage
+      </h3>
+
+      <p>
+        The website may use browser local storage for
+        basic preferences such as the currently selected
+        username. You can clear local storage through
+        your browser settings.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        5. third-party services
+      </h3>
+
+      <p>
+        Emlieey may rely on services including Cloudflare,
+        Groq and YouTube. Their own privacy policies may
+        apply when their services process information.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        6. security
+      </h3>
+
+      <p>
+        Reasonable technical measures are used to protect
+        the backend and community data. However, no online
+        service can guarantee absolute security.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        7. contact
+      </h3>
+
+      <p>
+        For privacy-related questions regarding Emlieey,
+        contact the creator through the official social
+        accounts listed on this website.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     TERMS
+======================================================= -->
+
+<section id="terms">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        terms of use
+      </h2>
+
+      <p>
+        rules for using the Emlieey community
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        1. acceptable use
+      </h3>
+
+      <p>
+        Do not use Emlieey for unlawful activity,
+        harassment, abuse, spam, impersonation or
+        attempts to disrupt the service.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        2. community points
+      </h3>
+
+      <p>
+        Points, XP, levels, achievements and leaderboard
+        positions are virtual community features.
+        They have no cash value unless explicitly stated.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        3. games
+      </h3>
+
+      <p>
+        Emlieey games are entertainment features.
+        Results may be generated by server-side or
+        client-side logic depending on the feature.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        4. AI responses
+      </h3>
+
+      <p>
+        AI-generated responses may sometimes be incorrect,
+        incomplete or unexpected. Do not treat Emlieey as
+        a professional or authoritative source.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        5. availability
+      </h3>
+
+      <p>
+        Features may be changed, temporarily unavailable
+        or removed as the Emlieey project develops.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        6. changes
+      </h3>
+
+      <p>
+        These terms and the website features may be
+        updated from time to time.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     FOOTER
+======================================================= -->
+
+<footer>
+
+  <div class="footer-logo">
+    em<span style="color:#c084fc;">Lee</span>
+  </div>
+
+
+  <div class="footer-text">
+    AI-powered YouTube live chat assistant
+  </div>
+
+
+  <div
+    style="
+      margin-top:8px;
+      color:#6f6576;
+      font-size:12px;
+    "
+  >
+    Created by Lee (liyaasmv)
+    · Creator & Owner of Emlieey
+  </div>
+
+
+  <div class="footer-socials">
+
+    <a
+      href="https://www.instagram.com/liyasmv"
+      target="_blank"
+      rel="noopener"
+    >
+      @liyasmv
+    </a>
+
+    <a
+      href="https://youtube.com/@liyaasmv"
+      target="_blank"
+      rel="noopener"
+    >
+      @liyaasmv
+    </a>
+
+    <a href="#privacy">
+      privacy
+    </a>
+
+    <a href="#terms">
+      terms
+    </a>
+
+  </div>
+
+
+  <div class="copyright">
+    © <span id="currentYear"></span> Emlieey.
+    All rights reserved.
+  </div>
+
+</footer>
+
+
+<!-- =======================================================
+     JAVASCRIPT
+======================================================= -->
+
+<script>
+
+/* =========================================================
+   CONFIG
+========================================================= */
+
+const API =
+  "https://emlieey-ai.liyasmuhammedmv.workers.dev";
+
+
+let currentUser = null;
+
+let isSending = false;
+
+
+/* =========================================================
+   DOM HELPERS
+========================================================= */
+
+function $(id){
+
+  return document.getElementById(id);
+
+}
+
+
+/* =========================================================
+   SAFE TEXT
+========================================================= */
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+   API REQUEST
+========================================================= */
+
+async function apiRequest(
+  path,
+  options = {}
+){
+
+  const response =
+    await fetch(
+      API + path,
+      {
+        ...options,
+
+        headers:{
+          "Content-Type":
+            "application/json",
+
+          ...(options.headers || {})
+        }
+      }
+    );
+
+
+  let data = {};
+
+  try{
+
+    data =
+      await response.json();
+
+  }catch{
+
+    data = {};
+
+  }
+
+
+  if(!response.ok){
+
+    throw new Error(
+      data.error ||
+      data.message ||
+      "request failed"
+    );
+
+  }
+
+
+  return data;
+
+}
+
+
+/* =========================================================
+   USERNAME
+========================================================= */
+
+function getSavedUsername(){
+
+  return localStorage.getItem(
+    "emlieey_username"
+  ) || "";
+
+}
+
+
+/* =========================================================
+   LOAD USER
+========================================================= */
+
+async function loadProfile(){
+
+  const input =
+    $("usernameInput");
+
+  const username =
+    input.value.trim();
+
+
+  if(!username){
+
+    showMessage(
+      "enter a username first",
+      "profile"
+    );
+
+    input.focus();
+
+    return;
+
+  }
+
+
+  localStorage.setItem(
+    "emlieey_username",
+    username
+  );
+
+
+  try{
+
+    const data =
+      await apiRequest(
+        "/api/user",
+        {
+          method:"POST",
+
+          body:JSON.stringify({
+            username:username
+          })
+        }
+      );
+
+
+    currentUser =
+      data.user ||
+      data;
+
+
+    renderProfile(
+      currentUser
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+    showMessage(
+      "profile load cheyyan pattiyilla",
+      "profile"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   RENDER PROFILE
+========================================================= */
+
+function renderProfile(user){
+
+  if(!user){
+    return;
+  }
+
+
+  const username =
+    user.username ||
+    "user";
+
+
+  const points =
+    Number(user.points || 0);
+
+
+  const xp =
+    Number(user.xp || 0);
+
+
+  const level =
+    Number(user.level || 1);
+
+
+  const games =
+    Number(user.games_played || 0);
+
+
+  const wins =
+    Number(user.total_wins || 0);
+
+
+  const streak =
+    Number(user.streak || 0);
+
+
+  const xpNeeded =
+    Math.max(
+      100,
+      level * 100
+    );
+
+
+  const xpPercent =
+    Math.min(
+      100,
+      Math.round(
+        ((xp % xpNeeded) /
+          xpNeeded) * 100
+      )
+    );
+
+
+  $("profileArea").style.display =
+    "block";
+
+
+  $("profileName").textContent =
+    username;
+
+
+  $("profileUsername").textContent =
+    "@" + username;
+
+
+  $("levelNumber").textContent =
+    level;
+
+
+  $("xpFill").style.width =
+    xpPercent + "%";
+
+
+  $("profilePoints").textContent =
+    points;
+
+
+  $("profileLevel").textContent =
+    level;
+
+
+  $("profileXp").textContent =
+    xp;
+
+
+  if($("fullProfileEmpty")){
+
+    $("fullProfileEmpty")
+      .style.display = "none";
+
+  }
+
+
+  if($("fullProfile")){
+
+    $("fullProfile")
+      .style.display = "block";
+
+  }
+
+
+  $("fullProfileName").textContent =
+    username;
+
+
+  $("fullProfileUsername").textContent =
+    "@" + username;
+
+
+  $("fullLevel").textContent =
+    level;
+
+
+  $("fullXp").textContent =
+    xp;
+
+
+  $("fullXpFill").style.width =
+    xpPercent + "%";
+
+
+  $("fullPoints").textContent =
+    points;
+
+
+  $("fullGames").textContent =
+    games;
+
+
+  $("fullWins").textContent =
+    wins;
+
+
+  $("fullStreak").textContent =
+    streak;
+
+
+  $("streakDisplay").textContent =
+    streak + " days";
+
+
+  renderAchievements(
+    user.achievements ||
+    []
+  );
+
+}
+
+
+/* =========================================================
+   ACHIEVEMENTS
+========================================================= */
+
+function renderAchievements(list){
+
+  const area =
+    $("profileAchievements");
+
+
+  if(!area){
+    return;
+  }
+
+
+  area.innerHTML = "";
+
+
+  if(
+    !Array.isArray(list) ||
+    list.length === 0
+  ){
+
+    area.innerHTML =
+      '<span style="color:#817788;font-size:13px;">no achievements yet</span>';
+
+    return;
+
+  }
+
+
+  list.forEach(
+    achievement => {
+
+      const badge =
+        document.createElement("span");
+
+
+      badge.style.cssText = `
+        padding:8px 12px;
+        border-radius:999px;
+        background:rgba(168,85,247,.1);
+        border:1px solid rgba(168,85,247,.18);
+        color:#d5b5f5;
+        font-size:12px;
+      `;
+
+
+      badge.textContent =
+        "🏅 " +
+        String(
+          achievement.achievement ||
+          achievement
+        );
+
+
+      area.appendChild(
+        badge
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   CHAT
+========================================================= */
+
+async function sendMessage(){
+
+  if(isSending){
+    return;
+  }
+
+
+  const input =
+    $("chatInput");
+
+
+  const text =
+    input.value.trim();
+
+
+  if(!text){
+    return;
+  }
+
+
+  input.value = "";
+
+
+  addMessage(
+    text,
+    "user"
+  );
+
+
+  isSending = true;
+
+
+  const button =
+    $("sendButton");
+
+
+  button.disabled = true;
+
+  button.style.opacity = ".55";
+
+
+  const typing =
+    addMessage(
+      "emLee is typing...",
+      "bot typing"
+    );
+
+
+  try{
+
+    const username =
+      currentUser?.username ||
+      getSavedUsername() ||
+      "guest";
+
+
+    const data =
+      await apiRequest(
+        "/api/chat",
+        {
+          method:"POST",
+
+          body:JSON.stringify({
+
+            message:text,
+
+            username:username
+
+          })
+
+        }
+      );
+
+
+    typing.remove();
+
+
+    const reply =
+      data.reply ||
+      data.message ||
+      data.content ||
+      "something went wrong 😭";
+
+
+    addMessage(
+      reply,
+      "bot"
+    );
+
+
+    if(data.user){
+
+      currentUser =
+        data.user;
+
+      renderProfile(
+        currentUser
+      );
+
+    }
+
+
+  }catch(error){
+
+    console.error(error);
+
+
+    typing.remove();
+
+
+    addMessage(
+      "ai ippol available alla 😭",
+      "bot"
+    );
+
+  }
+
+
+  isSending = false;
+
+
+  button.disabled = false;
+
+  button.style.opacity = "1";
+
+}
+
+
+function addMessage(
+  text,
+  type
+){
+
+  const box =
+    $("messages");
+
+
+  const message =
+    document.createElement("div");
+
+
+  message.className =
+    "message " + type;
+
+
+  message.textContent =
+    text;
+
+
+  box.appendChild(
+    message
+  );
+
+
+  box.scrollTop =
+    box.scrollHeight;
+
+
+  return message;
+
+}
+
+
+/* =========================================================
+   ENTER TO SEND
+========================================================= */
+
+$("chatInput")
+  ?.addEventListener(
+    "keydown",
+    function(event){
+
+      if(
+        event.key === "Enter"
+      ){
+
+        event.preventDefault();
+
+        sendMessage();
+
+      }
+
+    }
+  );
+
+
+/* =========================================================
+   DAILY REWARD
+========================================================= */
+
+async function claimReward(){
+
+  const username =
+    getActiveUsername();
+
+
+  if(!username){
+
+    requestUsername();
+
+    return;
+
+  }
+
+
+  try{
+
+    const data =
+      await apiRequest(
+        "/api/reward",
+        {
+          method:"POST",
+
+          body:JSON.stringify({
+            username:username
+          })
+        }
+      );
+
+
+    const reward =
+      data.reward ??
+      data.points ??
+      0;
+
+
+    $("rewardResult")
+      .textContent =
+      "🎁 +" +
+      reward +
+      " points added";
+
+
+    if(data.user){
+
+      currentUser =
+        data.user;
+
+      renderProfile(
+        currentUser
+      );
+
+    }else{
+
+      await refreshCurrentUser();
+
+    }
+
+
+  }catch(error){
+
+    console.error(error);
+
+
+    $("rewardResult")
+      .textContent =
+      error.message ||
+      "reward claim failed";
+
+  }
+
+}
+
+
+/* =========================================================
+   ACTIVE USER
+========================================================= */
+
+function getActiveUsername(){
+
+  return (
+    currentUser?.username ||
+    getSavedUsername() ||
+    ""
+  ).trim();
+
+}
+
+
+function requestUsername(){
+
+  const input =
+    $("usernameInput");
+
+
+  input.scrollIntoView({
+    behavior:"smooth",
+    block:"center"
+  });
+
+
+  input.focus();
+
+}
+
+
+/* =========================================================
+   REFRESH USER
+========================================================= */
+
+async function refreshCurrentUser(){
+
+  const username =
+    getActiveUsername();
+
+
+  if(!username){
+    return;
+  }
+
+
+  try{
+
+    const data =
+      await apiRequest(
+        "/api/user?id=" +
+        encodeURIComponent(username)
+      );
+
+
+    currentUser =
+      data.user ||
+      data;
+
+
+    renderProfile(
+      currentUser
+    );
+
+  }catch(error){
+
+    console.error(
+      "user refresh:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   DICE
+========================================================= */
+
+async function playDice(){
+
+  const username =
+    getActiveUsername();
+
+
+  if(!username){
+
+    requestUsername();
+
+    return;
+
+  }
+
+
+  $("diceResult")
+    .textContent =
+    "rolling...";
+
+
+  try{
+
+    const data =
+      await apiRequest(
+        "/api/game/dice",
+        {
+          method:"POST",
+
+          body:JSON.stringify({
+            username:username
+          })
+        }
+      );
+
+
+    $("diceResult")
+      .textContent =
+      formatGameResult(
+        data,
+        "🎲"
+      );
+
+
+    if(data.user){
+
+      currentUser =
+        data.user;
+
+      renderProfile(
+        currentUser
+      );
+
+    }else{
+
+      await refreshCurrentUser();
+
+    }
+
+
+  }catch(error){
+
+    $("diceResult")
+      .textContent =
+      error.message ||
+      "dice unavailable";
+
+  }
+
+}
+
+
+/* =========================================================
+   COIN FLIP
+========================================================= */
+
+async function playFlip(){
+
+  const username =
+    getActiveUsername();
+
+
+  if(!username){
+
+    requestUsername();
+
+    return;
+
+  }
+
+
+  $("flipResult")
+    .textContent =
+    "flipping...";
+
+
+  try{
+
+    const data =
+      await apiRequest(
+        "/api/game/flip",
+        {
+          method:"POST",
+
+          body:JSON.stringify({
+            username:username
+          })
+        }
+      );
+
+
+    $("flipResult")
+      .textContent =
+      formatGameResult(
+        data,
+        "🪙"
+      );
+
+
+    if(data.user){
+
+      currentUser =
+        data.user;
+
+      renderProfile(
+        currentUser
+      );
+
+    }else{
+
+      await refreshCurrentUser();
+
+    }
+
+
+  }catch(error){
+
+    $("flipResult")
+      .textContent =
+      error.message ||
+      "flip unavailable";
+
+  }
+
+}
+
+
+/* =========================================================
+   GUESS
+========================================================= */
+
+async function playGuess(){
+
+  const username =
+    getActiveUsername();
+
+
+  if(!username){
+
+    requestUsername();
+
+    return;
+
+  }
+
+
+  const input =
+    $("guessInput");
+
+
+  const guess =
+    Number(
+      input.value
+    );
+
+
+  if(
+    !Number.isInteger(guess) ||
+    guess < 1 ||
+    guess > 10
+  ){
+
+    $("guessResult")
+      .textContent =
+      "1 to 10 vare enter cheyyu";
+
+    return;
+
+  }
+
+
+  $("guessResult")
+    .textContent =
+    "checking...";
+
+
+  try{
+
+    const data =
+      await apiRequest(
+        "/api/game/guess",
+        {
+          method:"POST",
+
+          body:JSON.stringify({
+
+            username:username,
+
+            guess:guess
+
+          })
+        }
+      );
+
+
+    $("guessResult")
+      .textContent =
+      formatGameResult(
+        data,
+        "🎯"
+      );
+
+
+    if(data.user){
+
+      currentUser =
+        data.user;
+
+      renderProfile(
+        currentUser
+      );
+
+    }else{
+
+      await refreshCurrentUser();
+
+    }
+
+
+  }catch(error){
+
+    $("guessResult")
+      .textContent =
+      error.message ||
+      "guess unavailable";
+
+  }
+
+}
+
+
+/* =========================================================
+   GAME RESULT
+========================================================= */
+
+function formatGameResult(
+  data,
+  icon
+){
+
+  if(!data){
+    return icon + " done";
+  }
+
+
+  const result =
+    data.result ||
+    data.message ||
+    "";
+
+
+  const points =
+    data.points;
+
+
+  const xp =
+    data.xp;
+
+
+  let output =
+    icon +
+    " " +
+    result;
+
+
+  if(
+    points !== undefined
+  ){
+
+    output +=
+      " · " +
+      (Number(points) >= 0
+        ? "+"
+        : "") +
+      points +
+      " pts";
+
+  }
+
+
+  if(
+    xp !== undefined
+  ){
+
+    output +=
+      " · +" +
+      xp +
+      " xp";
+
+  }
+
+
+  return output;
+
+}
+
+
+/* =========================================================
+   QUIZ
+========================================================= */
+
+function playQuiz(){
+
+  openGameModal(
+    "🧠 quick quiz",
+    `
+      <p>
+        quiz mode is ready for the
+        Emlieey community.
+      </p>
+
+      <p style="margin-top:10px;">
+        the full shared-D1 quiz route
+        can be connected to the Worker.
+      </p>
+    `
+  );
+
+}
+
+
+/* =========================================================
+   WORD
+========================================================= */
+
+function playWord(){
+
+  const words = [
+    "vibe",
+    "dream",
+    "moon",
+    "chill",
+    "cloud",
+    "music",
+    "stream"
+  ];
+
+
+  const word =
+    words[
+      Math.floor(
+        Math.random() *
+        words.length
+      )
+    ];
+
+
+  openGameModal(
+    "🔤 word",
+    `
+      <p>
+        guess this word:
+      </p>
+
+      <div style="
+        margin-top:15px;
+        font-size:26px;
+        font-weight:900;
+        color:#c084fc;
+        letter-spacing:5px;
+      ">
+        ${"_ ".repeat(word.length)}
+      </div>
+
+      <p style="
+        margin-top:14px;
+        font-size:12px;
+      ">
+        hint: it has ${word.length} letters
+      </p>
+    `
+  );
+
+}
+
+
+/* =========================================================
+   RACE
+========================================================= */
+
+function playRace(){
+
+  const cars = [
+    "🚗",
+    "🏎️",
+    "🚙",
+    "🚕"
+  ];
+
+
+  let output = "";
+
+
+  cars.forEach(
+    (car,index) => {
+
+      const distance =
+        Math.floor(
+          Math.random() * 70
+        ) + 20;
+
+
+      output += `
+        <div style="
+          display:flex;
+          align-items:center;
+          gap:7px;
+          margin:8px 0;
+        ">
+          <span>${car}</span>
+
+          <div style="
+            flex:1;
+            height:7px;
+            background:rgba(255,255,255,.07);
+            border-radius:999px;
+            overflow:hidden;
+          ">
+            <div style="
+              width:${distance}%;
+              height:100%;
+              background:linear-gradient(
+                90deg,
+                #8b5cf6,
+                #ec4899
+              );
+              border-radius:999px;
+            "></div>
+          </div>
+
+          <span style="
+            font-size:11px;
+          ">
+            ${distance}%
+          </span>
+        </div>
+      `;
+
+    }
+  );
+
+
+  openGameModal(
+    "🏎️ community race",
+    output
+  );
+
+}
+
+
+/* =========================================================
+   JACKPOT
+========================================================= */
+
+function playJackpot(){
+
+  const symbols = [
+    "🍒",
+    "⭐",
+    "💎",
+    "7️⃣",
+    "🍀"
+  ];
+
+
+  const a =
+    symbols[
+      Math.floor(
+        Math.random() *
+        symbols.length
+      )
+    ];
+
+
+  const b =
+    symbols[
+      Math.floor(
+        Math.random() *
+        symbols.length
+      )
+    ];
+
+
+  const c =
+    symbols[
+      Math.floor(
+        Math.random() *
+        symbols.length
+      )
+    ];
+
+
+  const win =
+    a === b &&
+    b === c;
+
+
+  $("jackpotResult")
+    .textContent =
+    win
+      ? "🎰 jackpot! 🎉"
+      : `${a} ${b} ${c}`;
+
+}
+
+
+/* =========================================================
+   ACHIEVEMENTS MODAL
+========================================================= */
+
+function showAchievements(){
+
+  openGameModal(
+    "🏅 achievements",
+    `
+      <div style="
+        display:grid;
+        gap:10px;
+        text-align:left;
+      ">
+
+        <div>🎲 dice master</div>
+
+        <div>💬 chat addict</div>
+
+        <div>🔥 7 day streak</div>
+
+        <div>👑 top regular</div>
+
+        <div>😈 chaos creator</div>
+
+        <div>💜 Emlieey regular</div>
+
+      </div>
+    `
+  );
+
+}
+
+
+/* =========================================================
+   GAME MODAL
+========================================================= */
+
+function openGameModal(
+  title,
+  content
+){
+
+  $("modalTitle")
+    .textContent =
+    title;
+
+
+  $("modalContent")
+    .innerHTML =
+    content;
+
+
+  $("gameModal")
+    .style.display =
+    "flex";
+
+}
+
+
+function closeGameModal(){
+
+  $("gameModal")
+    .style.display =
+    "none";
+
+}
+
+
+$("gameModal")
+  ?.addEventListener(
+    "click",
+    function(event){
+
+      if(
+        event.target ===
+        $("gameModal")
+      ){
+
+        closeGameModal();
+
+      }
+
+    }
+  );
+
+
+/* =========================================================
+   SPIN WHEEL
+========================================================= */
+
+function spinWheel(){
+
+  const rewards = [
+    "+10 points ⭐",
+    "+25 points 💜",
+    "+50 points 🔥",
+    "mystery reward 🎁",
+    "rare badge 🏅"
+  ];
+
+
+  const reward =
+    rewards[
+      Math.floor(
+        Math.random() *
+        rewards.length
+      )
+    ];
+
+
+  $("rewardResult")
+    .textContent =
+    "🎡 " + reward;
+
+}
+
+
+/* =========================================================
+   POLL
+========================================================= */
+
+function votePoll(option){
+
+  const names = [
+    "more games",
+    "more music",
+    "more AI features",
+    "more community features"
+  ];
+
+
+  const selected =
+    names[option] ||
+    "option";
+
+
+  $("pollResult")
+    .textContent =
+    "you selected: " +
+    selected +
+    " 💜";
+
+}
+
+
+/* =========================================================
+   LEADERBOARD
+========================================================= */
+
+async function loadLeaderboard(){
+
+  const area =
+    $("leaderboardList");
+
+
+  area.innerHTML = `
+    <div class="card" style="text-align:center;">
+      loading leaderboard...
+    </div>
+  `;
+
+
+  try{
+
+    const data =
+      await apiRequest(
+        "/api/leaderboard"
+      );
+
+
+    const list =
+      data.leaderboard ||
+      data.users ||
+      data.results ||
+      [];
+
+
+    if(
+      !Array.isArray(list) ||
+      list.length === 0
+    ){
+
+      area.innerHTML = `
+        <div class="card" style="text-align:center;">
+          <div style="font-size:30px;">
+            🏆
+          </div>
+
+          <p style="margin-top:8px;">
+            leaderboard empty aanu ippo.
+          </p>
+
+          <p style="
+            margin-top:5px;
+            color:#6f6576;
+            font-size:12px;
+          ">
+            play games and earn points to appear here.
+          </p>
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    area.innerHTML = "";
+
+
+    list.forEach(
+      (user,index) => {
+
+        const row =
+          document.createElement("div");
+
+
+        row.className =
+          "leader-row";
+
+
+        const rank =
+          index + 1;
+
+
+        const username =
+          user.username ||
+          user.name ||
+          "unknown";
+
+
+        const points =
+          Number(
+            user.points || 0
+          );
+
+
+        const level =
+          Number(
+            user.level || 1
+          );
+
+
+        row.innerHTML = `
+
+          <div class="rank">
+            #${rank}
+          </div>
+
+          <div>
+
+            <div class="player-name">
+              ${escapeHTML(username)}
+            </div>
+
+            <span class="player-level">
+              level ${level}
+            </span>
+
+          </div>
+
+          <div class="player-points">
+            ${points} pts
+          </div>
+
+        `;
+
+
+        area.appendChild(
+          row
+        );
+
+      }
+    );
+
+
+  }catch(error){
+
+    console.error(
+      "leaderboard:",
+      error
+    );
+
+
+    area.innerHTML = `
+      <div class="card" style="text-align:center;">
+        leaderboard load cheyyan pattiyilla.
+      </div>
+    `;
+
+  }
+
+}
+
+
+/* =========================================================
+   ONLINE COUNT
+========================================================= */
+
+async function loadOnline(){
+
+  try{
+
+    const data =
+      await apiRequest(
+        "/api/online"
+      );
+
+
+    const count =
+      data.online ??
+      data.count ??
+      data.onlineCount ??
+      0;
+
+
+    $("onlineCount")
+      .textContent =
+      count;
+
+  }catch(error){
+
+    console.error(
+      "online:",
+      error
+    );
+
+
+    $("onlineCount")
+      .textContent =
+      "—";
+
+  }
+
+}
+
+
+/* =========================================================
+   BACKEND HEALTH
+========================================================= */
+
+async function checkBackend(){
+
+  const dot =
+    $("backendDot");
+
+  const status =
+    $("backendStatus");
+
+
+  try{
+
+    const data =
+      await apiRequest(
+        "/health"
+      );
+
+
+    dot.style.background =
+      "#a855f7";
+
+
+    dot.style.boxShadow =
+      "0 0 14px #a855f7";
+
+
+    status.textContent =
+      "online · Emlieey backend connected";
+
+  }catch(error){
+
+    dot.style.background =
+      "#777";
+
+
+    dot.style.boxShadow =
+      "none";
+
+
+    status.textContent =
+      "backend unavailable";
+
+  }
+
+}
+
+
+/* =========================================================
+   SHOW MESSAGE
+========================================================= */
+
+function showMessage(
+  text,
+  area
+){
+
+  if(area === "profile"){
+
+    const target =
+      $("fullProfileEmpty");
+
+
+    if(target){
+
+      target.style.display =
+        "block";
+
+      target.textContent =
+        text;
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   HERO SCROLL EFFECT
+========================================================= */
+
+let ticking = false;
+
+
+function updateHero(){
+
+  const scroll =
+    window.scrollY;
+
+
+  const hero =
+    document.querySelector(
+      ".hero"
+    );
+
+
+  const image =
+    $("heroCharacter");
+
+
+  const content =
+    document.querySelector(
+      ".hero-content"
+    );
+
+
+  if(!hero){
+    return;
+  }
+
+
+  const max =
+    Math.max(
+      hero.offsetHeight,
+      1
+    );
+
+
+  const progress =
+    Math.min(
+      scroll / (max * .72),
+      1
+    );
+
+
+  if(image){
+
+    image.style.transform =
+      `
+      translateY(${
+        progress * -90
+      }px)
+      scale(${
+        1.04 + progress * .08
+      })
+      `;
+
+
+    image.style.filter =
+      `
+      saturate(.92)
+      brightness(${
+        .62 - progress * .18
+      })
+      contrast(1.05)
+      blur(${
+        progress * 5
+      }px)
+      `;
+
+
+    image.style.opacity =
+      String(
+        1 - progress * .42
+      );
+
+  }
+
+
+  if(content){
+
+    content.style.transform =
+      `
+      translateY(${
+        progress * -45
+      }px)
+      `;
+
+
+    content.style.opacity =
+      String(
+        1 - progress * .75
+      );
+
+  }
+
+
+  ticking = false;
+
+}
+
+
+window.addEventListener(
+  "scroll",
+  function(){
+
+    if(!ticking){
+
+      window.requestAnimationFrame(
+        updateHero
+      );
+
+      ticking = true;
+
+    }
+
+  },
+  {
+    passive:true
+  }
+);
+
+
+/* =========================================================
+   CLOSE MODAL WITH ESC
+========================================================= */
+
+document.addEventListener(
+  "keydown",
+  function(event){
+
+    if(
+      event.key === "Escape"
+    ){
+
+      closeGameModal();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   CURRENT YEAR
+========================================================= */
+
+$("currentYear")
+  .textContent =
+  new Date().getFullYear();
+
+
+/* =========================================================
+   INITIAL USER
+========================================================= */
+
+async function initializeUser(){
+
+  const username =
+    getSavedUsername();
+
+
+  if(!username){
+    return;
+  }
+
+
+  $("usernameInput")
+    .value =
+    username;
+
+
+  await refreshCurrentUser();
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+async function initialize(){
+
+  updateHero();
+
+  await checkBackend();
+
+  await loadOnline();
+
+  await loadLeaderboard();
+
+  await initializeUser();
+
+}
+
+
+/* =========================================================
+   REFRESH ONLINE + LEADERBOARD
+========================================================= */
+
+setInterval(
+  loadOnline,
+  30000
+);
+
+
+setInterval(
+  loadLeaderboard,
+  60000
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+initialize();
+
+
+</script>
+
+
+<!-- =======================================================
+     END OF WEBSITE
+======================================================= -->
+
+</body>
+</html>
