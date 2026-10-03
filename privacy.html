@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="theme-color" content="#090b0f">
+  <title>Privacy Policy — emLee</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .legal-page {
+      max-width: 820px;
+      padding-bottom: 100px;
+    }
+
+    .legal-card {
+      padding: 30px;
+    }
+
+    .legal-section {
+      padding: 25px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .legal-section:first-child {
+      padding-top: 0;
+    }
+
+    .legal-section:last-child {
+      border-bottom: 0;
+    }
+
+    .legal-section h2 {
+      font-size: 18px;
+      letter-spacing: -.03em;
+    }
+
+    .legal-section p,
+    .legal-section li {
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .legal-section ul {
+      padding-left: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="brand-mark">e</span>
+    <span>emLee</span>
+  </a>
+
+  <nav class="desktop-nav">
+    <a href="index.html">Home</a>
+    <a href="games.html">Games</a>
+    <a href="chat.html">Chat Room</a>
+    <a href="rank.html">Rank</a>
+  </nav>
+
+  <div class="header-actions">
+    <a href="profile.html" class="profile-button">
+      <span id="headerAvatar">?</span>
+      <span id="headerUsername">profile</span>
+    </a>
+  </div>
+</header>
+
+<main class="legal-page">
+
+  <section class="page-header">
+    <span class="eyebrow">legal</span>
+    <h1>Privacy Policy</h1>
+    <p>
+      how emLee handles information used by the website.
+    </p>
+  </section>
+
+  <section class="card legal-card">
+
+    <div class="legal-section">
+      <h2>1. Information we collect</h2>
+      <p>
+        emLee may collect information that you provide while
+        using the website, such as your username, chat messages,
+        game activity, points, XP, achievements, streak information
+        and other profile-related data.
+      </p>
+    </div>
+
+    <div class="legal-section">
+      <h2>2. How information is used</h2>
+      <p>
+        Information may be used to provide profiles, rankings,
+        games, rewards, chat functionality and other features
+        available through emLee.
+      </p>
+    </div>
+
+    <div class="legal-section">
+      <h2>3. Chat messages</h2>
+      <p>
+        Messages sent through public or private chat features may
+        be processed and stored where the relevant backend feature
+        is enabled. Do not share passwords, payment information,
+        private documents or other sensitive information in chat.
+      </p>
+    </div>
+
+    <div class="legal-section">
+      <h2>4. Local storage</h2>
+      <p>
+        The website may use browser local storage to remember
+        settings such as your username, game limits and local
+        reward or poll state.
+      </p>
+    </div>
+
+    <div class="legal-section">
+      <h2>5. Third-party services</h2>
+      <p>
+        emLee may use third-party infrastructure and APIs to
+        operate its backend and AI-related features. Their
+        processing may be governed by their own terms and
+        privacy policies.
+      </p>
+    </div>
+
+    <div class="legal-section">
+      <h2>6. Security</h2>
+      <p>
+        Reasonable technical measures may be used to protect
+        information. However, no internet service can guarantee
+        absolute security.
+      </p>
+    </div>
+
+    <div class="legal-section">
+      <h2>7. Children's privacy</h2>
+      <p>
+        Users should not provide unnecessary personal information.
+        If you are under the applicable minimum age in your
+        jurisdiction, use the service only with appropriate
+        parental or guardian involvement.
+      </p>
+    </div>
+
+    <div class="legal-section">
+      <h2>8. Changes</h2>
+      <p>
+        This Privacy Policy may be updated when the website,
+        backend or features change. The updated version will be
+        published on this page.
+      </p>
+    </div>
+
+    <div class="legal-section">
+      <h2>9. Contact</h2>
+      <p>
+        Privacy-related questions can be sent to
+        liyasmuhammedmv@gmail.com.
+      </p>
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div>
+    <strong>emLee</strong>
+    <span>community space</span>
+  </div>
+
+  <div class="social-icons">
+    <a href="https://www.instagram.com/liyasmv"
+       target="_blank"
+       rel="noopener">◎</a>
+
+    <a href="https://youtube.com/@liyaasmv"
+       target="_blank"
+       rel="noopener">▶</a>
+
+    <a href="mailto:liyasmuhammedmv@gmail.com">@</a>
+  </div>
+
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </div>
+
+  <small>© <span class="current-year"></span> emLee</small>
+</footer>
+
+<script src="app.js"></script>
+
+<script>
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    updateCurrentYear();
+
+    updateHeader(
+      getSavedUsername()
+    );
+
+  }
+);
+</script>
+
+</body>
+</html>
