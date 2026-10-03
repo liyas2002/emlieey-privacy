@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emlieey Live App</title>
+  <style>
+    :root {
+      --bg: #0f0d13;
+      --card-bg: #1a1625;
+      --accent: #8b5cf6;
+      --text: #f3f4f6;
+      --muted: #817788;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 16px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+    .container { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 16px; }
+    .card { background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid rgba(255,255,255,0.08); }
+    .status-bar { display: flex; align-items: center; justify-content: space-between; font-size: 14px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #eab308; display: inline-block; margin-right: 6px; }
+    
+    /* Chat UI */
+    #messages { height: 260px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 4px; }
+    .message { padding: 8px 12px; border-radius: 8px; max-width: 80%; word-break: break-word; font-size: 14px; }
+    .message.user { background: var(--accent); align-self: flex-end; }
+    .message.bot { background: rgba(255,255,255,0.08); align-self: flex-start; }
+    .message.typing { font-style: italic; color: var(--muted); }
+    .chat-input-group { display: flex; gap: 8px; margin-top: 10px; }
+    input, button { padding: 10px 14px; border-radius: 8px; border: none; outline: none; font-size: 14px; }
+    input { background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid rgba(255,255,255,0.1); flex: 1; }
+    button { background: var(--accent); color: white; cursor: pointer; font-weight: 600; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Leaderboard & Games */
+    .leader-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .grid-games { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; padding: 16px; }
+    .modal-content { background: var(--card-bg); padding: 20px; border-radius: 12px; max-width: 400px; width: 100%; text-align: center; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header Status -->
+  <div class="card status-bar">
+    <div><span class="dot" id="backendDot"></span><span id="backendStatus">connecting...</span></div>
+    <div>Online: <strong id="onlineCount">0</strong></div>
+  </div>
+
+  <!-- Profile / User Input -->
+  <div class="card">
+    <div style="display:flex; gap:8px;">
+      <input type="text" id="usernameInput" placeholder="Enter Username..." />
+      <button onclick="loadProfile()">Load</button>
+    </div>
+    <div id="profileDisplay" style="margin-top:8px; font-size:13px; color:var(--muted);"></div>
+  </div>
+
+  <!-- Chat Box -->
+  <div class="card">
+    <div id="messages"></div>
+    <div class="chat-input-group">
+      <input type="text" id="chatInput" placeholder="Message Emlieey..." />
+      <button id="sendButton" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <!-- Mini Games -->
+  <div class="card">
+    <h3>🎮 Mini Games</h3>
+    <div class="grid-games">
+      <button onclick="playDice()">🎲 Dice</button>
+      <button onclick="playFlip()">🪙 Coin Flip</button>
+      <button onclick="playQuiz()">🧠 Quiz</button>
+      <button onclick="playJackpot()">🎰 Slots</button>
+    </div>
+    <div id="diceResult" style="margin-top:8px; font-size:13px; color:var(--muted);"></div>
+    <div id="flipResult" style="font-size:13px; color:var(--muted);"></div>
+    <div id="jackpotResult" style="font-size:13px; color:var(--muted);"></div>
+  </div>
+
+  <!-- Daily Rewards -->
+  <div class="card">
+    <h3>🎁 Daily Rewards</h3>
+    <div style="display:flex; gap:8px; margin-top:8px;">
+      <button onclick="claimReward()">Claim Daily</button>
+      <button onclick="spinWheel()">Spin Wheel</button>
+    </div>
+    <div id="rewardResult" style="margin-top:8px; font-size:13px; color:var(--muted);"></div>
+  </div>
+
+  <!-- Leaderboard -->
+  <div class="card">
+    <h3>🏆 Leaderboard</h3>
+    <div id="leaderboardList" style="margin-top:8px;"></div>
+  </div>
+
+  <footer style="text-align:center; font-size:12px; color:var(--muted);">
+    © <span id="currentYear"></span> Emlieey Bot Project
+  </footer>
+
+</div>
+
+<!-- Game Modal -->
+<div class="modal" id="gameModal">
+  <div class="modal-content">
+    <h3 id="modalTitle">Modal</h3>
+    <div id="modalContent" style="margin: 12px 0;"></div>
+    <button onclick="closeGameModal()">Close</button>
+  </div>
+</div>
+
+<script>
+/* Helper Functions & Variables */
+const $ = (id) => document.getElementById(id);
+let currentUser = null;
+let isSending = false;
+
+function getSavedUsername() {
+  return localStorage.getItem("emlieey_user") || "";
+}
+
+function escapeHTML(str) {
+  return (str || "").replace(/[&<>'"]/g, 
+    tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+  );
+}
+
+async function apiRequest(endpoint, options = {}) {
+  try {
+    const res = await fetch(endpoint, {
+      headers: { "Content-Type": "application/json" },
+      ...options
+    });
+    return await res.json();
+  } catch (err) {
+    throw err;
+  }
+}
+
+function loadProfile() {
+  const username = $("usernameInput").value.trim();
+  if (username) {
+    localStorage.setItem("emlieey_user", username);
+    $("profileDisplay").textContent = "Loaded profile for: " + username;
+    currentUser = { username: username };
+  }
+}
+
+function renderProfile(user) {
+  if (user && user.username) {
+    $("profileDisplay").textContent = `Player: ${user.username} | Points: ${user.points || 0}`;
+  }
+}
+
+/* =========================================================
+   CHAT IMPLEMENTATION
+========================================================= */
+
+async function sendMessage(){
+  if(isSending) return;
+
+  const input = $("chatInput");
+  const text = input.value.trim();
+  if(!text) return;
+
+  input.value = "";
+  appendMessage(text, "user");
+
+  isSending = true;
+  $("sendButton").disabled = true;
+
+  const typingId = appendMessage("Emlieey is typing...", "bot typing");
+
+  try {
+    const username = currentUser ? currentUser.username : (getSavedUsername() || "guest");
+
+    const response = await apiRequest("/api/chat", {
+      method: "POST",
+      body: JSON.stringify({ message: text, username: username })
+    });
+
+    removeMessage(typingId);
+    const botReply = response.reply || response.message || "ah ijj parayu 😌";
+    appendMessage(botReply, "bot");
+
+    if (response.user) {
+      currentUser = response.user;
+      renderProfile(currentUser);
+    }
+
+  } catch (error) {
+    console.error("Chat Error:", error);
+    removeMessage(typingId);
+    appendMessage("connection error scene aan... pinne nokk 🤖", "bot");
+  } finally {
+    isSending = false;
+    $("sendButton").disabled = false;
+  }
+}
+
+function appendMessage(text, senderClass) {
+  const messagesContainer = $("messages");
+  const msgElement = document.createElement("div");
+  const msgId = "msg_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4);
+
+  msgElement.id = msgId;
+  msgElement.className = "message " + senderClass;
+  msgElement.textContent = text;
+
+  messagesContainer.appendChild(msgElement);
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  return msgId;
+}
+
+function removeMessage(msgId) {
+  const el = $(msgId);
+  if (el) el.remove();
+}
+
+$("chatInput").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") sendMessage();
+});
+
+/* =========================================================
+   LEADERBOARD
+========================================================= */
+
+async function loadLeaderboard() {
+  const container = $("leaderboardList");
+  container.innerHTML = '<div style="text-align:center;">loading ranks...</div>';
+
+  try {
+    const data = await apiRequest("/api/leaderboard", { method: "GET" });
+    const list = data.leaderboard || data.users || [];
+
+    if (!Array.isArray(list) || list.length === 0) {
+      container.innerHTML = '<div style="text-align:center;color:#817788;">no leaderboard data yet</div>';
+      return;
+    }
+
+    container.innerHTML = "";
+    list.forEach((player, index) => {
+      const row = document.createElement("div");
+      row.className = "leader-row";
+      const rank = index + 1;
+      const rankBadge = rank === 1 ? "🥇 #1" : rank === 2 ? "🥈 #2" : rank === 3 ? "🥉 #3" : "#" + rank;
+
+      row.innerHTML = `
+        <div><strong>${rankBadge}</strong> ${escapeHTML(player.username)}</div>
+        <div>${Number(player.points || 0).toLocaleString()} PTS</div>
+      `;
+      container.appendChild(row);
+    });
+
+  } catch (error) {
+    container.innerHTML = '<div style="text-align:center;color:#ef4444;">failed to load leaderboard</div>';
+  }
+}
+
+/* =========================================================
+   DAILY REWARDS & GAMES
+========================================================= */
+
+async function claimReward() {
+  const target = $("rewardResult");
+  const username = currentUser ? currentUser.username : getSavedUsername();
+
+  if (!username) {
+    target.textContent = "Please enter and load your profile first!";
+    return;
+  }
+
+  target.textContent = "claiming reward...";
+  try {
+    const data = await apiRequest("/api/reward", {
+      method: "POST",
+      body: JSON.stringify({ username: username })
+    });
+    target.textContent = data.message || "Daily reward claimed! 🎉";
+  } catch (err) {
+    target.textContent = "Failed to claim reward.";
+  }
+}
+
+async function spinWheel() {
+  const target = $("rewardResult");
+  target.textContent = "spinning the wheel... 🎡";
+  setTimeout(() => { target.textContent = "You won +50 XP!"; }, 1000);
+}
+
+async function playDice() {
+  const target = $("diceResult");
+  const roll = Math.floor(Math.random() * 6) + 1;
+  target.textContent = `🎲 You rolled a ${roll}!`;
+}
+
+async function playFlip() {
+  const target = $("flipResult");
+  const side = Math.random() > 0.5 ? "Heads" : "Tails";
+  target.textContent = `🪙 Result: ${side}!`;
+}
+
+function openGameModal(title, contentHTML) {
+  $("modalTitle").textContent = title;
+  $("modalContent").innerHTML = contentHTML;
+  $("gameModal").style.display = "flex";
+}
+
+function closeGameModal() {
+  $("gameModal").style.display = "none";
+}
+
+function playQuiz() {
+  openGameModal("🧠 Community Quiz", `
+    <p style="margin-bottom:10px;">What powers the Emlieey AI bot engine?</p>
+    <button onclick="submitQuizAnswer('wrong')">A) Python Script</button>
+    <button onclick="submitQuizAnswer('correct')">B) Groq & Workers</button>
+  `);
+}
+
+function submitQuizAnswer(type) {
+  if (type === "correct") {
+    openGameModal("🎉 Correct!", "<p>You earned <strong>+50 XP</strong>!</p>");
+  } else {
+    openGameModal("❌ Missed!", "<p>Nice try! Try again later.</p>");
+  }
+}
+
+async function playJackpot() {
+  const target = $("jackpotResult");
+  target.textContent = "spinning slots... 🎰";
+  setTimeout(() => {
+    const symbols = ["🍒", "7️⃣", "💎"];
+    const s1 = symbols[Math.floor(Math.random() * symbols.length)];
+    const s2 = symbols[Math.floor(Math.random() * symbols.length)];
+    const s3 = symbols[Math.floor(Math.random() * symbols.length)];
+    target.textContent = `[ ${s1} | ${s2} | ${s3} ] ${s1 === s2 && s2 === s3 ? '💥 JACKPOT!' : 'Try again!'}`;
+  }, 800);
+}
+
+async function checkBackendStatus() {
+  const dot = $("backendDot");
+  const label = $("backendStatus");
+  try {
+    const res = await apiRequest("/health", { method: "GET" });
+    dot.style.background = "#22c55e";
+    label.textContent = "online";
+    $("onlineCount").textContent = res.online_users || "12";
+  } catch (e) {
+    dot.style.background = "#eab308";
+    label.textContent = "fallback mode";
+    $("onlineCount").textContent = "1";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  $("currentYear").textContent = new Date().getFullYear();
+  const saved = getSavedUsername();
+  if (saved) {
+    $("usernameInput").value = saved;
+    loadProfile();
+  }
+  loadLeaderboard();
+  checkBackendStatus();
+});
+</script>
+</body>
+</html>
