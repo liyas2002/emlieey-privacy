@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="theme-color" content="#090b0f">
+  <title>Rank — emLee</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .rank-wrap {
+      padding-bottom: 100px;
+    }
+
+    .rank-card {
+      overflow: hidden;
+    }
+
+    .rank-row {
+      display: grid;
+      grid-template-columns: 60px 1fr 120px 100px;
+      align-items: center;
+      gap: 15px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+      transition: .2s;
+    }
+
+    .rank-row:last-child {
+      border-bottom: 0;
+    }
+
+    .rank-row:hover {
+      background: rgba(255,255,255,.025);
+    }
+
+    .rank-number {
+      color: var(--muted-2);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .rank-user {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .rank-avatar {
+      width: 38px;
+      height: 38px;
+      flex: 0 0 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: rgba(217,255,85,.12);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .rank-user-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .rank-user-name small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 500;
+    }
+
+    .rank-points {
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .rank-level {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .rank-current {
+      background: rgba(217,255,85,.045);
+    }
+
+    .rank-head {
+      display: grid;
+      grid-template-columns: 60px 1fr 120px 100px;
+      gap: 15px;
+      padding: 12px 20px;
+      color: var(--muted-2);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .rank-empty {
+      padding: 50px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media(max-width:650px) {
+      .rank-head,
+      .rank-row {
+        grid-template-columns: 40px 1fr 75px;
+      }
+
+      .rank-head > :last-child,
+      .rank-row > :last-child {
+        display: none;
+      }
+
+      .rank-row {
+        padding: 13px 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="brand-mark">e</span>
+    <span>emLee</span>
+  </a>
+
+  <nav class="desktop-nav">
+    <a href="index.html">Home</a>
+    <a href="games.html">Games</a>
+    <a href="chat.html">Chat Room</a>
+    <a href="rank.html" class="active">Rank</a>
+  </nav>
+
+  <div class="header-actions">
+    <a href="profile.html" class="profile-button">
+      <span id="headerAvatar">?</span>
+      <span id="headerUsername">profile</span>
+    </a>
+  </div>
+</header>
+
+<main class="rank-wrap">
+
+  <section class="page-header">
+    <span class="eyebrow">leaderboard</span>
+    <h1>rank</h1>
+    <p>
+      points earned from games and community activity.
+      tap a username to open their profile.
+    </p>
+  </section>
+
+  <section class="card rank-card">
+
+    <div class="rank-head">
+      <span>#</span>
+      <span>player</span>
+      <span>points</span>
+      <span>level</span>
+    </div>
+
+    <div id="leaderboard">
+      <div class="rank-empty">
+        loading leaderboard...
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div>
+    <strong>emLee</strong>
+    <span>community space</span>
+  </div>
+
+  <div class="social-icons">
+    <a href="https://www.instagram.com/liyasmv"
+       target="_blank"
+       rel="noopener">◎</a>
+
+    <a href="https://youtube.com/@liyaasmv"
+       target="_blank"
+       rel="noopener">▶</a>
+
+    <a href="mailto:liyasmuhammedmv@gmail.com">@</a>
+  </div>
+
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </div>
+
+  <small>© <span class="current-year"></span> emLee</small>
+</footer>
+
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+
+<script>
+async function loadRankPage() {
+
+  updateCurrentYear();
+
+  const username = getSavedUsername();
+  updateHeader(username);
+
+  const container = document.getElementById("leaderboard");
+
+  try {
+
+    const data = await apiRequest("/api/leaderboard");
+
+    const list =
+      Array.isArray(data)
+        ? data
+        : (
+            data.leaderboard ||
+            data.users ||
+            data.data ||
+            []
+          );
+
+    if (!list.length) {
+
+      container.innerHTML =
+        '<div class="rank-empty">no leaderboard data yet.</div>';
+
+      return;
+    }
+
+    container.innerHTML = list.map((user, index) => {
+
+      const name =
+        user.username ||
+        user.name ||
+        "unknown";
+
+      const points =
+        Number(
+          user.points ??
+          user.xp ??
+          0
+        );
+
+      const level =
+        user.level ??
+        Math.floor(points / 100) + 1;
+
+      const position =
+        user.rank ??
+        user.position ??
+        index + 1;
+
+      const isCurrent =
+        username &&
+        name.toLowerCase() ===
+        username.toLowerCase();
+
+      return `
+        <a
+          class="rank-row ${isCurrent ? "rank-current" : ""}"
+          href="profile.html?user=${encodeURIComponent(name)}">
+
+          <span class="rank-number">
+            ${position}
+          </span>
+
+          <span class="rank-user">
+
+            <span class="rank-avatar">
+              ${escapeHTML(getInitial(name))}
+            </span>
+
+            <span class="rank-user-name">
+              ${escapeHTML(name)}
+              <small>
+                ${isCurrent ? "you" : "view profile"}
+              </small>
+            </span>
+
+          </span>
+
+          <span class="rank-points">
+            ${points.toLocaleString()}
+          </span>
+
+          <span class="rank-level">
+            level ${escapeHTML(level)}
+          </span>
+
+        </a>
+      `;
+
+    }).join("");
+
+  } catch (error) {
+
+    console.error(error);
+
+    container.innerHTML =
+      '<div class="rank-empty">could not load leaderboard.</div>';
+
+  }
+
+}
+
+document.addEventListener(
+  "DOMContentLoaded",
+  loadRankPage
+);
+</script>
+
+</body>
+</html>
