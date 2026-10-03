@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="theme-color" content="#090b0f">
+  <title>Daily Reward — emLee</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .reward-wrap {
+      padding-bottom: 100px;
+    }
+
+    .reward-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .reward-card {
+      padding: 32px;
+    }
+
+    .reward-big {
+      margin-top: 25px;
+      font-size: 64px;
+      font-weight: 900;
+      letter-spacing: -.07em;
+      color: var(--accent);
+    }
+
+    .reward-card h2 {
+      margin-top: 5px;
+      font-size: 25px;
+      letter-spacing: -.04em;
+    }
+
+    .reward-card p {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .reward-button {
+      width: 100%;
+      margin-top: 30px;
+    }
+
+    .reward-status {
+      margin-top: 15px;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .streak-number {
+      margin-top: 25px;
+      font-size: 64px;
+      font-weight: 900;
+      letter-spacing: -.07em;
+    }
+
+    .streak-number span {
+      color: var(--accent);
+    }
+
+    .reward-info {
+      margin-top: 30px;
+      padding: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .reward-info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 12px;
+    }
+
+    .reward-info-row:last-child {
+      border-bottom: 0;
+    }
+
+    .reward-info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .reward-info-row span:last-child {
+      font-weight: 800;
+    }
+
+    @media(max-width:700px) {
+      .reward-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="brand-mark">e</span>
+    <span>emLee</span>
+  </a>
+
+  <nav class="desktop-nav">
+    <a href="index.html">Home</a>
+    <a href="games.html">Games</a>
+    <a href="chat.html">Chat Room</a>
+    <a href="rank.html">Rank</a>
+  </nav>
+
+  <div class="header-actions">
+    <a href="profile.html" class="profile-button">
+      <span id="headerAvatar">?</span>
+      <span id="headerUsername">profile</span>
+    </a>
+  </div>
+</header>
+
+<main class="reward-wrap">
+
+  <section class="page-header">
+    <span class="eyebrow">daily reward</span>
+    <h1>come back daily.</h1>
+    <p>
+      claim once every day and keep your streak alive.
+    </p>
+  </section>
+
+  <section class="reward-grid">
+
+    <div class="card reward-card">
+
+      <span class="eyebrow">today's reward</span>
+
+      <div class="reward-big">
+        +25
+      </div>
+
+      <h2>points + xp</h2>
+
+      <p>
+        your daily reward gets added directly to your profile.
+      </p>
+
+      <button
+        id="claimReward"
+        class="primary-btn reward-button">
+        claim reward
+      </button>
+
+      <div
+        id="rewardStatus"
+        class="reward-status">
+        checking reward status...
+      </div>
+
+    </div>
+
+
+    <div class="card reward-card">
+
+      <span class="eyebrow">your streak</span>
+
+      <div class="streak-number">
+        <span id="streakValue">0</span>
+        days
+      </div>
+
+      <p>
+        keep claiming every day to maintain your streak.
+      </p>
+
+      <div class="reward-info">
+
+        <div class="reward-info-row">
+          <span>username</span>
+          <span id="rewardUsername">—</span>
+        </div>
+
+        <div class="reward-info-row">
+          <span>points</span>
+          <span id="rewardPoints">0</span>
+        </div>
+
+        <div class="reward-info-row">
+          <span>level</span>
+          <span id="rewardLevel">1</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div>
+    <strong>emLee</strong>
+    <span>community space</span>
+  </div>
+
+  <div class="social-icons">
+    <a href="https://www.instagram.com/liyasmv"
+       target="_blank"
+       rel="noopener">◎</a>
+
+    <a href="https://youtube.com/@liyaasmv"
+       target="_blank"
+       rel="noopener">▶</a>
+
+    <a href="mailto:liyasmuhammedmv@gmail.com">@</a>
+  </div>
+
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </div>
+
+  <small>© <span class="current-year"></span> emLee</small>
+</footer>
+
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+
+<script>
+async function initializeRewards() {
+
+  updateCurrentYear();
+
+  const username =
+    getSavedUsername();
+
+  if (!username) {
+
+    location.href =
+      "index.html";
+
+    return;
+
+  }
+
+  updateHeader(username);
+
+  document.getElementById(
+    "rewardUsername"
+  ).textContent = username;
+
+
+  const profile =
+    await loadProfile(username);
+
+  if (profile) {
+
+    document.getElementById(
+      "streakValue"
+    ).textContent =
+      profile.streak ??
+      profile.daily_streak ??
+      0;
+
+    document.getElementById(
+      "rewardPoints"
+    ).textContent =
+      Number(
+        profile.points ?? 0
+      ).toLocaleString();
+
+    document.getElementById(
+      "rewardLevel"
+    ).textContent =
+      profile.level ?? 1;
+
+  }
+
+
+  const status =
+    document.getElementById(
+      "rewardStatus"
+    );
+
+  try {
+
+    const state =
+      JSON.parse(
+        localStorage.getItem(
+          "emlee_daily_reward"
+        ) || "{}"
+      );
+
+    const today =
+      new Date()
+        .toISOString()
+        .slice(0,10);
+
+    if (
+      state.username === username &&
+      state.date === today
+    ) {
+
+      document.getElementById(
+        "claimReward"
+      ).disabled = true;
+
+      document.getElementById(
+        "claimReward"
+      ).textContent =
+        "claimed today";
+
+      status.textContent =
+        "come back tomorrow.";
+
+    } else {
+
+      status.textContent =
+        "available now.";
+
+    }
+
+  } catch (_) {}
+
+}
+
+
+document.getElementById(
+  "claimReward"
+).onclick =
+  async function() {
+
+    const username =
+      getSavedUsername();
+
+    if (!username) return;
+
+    const button = this;
+
+    button.disabled = true;
+
+    try {
+
+      const data =
+        await apiRequest(
+          "/api/reward",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              username
+            })
+          }
+        );
+
+      const today =
+        new Date()
+          .toISOString()
+          .slice(0,10);
+
+      localStorage.setItem(
+        "emlee_daily_reward",
+        JSON.stringify({
+          username,
+          date: today
+        })
+      );
+
+      button.textContent =
+        "claimed today";
+
+      document.getElementById(
+        "rewardStatus"
+      ).textContent =
+        "reward added to your profile.";
+
+      showMessage(
+        data.message ||
+        "daily reward claimed"
+      );
+
+      await initializeRewards();
+
+    } catch (error) {
+
+      button.disabled = false;
+
+      showMessage(
+        error.message ||
+        "reward could not be claimed"
+      );
+
+    }
+
+  };
+
+
+document.addEventListener(
+  "DOMContentLoaded",
+  initializeRewards
+);
+</script>
+
+</body>
+</html>
