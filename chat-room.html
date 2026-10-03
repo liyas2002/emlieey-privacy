@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="theme-color" content="#090b0f">
+  <title>Chat Room — emLee</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .room-page {
+      padding-bottom: 80px;
+    }
+
+    .room {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .room-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 16px;
+      border: 1px solid var(--line);
+      border-bottom: 0;
+      border-radius: 20px 20px 0 0;
+      background: #0d1015;
+    }
+
+    .room-status-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .room-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+
+    .room-messages {
+      height: 560px;
+      overflow-y: auto;
+      padding: 20px;
+      border: 1px solid var(--line);
+      background: var(--card);
+    }
+
+    .room-message {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .room-avatar {
+      width: 32px;
+      height: 32px;
+      flex: 0 0 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(217,255,85,.1);
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .room-message-content {
+      min-width: 0;
+    }
+
+    .room-message-name {
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .room-message-text {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      word-break: break-word;
+    }
+
+    .room-compose {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-top: 0;
+      border-radius: 0 0 20px 20px;
+      background: #0d1015;
+    }
+
+    .room-compose input {
+      margin: 0;
+    }
+
+    .room-compose button {
+      flex: 0 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="brand-mark">e</span>
+    <span>emLee</span>
+  </a>
+
+  <nav class="desktop-nav">
+    <a href="index.html">Home</a>
+    <a href="games.html">Games</a>
+    <a href="chat.html">Chat Room</a>
+    <a href="rank.html">Rank</a>
+  </nav>
+
+  <div class="header-actions">
+    <a href="profile.html" class="profile-button">
+      <span id="headerAvatar">?</span>
+      <span id="headerUsername">profile</span>
+    </a>
+  </div>
+</header>
+
+<main class="room-page">
+
+  <section class="page-header">
+    <span class="eyebrow">public room</span>
+    <h1>chat room</h1>
+    <p>
+      one public room for the community.
+    </p>
+  </section>
+
+  <section class="room">
+
+    <div class="room-status">
+
+      <div class="room-status-left">
+        <span class="room-dot"></span>
+        <span>
+          <span id="roomOnline">0</span>
+          online
+        </span>
+      </div>
+
+      <span
+        style="color:var(--muted-2);font-size:9px">
+        PUBLIC
+      </span>
+
+    </div>
+
+    <div
+      id="roomMessages"
+      class="room-messages">
+
+      <div
+        style="color:var(--muted);
+               font-size:12px">
+        loading messages...
+      </div>
+
+    </div>
+
+    <div class="room-compose">
+
+      <input
+        id="roomInput"
+        class="text-input"
+        maxlength="300"
+        placeholder="say something..."
+        autocomplete="off">
+
+      <button
+        id="roomSend"
+        class="primary-btn">
+        send
+      </button>
+
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div>
+    <strong>emLee</strong>
+    <span>community space</span>
+  </div>
+
+  <div class="social-icons">
+    <a href="https://www.instagram.com/liyasmv"
+       target="_blank"
+       rel="noopener">◎</a>
+
+    <a href="https://youtube.com/@liyaasmv"
+       target="_blank"
+       rel="noopener">▶</a>
+
+    <a href="mailto:liyasmuhammedmv@gmail.com">@</a>
+  </div>
+
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </div>
+
+  <small>© <span class="current-year"></span> emLee</small>
+</footer>
+
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+
+<script>
+/*
+  IMPORTANT:
+  Your existing Worker/D1 currently exposes the AI chat,
+  user, reward, game, leaderboard and online routes.
+
+  A true persistent public chat requires a Worker/D1 chat
+  route. This page is ready for:
+
+      GET  /api/chat-room
+      POST /api/chat-room
+
+  If those routes are not yet present in the Worker,
+  messages cannot be persisted by static HTML alone.
+*/
+
+async function loadRoom() {
+
+  const container =
+    document.getElementById(
+      "roomMessages"
+    );
+
+  try {
+
+    const data =
+      await apiRequest(
+        "/api/chat-room"
+      );
+
+    const messages =
+      Array.isArray(data)
+        ? data
+        : (
+            data.messages ||
+            data.data ||
+            []
+          );
+
+    if (!messages.length) {
+
+      container.innerHTML = `
+        <div style="color:var(--muted);
+                    font-size:12px">
+          no messages yet. be the first.
+        </div>
+      `;
+
+      return;
+
+    }
+
+    container.innerHTML =
+      messages.map(message => {
+
+        const name =
+          message.username ||
+          message.name ||
+          "user";
+
+        const text =
+          message.message ||
+          message.text ||
+          "";
+
+        return `
+          <div class="room-message">
+
+            <div class="room-avatar">
+              ${escapeHTML(
+                getInitial(name)
+              )}
+            </div>
+
+            <div class="room-message-content">
+
+              <div class="room-message-name">
+                ${escapeHTML(name)}
+              </div>
+
+              <div class="room-message-text">
+                ${escapeHTML(text)}
+              </div>
+
+            </div>
+
+          </div>
+        `;
+
+      }).join("");
+
+    container.scrollTop =
+      container.scrollHeight;
+
+  } catch (error) {
+
+    container.innerHTML = `
+      <div style="color:var(--muted);
+                  font-size:12px">
+        public chat backend is not connected yet.
+      </div>
+    `;
+
+  }
+
+}
+
+
+async function sendRoomMessage() {
+
+  const input =
+    document.getElementById(
+      "roomInput"
+    );
+
+  const message =
+    input.value.trim();
+
+  const username =
+    getSavedUsername();
+
+  if (!username) {
+
+    showMessage(
+      "set your username first"
+    );
+
+    return;
+
+  }
+
+  if (!message) return;
+
+  try {
+
+    await apiRequest(
+      "/api/chat-room",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          username,
+          message
+        })
+      }
+    );
+
+    input.value = "";
+
+    await loadRoom();
+
+  } catch (error) {
+
+    showMessage(
+      "public chat backend is not available yet"
+    );
+
+  }
+
+}
+
+
+document.getElementById(
+  "roomSend"
+).onclick =
+  sendRoomMessage;
+
+
+document.getElementById(
+  "roomInput"
+).onkeydown =
+  event => {
+
+    if (
+      event.key === "Enter"
+    ) {
+
+      event.preventDefault();
+
+      sendRoomMessage();
+
+    }
+
+  };
+
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    updateCurrentYear();
+
+    updateHeader(
+      getSavedUsername()
+    );
+
+    loadRoom();
+
+    setInterval(
+      loadRoom,
+      5000
+    );
+
+    loadOnlineCount();
+
+  }
+);
+</script>
+
+</body>
+</html>
