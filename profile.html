@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="theme-color" content="#090b0f">
+  <title>Profile — emLee</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .profile-page {
+      padding-bottom: 100px;
+    }
+
+    .profile-main {
+      display: grid;
+      grid-template-columns: .8fr 1.2fr;
+      gap: 14px;
+    }
+
+    .profile-card {
+      padding: 28px;
+    }
+
+    .profile-identity {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .profile-avatar {
+      width: 66px;
+      height: 66px;
+      display: grid;
+      place-items: center;
+      border-radius: 20px;
+      background: var(--accent);
+      color: #090b0f;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .profile-name {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .profile-sub {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .profile-rank {
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .profile-rank span {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .profile-rank strong {
+      display: block;
+      margin-top: 3px;
+      font-size: 30px;
+    }
+
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 10px;
+    }
+
+    .stat-box {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: rgba(255,255,255,.02);
+    }
+
+    .stat-box span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .stat-box strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 24px;
+    }
+
+    .profile-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 20px;
+    }
+
+    .profile-actions .secondary-btn,
+    .profile-actions .primary-btn {
+      flex: 1;
+    }
+
+    .edit-name-box {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .edit-name-box.hidden {
+      display: none;
+    }
+
+    .profile-progress {
+      margin-top: 22px;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .progress-bar {
+      height: 6px;
+      margin-top: 9px;
+      overflow: hidden;
+      border-radius: 10px;
+      background: rgba(255,255,255,.07);
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--accent);
+      border-radius: inherit;
+    }
+
+    .profile-message {
+      padding: 30px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    @media(max-width:800px) {
+      .profile-main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="brand-mark">e</span>
+    <span>emLee</span>
+  </a>
+
+  <nav class="desktop-nav">
+    <a href="index.html">Home</a>
+    <a href="games.html">Games</a>
+    <a href="chat.html">Chat Room</a>
+    <a href="rank.html">Rank</a>
+  </nav>
+
+  <div class="header-actions">
+    <a href="profile.html" class="profile-button">
+      <span id="headerAvatar">?</span>
+      <span id="headerUsername">profile</span>
+    </a>
+  </div>
+</header>
+
+<main class="profile-page">
+
+  <section class="page-header">
+    <span class="eyebrow">player profile</span>
+    <h1>profile</h1>
+  </section>
+
+  <div id="profileContent">
+
+    <section class="profile-main">
+
+      <div class="card profile-card">
+
+        <div class="profile-identity">
+
+          <div class="profile-avatar" id="profileAvatar">
+            ?
+          </div>
+
+          <div>
+            <div class="profile-name" id="profileName">
+              loading...
+            </div>
+
+            <div class="profile-sub" id="profileLevel">
+              level 1
+            </div>
+          </div>
+
+        </div>
+
+        <div class="profile-rank">
+          <span>current rank</span>
+          <strong id="profileRank">—</strong>
+        </div>
+
+        <div class="profile-actions">
+
+          <a
+            id="messageButton"
+            href="private-chat.html"
+            class="primary-btn">
+            message
+          </a>
+
+          <button
+            id="editButton"
+            class="secondary-btn">
+            change username
+          </button>
+
+        </div>
+
+        <div
+          id="editNameBox"
+          class="edit-name-box hidden">
+
+          <input
+            id="newUsername"
+            class="text-input"
+            maxlength="24"
+            placeholder="new username">
+
+          <button
+            id="saveUsername"
+            class="primary-btn full-btn">
+            save username
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="card profile-card">
+
+        <div class="profile-stats">
+
+          <div class="stat-box">
+            <span>points</span>
+            <strong id="statPoints">0</strong>
+          </div>
+
+          <div class="stat-box">
+            <span>xp</span>
+            <strong id="statXP">0</strong>
+          </div>
+
+          <div class="stat-box">
+            <span>games played</span>
+            <strong id="statGames">0</strong>
+          </div>
+
+          <div class="stat-box">
+            <span>wins</span>
+            <strong id="statWins">0</strong>
+          </div>
+
+          <div class="stat-box">
+            <span>achievements</span>
+            <strong id="statAchievements">0</strong>
+          </div>
+
+          <div class="stat-box">
+            <span>streak</span>
+            <strong id="statStreak">0</strong>
+          </div>
+
+        </div>
+
+        <div class="profile-progress">
+
+          <div class="progress-top">
+            <span>level progress</span>
+            <span id="levelProgressText">0%</span>
+          </div>
+
+          <div class="progress-bar">
+            <div
+              id="levelProgress"
+              class="progress-fill">
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div>
+    <strong>emLee</strong>
+    <span>community space</span>
+  </div>
+
+  <div class="social-icons">
+    <a href="https://www.instagram.com/liyasmv"
+       target="_blank"
+       rel="noopener">◎</a>
+
+    <a href="https://youtube.com/@liyaasmv"
+       target="_blank"
+       rel="noopener">▶</a>
+
+    <a href="mailto:liyasmuhammedmv@gmail.com">@</a>
+  </div>
+
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </div>
+
+  <small>© <span class="current-year"></span> emLee</small>
+</footer>
+
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+
+<script>
+function getProfileTarget() {
+
+  const params =
+    new URLSearchParams(
+      location.search
+    );
+
+  return (
+    params.get("user") ||
+    getSavedUsername()
+  );
+
+}
+
+
+function setText(id, value) {
+
+  const el =
+    document.getElementById(id);
+
+  if (el) {
+    el.textContent =
+      value ?? "0";
+  }
+
+}
+
+
+async function loadProfilePage() {
+
+  updateCurrentYear();
+
+  const target =
+    getProfileTarget();
+
+  if (!target) {
+
+    location.href =
+      "index.html";
+
+    return;
+
+  }
+
+  updateHeader(
+    getSavedUsername()
+  );
+
+  const profile =
+    await loadProfile(target);
+
+  if (!profile) {
+
+    document.getElementById(
+      "profileContent"
+    ).innerHTML = `
+      <div class="card profile-message">
+        profile could not be loaded.
+      </div>
+    `;
+
+    return;
+
+  }
+
+  const username =
+    profile.username ||
+    target;
+
+  const points =
+    Number(
+      profile.points ?? 0
+    );
+
+  const xp =
+    Number(
+      profile.xp ?? 0
+    );
+
+  const level =
+    Number(
+      profile.level ??
+      Math.floor(xp / 100) + 1
+    );
+
+  const games =
+    Number(
+      profile.gamesPlayed ??
+      profile.games_played ??
+      profile.totalGames ??
+      0
+    );
+
+  const wins =
+    Number(
+      profile.wins ??
+      0
+    );
+
+  const achievements =
+    Number(
+      profile.achievementsCount ??
+      profile.achievements_count ??
+      (
+        Array.isArray(profile.achievements)
+          ? profile.achievements.length
+          : 0
+      )
+    );
+
+  const streak =
+    Number(
+      profile.streak ??
+      profile.daily_streak ??
+      0
+    );
+
+  const rank =
+    profile.rank ??
+    profile.position ??
+    "—";
+
+
+  setText(
+    "profileName",
+    username
+  );
+
+  setText(
+    "profileLevel",
+    "level " + level
+  );
+
+  setText(
+    "profileRank",
+    "#" + rank
+  );
+
+  setText(
+    "statPoints",
+    points.toLocaleString()
+  );
+
+  setText(
+    "statXP",
+    xp.toLocaleString()
+  );
+
+  setText(
+    "statGames",
+    games.toLocaleString()
+  );
+
+  setText(
+    "statWins",
+    wins.toLocaleString()
+  );
+
+  setText(
+    "statAchievements",
+    achievements.toLocaleString()
+  );
+
+  setText(
+    "statStreak",
+    streak.toLocaleString()
+  );
+
+
+  document.getElementById(
+    "profileAvatar"
+  ).textContent =
+    getInitial(username);
+
+
+  const currentUser =
+    getSavedUsername();
+
+  const messageButton =
+    document.getElementById(
+      "messageButton"
+    );
+
+  if (
+    !currentUser ||
+    currentUser.toLowerCase() ===
+    username.toLowerCase()
+  ) {
+
+    messageButton.style.display =
+      "none";
+
+  } else {
+
+    messageButton.href =
+      "private-chat.html?user=" +
+      encodeURIComponent(username);
+
+  }
+
+
+  const progress =
+    Math.min(
+      100,
+      xp % 100
+    );
+
+  setText(
+    "levelProgressText",
+    progress + "%"
+  );
+
+  document.getElementById(
+    "levelProgress"
+  ).style.width =
+    progress + "%";
+
+
+  const editButton =
+    document.getElementById(
+      "editButton"
+    );
+
+  const editBox =
+    document.getElementById(
+      "editNameBox"
+    );
+
+  if (
+    currentUser &&
+    currentUser.toLowerCase() ===
+    username.toLowerCase()
+  ) {
+
+    editButton.style.display =
+      "inline-flex";
+
+  } else {
+
+    editButton.style.display =
+      "none";
+
+  }
+
+
+  editButton.onclick = () => {
+
+    editBox.classList.toggle(
+      "hidden"
+    );
+
+  };
+
+
+  document.getElementById(
+    "saveUsername"
+  ).onclick =
+    async () => {
+
+      const newName =
+        document.getElementById(
+          "newUsername"
+        ).value.trim();
+
+      if (!newName) {
+
+        showMessage(
+          "enter a new username"
+        );
+
+        return;
+
+      }
+
+      try {
+
+        await createOrGetUser(
+          newName
+        );
+
+        saveUsername(
+          newName
+        );
+
+        showMessage(
+          "username updated"
+        );
+
+        setTimeout(() => {
+
+          location.href =
+            "profile.html";
+
+        }, 500);
+
+      } catch (error) {
+
+        showMessage(
+          error.message ||
+          "could not update username"
+        );
+
+      }
+
+    };
+
+}
+
+
+document.addEventListener(
+  "DOMContentLoaded",
+  loadProfilePage
+);
+</script>
+
+</body>
+</html>
