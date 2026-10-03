@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="theme-color" content="#090b0f">
+  <title>Community Poll — emLee</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .poll-page {
+      padding-bottom: 100px;
+    }
+
+    .poll-card {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+
+    .poll-card h2 {
+      margin-top: 10px;
+      font-size: 28px;
+      letter-spacing: -.04em;
+    }
+
+    .poll-question {
+      margin-top: 25px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: rgba(255,255,255,.02);
+    }
+
+    .poll-question strong {
+      font-size: 14px;
+    }
+
+    .poll-options {
+      display: grid;
+      gap: 9px;
+      margin-top: 17px;
+    }
+
+    .poll-option {
+      width: 100%;
+      padding: 14px 15px;
+      text-align: left;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: transparent;
+      color: var(--text);
+      font-size: 12px;
+      transition: .2s;
+    }
+
+    .poll-option:hover {
+      border-color: var(--line-strong);
+      background: rgba(255,255,255,.04);
+    }
+
+    .poll-option.selected {
+      border-color: var(--accent);
+      background: rgba(217,255,85,.08);
+    }
+
+    .poll-result {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="brand-mark">e</span>
+    <span>emLee</span>
+  </a>
+
+  <nav class="desktop-nav">
+    <a href="index.html">Home</a>
+    <a href="games.html">Games</a>
+    <a href="chat.html">Chat Room</a>
+    <a href="rank.html">Rank</a>
+  </nav>
+
+  <div class="header-actions">
+    <a href="profile.html" class="profile-button">
+      <span id="headerAvatar">?</span>
+      <span id="headerUsername">profile</span>
+    </a>
+  </div>
+</header>
+
+<main class="poll-page">
+
+  <section class="page-header">
+    <span class="eyebrow">community voice</span>
+    <h1>Community Poll</h1>
+    <p>
+      share what you'd like to see around emLee.
+    </p>
+  </section>
+
+  <section class="card poll-card">
+
+    <span class="eyebrow">
+      this week's question
+    </span>
+
+    <h2>
+      next stream-il entha type content venam?
+    </h2>
+
+    <div class="poll-question">
+
+      <strong>
+        choose one
+      </strong>
+
+      <div
+        id="pollOptions"
+        class="poll-options">
+
+        <button
+          class="poll-option"
+          data-option="chill">
+          chill music + vibes
+        </button>
+
+        <button
+          class="poll-option"
+          data-option="games">
+          more live games
+        </button>
+
+        <button
+          class="poll-option"
+          data-option="chat">
+          more community chat
+        </button>
+
+        <button
+          class="poll-option"
+          data-option="mix">
+          mix of everything
+        </button>
+
+      </div>
+
+      <div
+        id="pollResult"
+        class="poll-result">
+        your vote is saved on this device.
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div>
+    <strong>emLee</strong>
+    <span>community space</span>
+  </div>
+
+  <div class="social-icons">
+    <a href="https://www.instagram.com/liyasmv"
+       target="_blank"
+       rel="noopener">◎</a>
+
+    <a href="https://youtube.com/@liyaasmv"
+       target="_blank"
+       rel="noopener">▶</a>
+
+    <a href="mailto:liyasmuhammedmv@gmail.com">@</a>
+  </div>
+
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </div>
+
+  <small>© <span class="current-year"></span> emLee</small>
+</footer>
+
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+
+<script>
+const POLL_KEY =
+  "emlee_community_poll";
+
+
+function loadPollState() {
+
+  const saved =
+    localStorage.getItem(
+      POLL_KEY
+    );
+
+  if (!saved) return;
+
+  document
+    .querySelectorAll(".poll-option")
+    .forEach(button => {
+
+      if (
+        button.dataset.option ===
+        saved
+      ) {
+
+        button.classList.add(
+          "selected"
+        );
+
+      }
+
+    });
+
+  document.getElementById(
+    "pollResult"
+  ).textContent =
+    "your choice: " +
+    saved;
+
+}
+
+
+document
+  .querySelectorAll(".poll-option")
+  .forEach(button => {
+
+    button.onclick = async () => {
+
+      const option =
+        button.dataset.option;
+
+      localStorage.setItem(
+        POLL_KEY,
+        option
+      );
+
+      document
+        .querySelectorAll(".poll-option")
+        .forEach(item =>
+          item.classList.remove(
+            "selected"
+          )
+        );
+
+      button.classList.add(
+        "selected"
+      );
+
+      document.getElementById(
+        "pollResult"
+      ).textContent =
+        "your choice: " +
+        option;
+
+      /*
+        Optional Worker endpoint:
+
+        POST /api/poll
+
+        {
+          username,
+          option
+        }
+
+        If the endpoint does not exist,
+        the local vote still remains saved.
+      */
+
+      try {
+
+        const username =
+          getSavedUsername();
+
+        if (username) {
+
+          await apiRequest(
+            "/api/poll",
+            {
+              method: "POST",
+              body: JSON.stringify({
+                username,
+                option
+              })
+            }
+          );
+
+        }
+
+      } catch (_) {}
+
+      showMessage(
+        "vote saved"
+      );
+
+    };
+
+  });
+
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    updateCurrentYear();
+
+    updateHeader(
+      getSavedUsername()
+    );
+
+    loadPollState();
+
+  }
+);
+</script>
+
+</body>
+</html>
