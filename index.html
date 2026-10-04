@@ -1,0 +1,4978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#09070d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <title>emLee — Emlieey Live</title>
+
+  <style>
+    :root {
+      --bg: #09070d;
+      --bg2: #100c17;
+      --card: rgba(24, 18, 34, 0.78);
+      --card2: rgba(255,255,255,0.055);
+      --accent: #a855f7;
+      --accent2: #7c3aed;
+      --pink: #ec4899;
+      --text: #fafafa;
+      --muted: #9d93a8;
+      --border: rgba(255,255,255,0.09);
+      --success: #22c55e;
+      --danger: #ef4444;
+      --shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(139,92,246,0.13), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(236,72,153,0.08), transparent 35%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body.feature-open {
+      overflow: hidden;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+
+    .entry-pfp-wrap {
+      display:flex; flex-direction:column; align-items:center; gap:9px; margin:-5px 0 18px;
+    }
+    .entry-pfp, .viewer-profile-pfp {
+      width:78px; height:78px; border-radius:50%; object-fit:cover;
+      border:2px solid rgba(255,255,255,.16); box-shadow:0 10px 30px rgba(168,85,247,.22);
+    }
+    .pfp-upload {
+      color:#c084fc; font-size:10px; cursor:pointer;
+    }
+    .feature-image {
+      background-size:cover !important; background-position:center !important; background-repeat:no-repeat !important;
+      position:relative; overflow:hidden;
+    }
+    .feature-image::after { content:""; position:absolute; inset:0; background:linear-gradient(145deg,rgba(168,85,247,.12),rgba(0,0,0,.18)); }
+    .profile-avatar-img { object-fit:cover; display:block; }
+    .profile-level-row { display:flex; gap:8px; margin-top:5px; color:#9d93a8; font-size:10px; }
+    .personal-chat-btn {
+      width:100%; margin-top:13px; padding:11px; border:1px solid rgba(168,85,247,.2); border-radius:12px;
+      color:white; background:rgba(168,85,247,.11); font-weight:700;
+    }
+    .live-pfp { width:28px; height:28px; border-radius:50%; object-fit:cover; vertical-align:middle; margin-right:7px; border:1px solid rgba(255,255,255,.12); }
+    .live-name-btn { background:none; border:0; color:#c084fc; font-weight:800; padding:0; margin-right:6px; }
+    .viewer-profile-modal { text-align:center; }
+    .viewer-profile-modal h3 { margin:12px 0 16px; }
+    .viewer-profile-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; margin-bottom:15px; }
+    .viewer-profile-grid div { padding:10px 5px; border-radius:12px; background:rgba(255,255,255,.05); }
+    .viewer-profile-grid strong { display:block; color:#d8b4fe; font-size:15px; }
+    .viewer-profile-grid span { color:#817788; font-size:9px; }
+
+    /* =====================================================
+       USERNAME ENTRY
+    ===================================================== */
+
+    #entryScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+
+      background:
+        linear-gradient(
+          rgba(5,4,8,0.58),
+          rgba(5,4,8,0.86)
+        ),
+        url("./emlee-character.PNG") center/cover no-repeat;
+
+      backdrop-filter: blur(10px);
+    }
+
+    .entry-box {
+      width: 100%;
+      max-width: 410px;
+      padding: 32px 26px;
+      text-align: center;
+
+      background: rgba(15,12,22,0.76);
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 28px;
+
+      box-shadow:
+        0 30px 100px rgba(0,0,0,0.65),
+        inset 0 1px rgba(255,255,255,0.08);
+
+      backdrop-filter: blur(25px);
+      animation: entryIn .7s ease;
+    }
+
+    @keyframes entryIn {
+      from {
+        opacity: 0;
+        transform: translateY(25px) scale(.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .entry-logo {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 18px;
+
+      border-radius: 24px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 27px;
+      font-weight: 800;
+
+      background:
+        linear-gradient(135deg, #a855f7, #7c3aed, #ec4899);
+
+      box-shadow:
+        0 12px 40px rgba(168,85,247,0.38);
+    }
+
+    .entry-box h1 {
+      font-size: 35px;
+      letter-spacing: -1.5px;
+    }
+
+    .entry-box h1 span {
+      color: #c084fc;
+    }
+
+    .entry-sub {
+      margin-top: 8px;
+      margin-bottom: 25px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .entry-input {
+      width: 100%;
+      padding: 15px 16px;
+
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+
+      color: white;
+      outline: none;
+      text-align: center;
+    }
+
+    .entry-input:focus {
+      border-color: rgba(168,85,247,0.7);
+      box-shadow: 0 0 0 4px rgba(168,85,247,0.1);
+    }
+
+    .enter-btn {
+      width: 100%;
+      margin-top: 12px;
+      padding: 15px;
+
+      border: 0;
+      border-radius: 14px;
+
+      color: white;
+      font-weight: 700;
+
+      background:
+        linear-gradient(135deg, #a855f7, #7c3aed);
+
+      box-shadow: 0 12px 30px rgba(124,58,237,0.28);
+    }
+
+    .entry-note {
+      margin-top: 16px;
+      color: #756c7d;
+      font-size: 11px;
+    }
+
+    /* =====================================================
+       APP
+    ===================================================== */
+
+    #app {
+      display: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      margin: auto;
+      padding: 14px 14px 50px;
+    }
+
+    /* =====================================================
+       TOP NAV
+    ===================================================== */
+
+    .top-nav {
+      position: sticky;
+      top: 10px;
+      z-index: 100;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 11px 14px;
+      margin-bottom: 14px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: rgba(10,8,15,0.72);
+      backdrop-filter: blur(20px);
+
+      box-shadow: 0 10px 35px rgba(0,0,0,.25);
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.7px;
+    }
+
+    .brand span {
+      color: #c084fc;
+    }
+
+    .nav-rank {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+
+      padding: 7px 11px;
+
+      border-radius: 12px;
+      background: rgba(168,85,247,.12);
+      border: 1px solid rgba(168,85,247,.18);
+
+      font-size: 12px;
+      color: white;
+    }
+
+    .rank-number {
+      color: #d8b4fe;
+      font-weight: 800;
+    }
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .hero {
+      position: relative;
+      min-height: 570px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+
+      overflow: hidden;
+
+      border-radius: 30px;
+      border: 1px solid var(--border);
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(5,4,8,0.05) 10%,
+          rgba(5,4,8,0.18) 35%,
+          rgba(5,4,8,0.95) 100%
+        ),
+        url("./emlee-character.PNG") center/cover no-repeat;
+
+      box-shadow: var(--shadow);
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      right: -100px;
+      top: -100px;
+
+      background: rgba(168,85,247,.28);
+      filter: blur(70px);
+      border-radius: 50%;
+    }
+
+    .hero-content {
+      position: relative;
+      padding: 28px 22px;
+    }
+
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+
+      padding: 7px 11px;
+
+      border-radius: 30px;
+
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+
+      font-size: 11px;
+      color: #ddd6fe;
+
+      backdrop-filter: blur(10px);
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 12px #22c55e;
+    }
+
+    .hero h1 {
+      margin-top: 14px;
+
+      font-size: clamp(50px, 15vw, 82px);
+      line-height: .88;
+      letter-spacing: -5px;
+
+      background: linear-gradient(
+        135deg,
+        #fff,
+        #d8b4fe 55%,
+        #f0abfc
+      );
+
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-tagline {
+      margin-top: 17px;
+      color: #d4ced9;
+      font-size: 14px;
+      max-width: 390px;
+      line-height: 1.55;
+    }
+
+    /* =====================================================
+       CREATOR + SOCIAL
+    ===================================================== */
+
+    .creator-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+
+      margin-top: 24px;
+      padding-top: 18px;
+
+      border-top: 1px solid rgba(255,255,255,.12);
+    }
+
+    .creator {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .creator strong {
+      color: white;
+      font-size: 14px;
+    }
+
+    .socials {
+      display: flex;
+      gap: 7px;
+    }
+
+    .social {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+
+      padding: 8px 10px;
+
+      color: #eee;
+      text-decoration: none;
+
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 11px;
+
+      background: rgba(255,255,255,.06);
+
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .social svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .social.instagram svg {
+      color: #f472b6;
+    }
+
+    .social.youtube svg {
+      color: #ff4d4d;
+    }
+
+    /* =====================================================
+       FEATURE LAUNCHER
+    ===================================================== */
+
+    .feature-launcher {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .feature-tile {
+      position: relative;
+      min-height: 112px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+
+      padding: 12px 7px;
+
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 21px;
+
+      color: white;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(31,24,44,.82),
+          rgba(17,13,24,.9)
+        );
+
+      box-shadow:
+        0 15px 40px rgba(0,0,0,.22),
+        inset 0 1px rgba(255,255,255,.05);
+
+      backdrop-filter: blur(18px);
+
+      transition:
+        transform .22s ease,
+        border-color .22s ease,
+        background .22s ease;
+    }
+
+    .feature-tile:hover {
+      transform: translateY(-3px);
+      border-color: rgba(168,85,247,.42);
+      background:
+        linear-gradient(
+          145deg,
+          rgba(168,85,247,.16),
+          rgba(236,72,153,.08)
+        );
+    }
+
+    .feature-tile:active {
+      transform: scale(.97);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 16px;
+
+      font-size: 24px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(168,85,247,.25),
+          rgba(236,72,153,.13)
+        );
+
+      border: 1px solid rgba(255,255,255,.08);
+
+      box-shadow:
+        0 10px 25px rgba(0,0,0,.2);
+    }
+
+    .feature-name {
+      font-size: 11px;
+      font-weight: 800;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .feature-sub {
+      color: var(--muted);
+      font-size: 9px;
+      text-align: center;
+    }
+
+    /* =====================================================
+       FULL SCREEN FEATURES
+    ===================================================== */
+
+    .feature-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+
+      padding:
+        max(18px, env(safe-area-inset-top))
+        14px
+        max(18px, env(safe-area-inset-bottom));
+
+      background:
+        linear-gradient(
+          rgba(5,4,8,.62),
+          rgba(5,4,8,.9)
+        ),
+        url("./emlee-character.PNG") center/cover no-repeat;
+
+      backdrop-filter: blur(12px);
+
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+
+      transform: scale(1.025);
+
+      transition:
+        opacity .24s ease,
+        transform .24s ease,
+        visibility .24s ease;
+    }
+
+    .feature-screen.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+
+    .feature-screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+
+      background:
+        radial-gradient(
+          circle at top right,
+          rgba(168,85,247,.24),
+          transparent 38%
+        ),
+        radial-gradient(
+          circle at bottom left,
+          rgba(236,72,153,.15),
+          transparent 38%
+        );
+
+      pointer-events: none;
+    }
+
+    .feature-screen-inner {
+      position: relative;
+      z-index: 1;
+
+      width: 100%;
+      max-width: 680px;
+
+      height: 100%;
+
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      padding:
+        58px 0
+        20px;
+
+      scrollbar-width: thin;
+    }
+
+    .feature-back {
+      position: fixed;
+      top: max(16px, env(safe-area-inset-top));
+      left: 14px;
+      z-index: 5;
+
+      width: 42px;
+      height: 42px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 14px;
+
+      color: white;
+      background: rgba(10,8,15,.72);
+
+      backdrop-filter: blur(18px);
+
+      font-size: 21px;
+
+      box-shadow:
+        0 10px 30px rgba(0,0,0,.3);
+    }
+
+    .feature-screen .card {
+      margin-top: 0;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(31,24,44,.84),
+          rgba(17,13,24,.9)
+        );
+
+      box-shadow:
+        0 25px 70px rgba(0,0,0,.4),
+        inset 0 1px rgba(255,255,255,.045);
+    }
+
+    /* =====================================================
+       TRUE FULL-SCREEN CHAT / LIVE CHAT
+    ===================================================== */
+
+    #chatScreen .feature-screen-inner,
+    #liveChatScreen .feature-screen-inner {
+      width: 100%;
+      max-width: none;
+      height: 100%;
+      min-height: 100vh;
+      padding: 72px 14px 18px;
+    }
+
+    #chatScreen #chatSection,
+    #liveChatScreen > .feature-screen-inner > .card {
+      width: 100%;
+      min-height: calc(100vh - 90px);
+      margin: 0;
+      padding: 18px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #chatScreen #messages,
+    #liveChatScreen #liveMessages {
+      flex: 1;
+      min-height: 0;
+      height: auto;
+    }
+
+    #chatScreen .chat-input-group,
+    #liveChatScreen .live-input-group {
+      flex-shrink: 0;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    /* =====================================================
+       VIEWER PROFILE / PERSONAL CHAT FULL SCREEN
+    ===================================================== */
+
+    #viewerProfileModal,
+    #personalChatScreen {
+      padding: 0;
+      background:
+        linear-gradient(rgba(5,4,8,.58),rgba(5,4,8,.92)),
+        url("./emlee-character.PNG") center/cover no-repeat;
+      backdrop-filter: blur(12px);
+    }
+
+    .viewer-profile-fullscreen,
+    .personal-chat-fullscreen {
+      width: 100%;
+      max-width: none;
+      height: 100vh;
+      max-height: none;
+      overflow: hidden;
+      padding: 72px 18px 18px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      text-align: center;
+    }
+
+    .viewer-profile-fullscreen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .viewer-profile-fullscreen .viewer-profile-pfp {
+      width: 92px;
+      height: 92px;
+    }
+
+    .profile-screen-back {
+      position: fixed;
+      top: max(16px, env(safe-area-inset-top));
+      left: 14px;
+      z-index: 10;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 14px;
+      color: white;
+      background: rgba(10,8,15,.72);
+      backdrop-filter: blur(18px);
+      font-size: 21px;
+    }
+
+    .personal-chat-fullscreen {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .personal-chat-title {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    #personalChatMessages {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 8px 2px 12px;
+    }
+
+    .private-message {
+      max-width: 84%;
+      padding: 10px 13px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .private-message.me {
+      align-self: flex-end;
+      background: linear-gradient(135deg,#8b5cf6,#7c3aed);
+      border-bottom-right-radius: 5px;
+    }
+
+    .private-message.them {
+      align-self: flex-start;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.06);
+      border-bottom-left-radius: 5px;
+    }
+
+    .private-empty {
+      margin: auto;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .rank-click-row {
+      cursor: pointer;
+      transition: background .18s ease, transform .18s ease;
+      border-radius: 12px;
+      padding-left: 7px;
+      padding-right: 7px;
+    }
+
+    .rank-click-row:hover {
+      background: rgba(168,85,247,.08);
+    }
+
+    @media(max-width:430px) {
+      #chatScreen .feature-screen-inner,
+      #liveChatScreen .feature-screen-inner {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+      #chatScreen #chatSection,
+      #liveChatScreen > .feature-screen-inner > .card {
+        padding: 14px 4px;
+      }
+    }
+
+    /* =====================================================
+       CARDS
+    ===================================================== */
+
+    .card {
+      margin-top: 14px;
+      padding: 18px;
+
+      border-radius: 22px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(31,24,44,.78),
+          rgba(17,13,24,.86)
+        );
+
+      border: 1px solid var(--border);
+
+      box-shadow:
+        0 18px 50px rgba(0,0,0,.22),
+        inset 0 1px rgba(255,255,255,.035);
+
+      backdrop-filter: blur(18px);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-title h2 {
+      font-size: 17px;
+      letter-spacing: -.3px;
+    }
+
+    .section-title span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    /* =====================================================
+       CHAT
+    ===================================================== */
+
+    #messages {
+      height: 300px;
+
+      overflow-y: auto;
+
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      padding-right: 3px;
+    }
+
+    #messages::-webkit-scrollbar,
+    #liveMessages::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    #messages::-webkit-scrollbar-thumb,
+    #liveMessages::-webkit-scrollbar-thumb {
+      background: #3b3047;
+      border-radius: 10px;
+    }
+
+    .message {
+      max-width: 84%;
+      padding: 10px 13px;
+
+      border-radius: 14px;
+
+      font-size: 13px;
+      line-height: 1.4;
+
+      word-break: break-word;
+    }
+
+    .message.user {
+      align-self: flex-end;
+
+      background:
+        linear-gradient(135deg,#8b5cf6,#7c3aed);
+
+      border-bottom-right-radius: 5px;
+    }
+
+    .message.bot {
+      align-self: flex-start;
+
+      background: rgba(255,255,255,.07);
+
+      border: 1px solid rgba(255,255,255,.06);
+
+      border-bottom-left-radius: 5px;
+    }
+
+    .message.typing {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .chat-input-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .chat-input {
+      flex: 1;
+
+      min-width: 0;
+
+      padding: 13px 14px;
+
+      color: white;
+
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.09);
+
+      border-radius: 13px;
+      outline: none;
+    }
+
+    .chat-input:focus {
+      border-color: rgba(168,85,247,.6);
+    }
+
+    .send-btn {
+      padding: 0 17px;
+
+      border: 0;
+      border-radius: 13px;
+
+      color: white;
+      font-weight: 700;
+
+      background: linear-gradient(
+        135deg,
+        #a855f7,
+        #7c3aed
+      );
+    }
+
+    .send-btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    /* =====================================================
+       LIVE CHAT ROOM
+    ===================================================== */
+
+    #liveMessages {
+      height: 290px;
+      overflow-y: auto;
+
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+
+      padding: 2px 2px 5px;
+    }
+
+    .live-message {
+      padding: 9px 11px;
+
+      border-radius: 13px;
+
+      background: rgba(255,255,255,.045);
+      border: 1px solid rgba(255,255,255,.045);
+
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .live-message .live-name {
+      color: #c084fc;
+      font-weight: 800;
+      margin-right: 6px;
+    }
+
+    .live-message.system {
+      color: var(--muted);
+      text-align: center;
+      font-size: 11px;
+    }
+
+    .live-typing {
+      display: none;
+      align-items: center;
+      gap: 7px;
+
+      margin-top: 8px;
+      padding: 6px 10px;
+
+      color: var(--muted);
+      font-size: 10px;
+      font-style: italic;
+    }
+
+    .live-typing.active {
+      display: flex;
+    }
+
+    .typing-dots {
+      display: inline-flex;
+      gap: 3px;
+    }
+
+    .typing-dots span {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #a855f7;
+
+      animation: liveTypingDot 1s infinite ease-in-out;
+    }
+
+    .typing-dots span:nth-child(2) {
+      animation-delay: .15s;
+    }
+
+    .typing-dots span:nth-child(3) {
+      animation-delay: .3s;
+    }
+
+    @keyframes liveTypingDot {
+      0%, 60%, 100% {
+        opacity: .25;
+        transform: translateY(0);
+      }
+
+      30% {
+        opacity: 1;
+        transform: translateY(-2px);
+      }
+    }
+
+    .live-input-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .live-input {
+      flex: 1;
+      min-width: 0;
+
+      padding: 12px 13px;
+
+      color: white;
+
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.09);
+
+      border-radius: 13px;
+      outline: none;
+    }
+
+    .live-send {
+      padding: 0 15px;
+
+      border: 0;
+      border-radius: 13px;
+
+      color: white;
+      font-weight: 700;
+
+      background:
+        linear-gradient(
+          135deg,
+          #ec4899,
+          #a855f7
+        );
+    }
+
+    .live-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .live-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 10px #22c55e;
+    }
+
+    /* =====================================================
+       PROFILE
+    ===================================================== */
+
+    .profile-box {
+      display: grid;
+      grid-template-columns: 58px 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .profile-avatar {
+      width: 58px;
+      height: 58px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 18px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #a855f7,
+          #7c3aed,
+          #ec4899
+        );
+
+      font-size: 22px;
+      font-weight: 800;
+
+      box-shadow:
+        0 10px 30px rgba(168,85,247,.22);
+    }
+
+    .profile-name {
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .profile-sub {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .profile-stat {
+      text-align: right;
+    }
+
+    .profile-points {
+      color: #d8b4fe;
+      font-weight: 900;
+      font-size: 17px;
+    }
+
+    .profile-stat small {
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    /* =====================================================
+       GAMES
+    ===================================================== */
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    .game-btn {
+      min-height: 70px;
+
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+
+      color: white;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.07),
+          rgba(255,255,255,.035)
+        );
+
+      transition: .2s ease;
+    }
+
+    .game-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(168,85,247,.4);
+      background: rgba(168,85,247,.1);
+    }
+
+    .game-icon {
+      display: block;
+      font-size: 23px;
+      margin-bottom: 5px;
+    }
+
+    .game-name {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .game-limit {
+      display: block;
+      color: #8f8498;
+      font-size: 9px;
+      margin-top: 3px;
+    }
+
+    .game-result {
+      min-height: 20px;
+      margin-top: 13px;
+
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    /* =====================================================
+       REWARD
+    ===================================================== */
+
+    .reward-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+
+      padding: 15px;
+
+      border-radius: 17px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(168,85,247,.12),
+          rgba(236,72,153,.07)
+        );
+
+      border: 1px solid rgba(168,85,247,.15);
+    }
+
+    .reward-info strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .reward-info span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .claim-btn {
+      flex-shrink: 0;
+
+      padding: 10px 13px;
+
+      border: 0;
+      border-radius: 11px;
+
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+
+      background: linear-gradient(
+        135deg,
+        #a855f7,
+        #ec4899
+      );
+    }
+
+    .claim-btn:disabled {
+      opacity: .55;
+    }
+
+    #rewardResult {
+      margin-top: 10px;
+      color: #c4b5fd;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    /* =====================================================
+       LEADERBOARD
+    ===================================================== */
+
+    .leader-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 12px 3px;
+
+      border-bottom: 1px solid rgba(255,255,255,.055);
+    }
+
+    .leader-row:last-child {
+      border-bottom: 0;
+    }
+
+    .leader-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .rank-badge {
+      width: 28px;
+      height: 28px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 9px;
+
+      background: rgba(255,255,255,.06);
+
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .leader-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .leader-points {
+      color: #c4b5fd;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .rank-click {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* =====================================================
+       LEGAL
+    ===================================================== */
+
+    .legal {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    .legal-card {
+      padding: 14px;
+
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 15px;
+
+      background: rgba(255,255,255,.035);
+
+      color: #ddd6e4;
+      text-decoration: none;
+
+      font-size: 12px;
+    }
+
+    .legal-card strong {
+      display: block;
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .legal-card span {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    footer {
+      padding: 25px 5px 5px;
+      text-align: center;
+      color: #6e6577;
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    footer strong {
+      color: #a99eae;
+    }
+
+    /* =====================================================
+       MODAL
+    ===================================================== */
+
+    .modal {
+      display: none;
+
+      position: fixed;
+      inset: 0;
+
+      z-index: 5000;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 18px;
+
+      background: rgba(0,0,0,.76);
+      backdrop-filter: blur(12px);
+    }
+
+    .modal-content {
+      width: 100%;
+      max-width: 410px;
+      max-height: 82vh;
+      overflow-y: auto;
+
+      padding: 24px;
+
+      border-radius: 23px;
+
+      background: #17121f;
+      border: 1px solid rgba(255,255,255,.1);
+
+      box-shadow: 0 30px 100px rgba(0,0,0,.65);
+
+      text-align: center;
+    }
+
+    .modal-content h3 {
+      font-size: 20px;
+    }
+
+    .modal-text {
+      margin: 13px 0 18px;
+
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .modal-option {
+      width: 100%;
+      margin-top: 8px;
+
+      padding: 12px;
+
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 12px;
+
+      color: white;
+      background: rgba(255,255,255,.05);
+    }
+
+    .close-btn {
+      width: 100%;
+      margin-top: 14px;
+
+      padding: 11px;
+
+      border: 0;
+      border-radius: 12px;
+
+      color: white;
+      background: rgba(255,255,255,.08);
+    }
+
+    /* =====================================================
+       PROFILE / RANK MODAL LIST
+    ===================================================== */
+
+    .rank-modal-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+
+      padding: 11px 4px;
+
+      border-bottom: 1px solid rgba(255,255,255,.06);
+
+      text-align: left;
+    }
+
+    .rank-modal-row:last-child {
+      border-bottom: 0;
+    }
+
+    .rank-modal-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .rank-modal-position {
+      width: 30px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .rank-modal-name {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .rank-modal-points {
+      color: #c4b5fd;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media(max-width: 430px) {
+
+      .container {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .hero {
+        min-height: 600px;
+        border-radius: 25px;
+      }
+
+      .hero h1 {
+        letter-spacing: -4px;
+      }
+
+      .creator-row {
+        align-items: flex-end;
+      }
+
+      .socials {
+        flex-direction: column;
+      }
+
+      .social {
+        padding: 6px 8px;
+      }
+
+      .profile-box {
+        grid-template-columns: 52px 1fr auto;
+      }
+
+      .profile-avatar {
+        width: 52px;
+        height: 52px;
+      }
+
+      .feature-launcher {
+        gap: 7px;
+      }
+
+      .feature-tile {
+        min-height: 105px;
+        border-radius: 18px;
+      }
+
+      .feature-icon {
+        width: 44px;
+        height: 44px;
+      }
+
+      .feature-name {
+        font-size: 10px;
+      }
+
+      .feature-sub {
+        font-size: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     USERNAME POPUP
+========================================================= -->
+
+<div id="entryScreen">
+
+  <div class="entry-box">
+
+    <div class="entry-logo">
+      eM
+    </div>
+
+    <h1>em<span>Lee</span></h1>
+
+    <p class="entry-sub">
+      welcome to the emLee community
+    </p>
+
+    <div class="entry-pfp-wrap">
+      <img id="entryPfpPreview" class="entry-pfp" src="./pfp.JPG" alt="profile picture">
+      <label class="pfp-upload">
+        choose profile picture
+        <input id="pfpInput" type="file" accept="image/*" hidden>
+      </label>
+    </div>
+
+    <input
+      class="entry-input"
+      id="usernameInput"
+      type="text"
+      maxlength="24"
+      placeholder="enter your username"
+      autocomplete="off"
+    >
+
+    <button class="enter-btn" onclick="enterApp()">
+      Enter emLee
+    </button>
+
+    <div class="entry-note">
+      your username is used to personalize your experience.
+    </div>
+
+  </div>
+
+</div>
+
+<!-- =========================================================
+     MAIN APP
+========================================================= -->
+
+<div id="app">
+
+  <div class="container">
+
+    <!-- TOP NAV -->
+
+    <nav class="top-nav">
+
+      <div class="brand">
+        em<span>Lee</span>
+      </div>
+
+      <div
+        class="nav-rank rank-click"
+        onclick="openRankModal()"
+        title="open leaderboard"
+      >
+        🏆 rank
+        <span class="rank-number" id="topRank">#—</span>
+      </div>
+
+    </nav>
+
+    <!-- =====================================================
+         HERO / HOME
+    ===================================================== -->
+
+    <section class="hero">
+
+      <div class="hero-glow"></div>
+
+      <div class="hero-content">
+
+        <div class="live-pill">
+          <span class="live-dot"></span>
+          emlieey live community
+        </div>
+
+        <h1>emLee</h1>
+
+        <p class="hero-tagline">
+          a little space for conversations, games,
+          rewards and the emlieey community.
+        </p>
+
+        <div class="creator-row">
+
+          <div class="creator">
+            created by<br>
+            <strong>Lee · liyaasmv</strong>
+          </div>
+
+          <div class="socials">
+
+            <a
+              class="social instagram"
+              href="https://instagram.com/liyaasmv"
+              target="_blank"
+              rel="noopener"
+            >
+
+              <svg viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+                <circle cx="12" cy="12" r="4"></circle>
+                <circle cx="17.5" cy="6.5" r="1"></circle>
+              </svg>
+
+              liyaasmv
+
+            </a>
+
+            <a
+              class="social youtube"
+              href="https://youtube.com/@liyaasmv"
+              target="_blank"
+              rel="noopener"
+            >
+
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.5v-7l6.2 3.5-6.2 3.5-6.2 3.5z"/>
+              </svg>
+
+              liyaasmv
+
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- =====================================================
+         3 FEATURE ICONS
+    ===================================================== -->
+
+    <section class="feature-launcher">
+
+      <button
+        class="feature-tile"
+        onclick="openFeature('chatScreen')"
+      >
+
+        <span class="feature-icon feature-image" style="background-image:url('./chat.jpg')"></span>
+
+        <span class="feature-name">
+          Chat with emLee
+        </span>
+
+        <span class="feature-sub">
+          talk with emLee
+        </span>
+
+      </button>
+
+      <button
+        class="feature-tile"
+        onclick="openFeature('gamesScreen')"
+      >
+
+        <span class="feature-icon feature-image" style="background-image:url('./game.jpg')"></span>
+
+        <span class="feature-name">
+          Games
+        </span>
+
+        <span class="feature-sub">
+          play & earn
+        </span>
+
+      </button>
+
+      <button
+        class="feature-tile"
+        onclick="openFeature('liveChatScreen')"
+      >
+
+        <span class="feature-icon feature-image" style="background-image:url('./live.jpg')"></span>
+
+        <span class="feature-name">
+          Live Chat Room
+        </span>
+
+        <span class="feature-sub">
+          community room
+        </span>
+
+      </button>
+
+    </section>
+
+    <!-- =====================================================
+         PROFILE
+    ===================================================== -->
+
+    <section class="card">
+
+      <div class="section-title">
+        <h2>👤 your profile</h2>
+        <span id="profileRankText">rank #—</span>
+      </div>
+
+      <div class="profile-box">
+
+        <img
+          class="profile-avatar profile-avatar-img"
+          id="profileAvatar"
+          src="./pfp.JPG"
+          alt="profile picture"
+        >
+
+        <div>
+          <div
+            class="profile-name"
+            id="profileName"
+          >
+            guest
+          </div>
+
+          <div
+            class="profile-sub"
+            id="profileSub"
+          >
+            emLee community member
+          </div>
+
+          <div class="profile-level-row">
+            <span id="profileLevel">level 1</span>
+            <span id="profileXP">0 xp</span>
+          </div>
+        </div>
+
+        <div class="profile-stat">
+
+          <div
+            class="profile-points"
+            id="profilePoints"
+          >
+            0
+          </div>
+
+          <small>points</small>
+
+        </div>
+
+      </div>
+
+      <button class="personal-chat-btn" onclick="openFeature('chatScreen')">
+        Personal Chat
+      </button>
+
+    </section>
+
+    <!-- =====================================================
+         CHAT WITH EMLIEEY FULL SCREEN
+    ===================================================== -->
+
+    <div
+      class="feature-screen"
+      id="chatScreen"
+    >
+
+      <div class="feature-screen-inner">
+
+        <button
+          class="feature-back"
+          onclick="closeFeature('chatScreen')"
+          aria-label="go back"
+        >
+          ←
+        </button>
+
+        <section
+          class="card"
+          id="chatSection"
+        >
+
+          <div class="section-title">
+
+            <h2>💬 chat with emLee</h2>
+
+            <span id="chatUser">
+              guest
+            </span>
+
+          </div>
+
+          <div id="messages"></div>
+
+          <div class="chat-input-group">
+
+            <input
+              class="chat-input"
+              id="chatInput"
+              type="text"
+              placeholder="message emLee..."
+              autocomplete="off"
+            >
+
+            <button
+              class="send-btn"
+              id="sendButton"
+              onclick="sendMessage()"
+            >
+              Send
+            </button>
+
+          </div>
+
+        </section>
+
+      </div>
+
+    </div>
+
+    <!-- =====================================================
+         LIVE COMMUNITY CHAT FULL SCREEN
+    ===================================================== -->
+
+    <div
+      class="feature-screen"
+      id="liveChatScreen"
+    >
+
+      <div class="feature-screen-inner">
+
+        <button
+          class="feature-back"
+          onclick="closeFeature('liveChatScreen')"
+          aria-label="go back"
+        >
+          ←
+        </button>
+
+        <section class="card live-room-panel">
+
+          <div class="section-title">
+
+            <h2>🔴 live chat room</h2>
+
+            <span class="live-status">
+              <i class="live-status-dot"></i>
+              live
+            </span>
+
+          </div>
+
+          <div id="liveMessages">
+
+            <div class="live-message system">
+              emLee community room is live...
+            </div>
+
+          </div>
+
+          <div
+            class="live-typing"
+            id="liveTyping"
+          >
+
+            <span id="liveTypingName">
+              someone
+            </span>
+
+            is typing
+
+            <span class="typing-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+
+          </div>
+
+          <div class="live-input-group">
+
+            <input
+              class="live-input"
+              id="liveChatInput"
+              type="text"
+              maxlength="300"
+              placeholder="say something to the community..."
+              autocomplete="off"
+            >
+
+            <button
+              class="live-send"
+              onclick="sendLiveMessage()"
+            >
+              Send
+            </button>
+
+          </div>
+
+        </section>
+
+      </div>
+
+    </div>
+
+    <!-- =====================================================
+         GAMES FULL SCREEN
+    ===================================================== -->
+
+    <div
+      class="feature-screen"
+      id="gamesScreen"
+    >
+
+      <div class="feature-screen-inner">
+
+        <button
+          class="feature-back"
+          onclick="closeFeature('gamesScreen')"
+          aria-label="go back"
+        >
+          ←
+        </button>
+
+        <section class="card">
+
+          <div class="section-title">
+
+            <h2>🎮 games</h2>
+
+            <span>limited plays</span>
+
+          </div>
+
+          <div class="games-grid">
+
+            <button
+              class="game-btn"
+              onclick="playQuiz()"
+            >
+              <span class="game-icon">🧠</span>
+              <span class="game-name">Quiz</span>
+              <span class="game-limit">2 / day</span>
+            </button>
+
+            <button
+              class="game-btn"
+              onclick="playFlip()"
+            >
+              <span class="game-icon">🪙</span>
+              <span class="game-name">Coin Flip</span>
+              <span class="game-limit">3 / day</span>
+            </button>
+
+            <button
+              class="game-btn"
+              onclick="playGuess()"
+            >
+              <span class="game-icon">🔢</span>
+              <span class="game-name">Guess Number</span>
+              <span class="game-limit">2 / day</span>
+            </button>
+
+            <button
+              class="game-btn"
+              onclick="spinWheel()"
+            >
+              <span class="game-icon">🎡</span>
+              <span class="game-name">Spin Wheel</span>
+              <span class="game-limit">1 / day</span>
+            </button>
+
+          </div>
+
+          <div
+            class="game-result"
+            id="gameResult"
+          ></div>
+
+        </section>
+
+      </div>
+
+    </div>
+
+    <!-- =====================================================
+         DAILY REWARD
+    ===================================================== -->
+
+    <section class="card">
+
+      <div class="section-title">
+
+        <h2>🎁 daily reward</h2>
+
+        <span>once a day</span>
+
+      </div>
+
+      <div class="reward-box">
+
+        <div class="reward-info">
+
+          <strong>daily community bonus</strong>
+
+          <span>
+            claim your daily points and keep your streak alive.
+          </span>
+
+        </div>
+
+        <button
+          class="claim-btn"
+          id="claimButton"
+          onclick="claimReward()"
+        >
+          Claim
+        </button>
+
+      </div>
+
+      <div id="rewardResult"></div>
+
+    </section>
+
+    <!-- =====================================================
+         LEADERBOARD
+    ===================================================== -->
+
+    <section class="card">
+
+      <div class="section-title">
+
+        <h2>🏆 leaderboard</h2>
+
+        <span
+          class="rank-click"
+          onclick="openRankModal()"
+        >
+          view all →
+        </span>
+
+      </div>
+
+      <div id="leaderboardList">
+
+        <div
+          style="
+            text-align:center;
+            color:#817788;
+            font-size:12px;
+            padding:15px;
+          "
+        >
+          loading ranks...
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- =====================================================
+         ABOUT EMLIEEY
+    ===================================================== -->
+
+    <section class="card">
+
+      <div class="section-title">
+        <h2>✨ emLee</h2>
+        <span>community space</span>
+      </div>
+
+      <p
+        style="
+          color:var(--muted);
+          font-size:12px;
+          line-height:1.7;
+        "
+      >
+        emLee is the community space around Emlieey Live —
+        a place for live conversations, games, rewards,
+        rankings and community interaction.
+      </p>
+
+    </section>
+
+    <!-- =====================================================
+         PRIVACY / TERMS
+    ===================================================== -->
+
+    <section class="card">
+
+      <div class="section-title">
+
+        <h2>📄 information</h2>
+
+        <span>emLee</span>
+
+      </div>
+
+      <div class="legal">
+
+        <a
+          class="legal-card"
+          href="privacy.html"
+        >
+          <strong>Privacy Policy</strong>
+          <span>how emLee handles information</span>
+        </a>
+
+        <a
+          class="legal-card"
+          href="terms.html"
+        >
+          <strong>Terms & Conditions</strong>
+          <span>rules for using emLee</span>
+        </a>
+
+      </div>
+
+    </section>
+
+    <!-- =====================================================
+         FOOTER
+    ===================================================== -->
+
+    <footer>
+
+      <strong>emLee</strong> · created by Lee (liyaasmv)
+
+      <br>
+
+      © <span id="currentYear"></span> emLee · Emlieey Live
+
+    </footer>
+
+  </div>
+
+</div>
+
+<!-- =========================================================
+     GAME MODAL
+========================================================= -->
+
+<div
+  class="modal"
+  id="gameModal"
+>
+
+  <div class="modal-content">
+
+    <h3 id="modalTitle">
+      Game
+    </h3>
+
+    <div
+      class="modal-text"
+      id="modalContent"
+    ></div>
+
+    <button
+      class="close-btn"
+      onclick="closeGameModal()"
+    >
+      Close
+    </button>
+
+  </div>
+
+</div>
+
+<!-- =========================================================
+     VIEWER PROFILE MODAL
+========================================================= -->
+
+<div class="modal" id="viewerProfileModal">
+  <div class="modal-content viewer-profile-fullscreen">
+    <button class="profile-screen-back" onclick="closeViewerProfile()" aria-label="go back">←</button>
+    <img id="viewerProfilePfp" class="viewer-profile-pfp" src="./pfp.JPG" alt="profile picture">
+    <h3 id="viewerProfileName">viewer</h3>
+    <div class="viewer-profile-grid">
+      <div><strong id="viewerProfileRank">#—</strong><span>rank</span></div>
+      <div><strong id="viewerProfileLevel">1</strong><span>level</span></div>
+      <div><strong id="viewerProfileXP">0</strong><span>xp</span></div>
+      <div><strong id="viewerProfilePoints">0</strong><span>points</span></div>
+    </div>
+    <button class="personal-chat-btn" id="viewerPersonalChatBtn">Personal Chat</button>
+  </div>
+</div>
+
+<!-- =========================================================
+     PERSONAL CHAT
+========================================================= -->
+
+<div class="feature-screen" id="personalChatScreen">
+  <div class="personal-chat-fullscreen">
+    <button class="profile-screen-back" onclick="closePersonalChat()" aria-label="go back">←</button>
+    <div class="personal-chat-title">
+      <h2 id="personalChatTitle">personal chat</h2>
+      <span id="personalChatStatus" style="color:var(--muted);font-size:10px;">online chat</span>
+    </div>
+    <div id="personalChatMessages">
+      <div class="private-empty">start a private conversation...</div>
+    </div>
+    <div class="chat-input-group">
+      <input class="chat-input" id="personalChatInput" type="text" maxlength="500" placeholder="message..." autocomplete="off">
+      <button class="send-btn" id="personalChatSendButton" onclick="sendPersonalChatMessage()">Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     RANK MODAL
+========================================================= -->
+
+<div
+  class="modal"
+  id="rankModal"
+>
+
+  <div class="modal-content">
+
+    <h3>🏆 community ranks</h3>
+
+    <div
+      class="modal-text"
+      style="margin-bottom:10px;"
+    >
+      top emLee community members
+    </div>
+
+    <div id="fullRankList">
+      <div
+        style="
+          color:#817788;
+          font-size:12px;
+          padding:15px;
+        "
+      >
+        loading...
+      </div>
+    </div>
+
+    <button
+      class="close-btn"
+      onclick="closeRankModal()"
+    >
+      Close
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+
+/* =========================================================
+   WORKER CONFIG
+========================================================= */
+
+const WORKER_URL =
+  "https://emlieey-ai.liyasmuhammedmv.workers.dev";
+
+/*
+  IMPORTANT:
+  The Worker is the backend.
+  Do not put GEMINI_API_KEY in this HTML.
+*/
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+const $ = (id) =>
+  document.getElementById(id);
+
+let currentUser = null;
+let isSending = false;
+let isLiveSending = false;
+let guessNumber = null;
+let selectedPfp = localStorage.getItem("emlee_pfp") || "./pfp.JPG";
+
+let leaderboardCache = [];
+
+const GAME_LIMITS = {
+  quiz: 2,
+  flip: 3,
+  guess: 2,
+  wheel: 1
+};
+
+/* =========================================================
+   FEATURE SCREENS
+========================================================= */
+
+let activeFeature =
+  null;
+
+function openFeature(
+  featureId
+) {
+
+  const screen =
+    $(featureId);
+
+  if (!screen) return;
+
+  if (activeFeature &&
+      activeFeature !== featureId) {
+
+    const previous =
+      $(activeFeature);
+
+    if (previous) {
+      previous.classList.remove(
+        "active"
+      );
+    }
+
+  }
+
+  screen.classList.add(
+    "active"
+  );
+
+  activeFeature =
+    featureId;
+
+  document.body.classList.add(
+    "feature-open"
+  );
+
+  const inner =
+    screen.querySelector(
+      ".feature-screen-inner"
+    );
+
+  if (inner) {
+    inner.scrollTop = 0;
+  }
+
+}
+
+function closeFeature(
+  featureId
+) {
+
+  const screen =
+    $(featureId);
+
+  if (!screen) return;
+
+  screen.classList.remove(
+    "active"
+  );
+
+  if (
+    activeFeature ===
+    featureId
+  ) {
+
+    activeFeature =
+      null;
+
+  }
+
+  document.body.classList.remove(
+    "feature-open"
+  );
+
+}
+
+document.addEventListener(
+  "keydown",
+  function(e) {
+
+    if (e.key === "Escape" && $("personalChatScreen")?.classList.contains("active")) {
+      closePersonalChat();
+      return;
+    }
+
+    if (
+      e.key === "Escape" &&
+      activeFeature
+    ) {
+
+      closeFeature(
+        activeFeature
+      );
+
+    }
+
+  }
+);
+
+/* =========================================================
+   USERNAME
+========================================================= */
+
+function getSavedUsername() {
+
+  return localStorage.getItem(
+    "emlee_user"
+  ) || "";
+
+}
+
+function normalizeUsername(name) {
+
+  return (name || "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .slice(0, 24);
+
+}
+
+function enterApp() {
+
+  const input =
+    $("usernameInput");
+
+  const username =
+    normalizeUsername(
+      input.value
+    );
+
+  if (!username) {
+
+    input.focus();
+
+    input.style.borderColor =
+      "#ef4444";
+
+    setTimeout(() => {
+      input.style.borderColor = "";
+    }, 900);
+
+    return;
+  }
+
+  localStorage.setItem(
+    "emlee_user",
+    username
+  );
+
+  currentUser = {
+    username: username
+  };
+
+  openApp();
+
+}
+
+function openApp() {
+
+  if (!currentUser) {
+
+    const saved =
+      getSavedUsername();
+
+    if (!saved) return;
+
+    currentUser = {
+      username: saved
+    };
+
+  }
+
+  const username =
+    currentUser.username;
+
+  $("chatUser").textContent =
+    username;
+
+  $("profileName").textContent =
+    username;
+
+  const profileAvatar = $("profileAvatar");
+  if (profileAvatar) profileAvatar.src = selectedPfp || "./pfp.JPG";
+  const entryPreview = $("entryPfpPreview");
+  if (entryPreview) entryPreview.src = selectedPfp || "./pfp.JPG";
+
+  $("entryScreen").style.display =
+    "none";
+
+  $("app").style.display =
+    "block";
+
+  document.body.style.overflow =
+    "auto";
+
+  loadProfile();
+  loadLeaderboard();
+  loadLiveChat();
+  checkBackendStatus();
+
+}
+
+$("usernameInput").addEventListener(
+  "keydown",
+  function(e) {
+
+    if (e.key === "Enter") {
+      enterApp();
+    }
+
+  }
+);
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(str) {
+
+  return (str || "").replace(
+    /[&<>'"]/g,
+
+    tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag] || tag)
+
+  );
+
+}
+
+/* =========================================================
+   WORKER API
+========================================================= */
+
+async function apiRequest(
+  path,
+  options = {}
+) {
+
+  const url =
+    WORKER_URL +
+    path;
+
+  const res =
+    await fetch(
+      url,
+      {
+        ...options,
+
+        headers: {
+          "Content-Type":
+            "application/json",
+          ...(options.headers || {})
+        }
+      }
+    );
+
+  let data = {};
+
+  try {
+    data =
+      await res.json();
+  } catch {
+    data = {};
+  }
+
+  if (!res.ok) {
+
+    throw new Error(
+      data.error ||
+      data.message ||
+      "HTTP " + res.status
+    );
+
+  }
+
+  return data;
+
+}
+
+/* =========================================================
+   CHAT WITH EMLIEEY
+========================================================= */
+
+async function sendMessage() {
+
+  if (isSending) return;
+
+  const input =
+    $("chatInput");
+
+  const text =
+    input.value.trim();
+
+  if (!text) return;
+
+  const username =
+    currentUser
+      ? currentUser.username
+      : getSavedUsername();
+
+  if (!username) {
+
+    showEntry();
+
+    return;
+  }
+
+  input.value = "";
+
+  appendMessage(
+    text,
+    "user"
+  );
+
+  isSending = true;
+
+  $("sendButton").disabled =
+    true;
+
+  const typingId =
+    appendMessage(
+      "emLee is typing...",
+      "bot typing"
+    );
+
+  try {
+
+    const response =
+      await apiRequest(
+        "/chat",
+        {
+          method: "POST",
+
+          body:
+            JSON.stringify({
+
+              message: text,
+
+              username:
+                username
+
+            })
+        }
+      );
+
+    removeMessage(
+      typingId
+    );
+
+    const botReply =
+      response.reply ||
+      response.message ||
+      "hmm connection scene und 😭";
+
+    appendMessage(
+      botReply,
+      "bot"
+    );
+
+    if (response.user) {
+
+      currentUser =
+        {
+          ...currentUser,
+          ...response.user
+        };
+
+    }
+
+    await loadProfile();
+
+  } catch (error) {
+
+    console.error(
+      "Emlieey Chat Error:",
+      error
+    );
+
+    removeMessage(
+      typingId
+    );
+
+    appendMessage(
+      "connection scene aan... pinne try cheyy 😭",
+      "bot"
+    );
+
+  } finally {
+
+    isSending = false;
+
+    $("sendButton").disabled =
+      false;
+
+    input.focus();
+
+  }
+
+}
+
+function appendMessage(
+  text,
+  senderClass
+) {
+
+  const container =
+    $("messages");
+
+  const element =
+    document.createElement(
+      "div"
+    );
+
+  const msgId =
+    "msg_" +
+    Date.now() +
+    "_" +
+    Math.random()
+      .toString(36)
+      .substr(2,4);
+
+  element.id =
+    msgId;
+
+  element.className =
+    "message " +
+    senderClass;
+
+  element.textContent =
+    text;
+
+  container.appendChild(
+    element
+  );
+
+  container.scrollTop =
+    container.scrollHeight;
+
+  return msgId;
+
+}
+
+function removeMessage(
+  msgId
+) {
+
+  const el =
+    $(msgId);
+
+  if (el) {
+    el.remove();
+  }
+
+}
+
+$("chatInput").addEventListener(
+  "keydown",
+  function(e) {
+
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+
+  }
+);
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+async function loadProfile() {
+
+  const username =
+    currentUser
+      ? currentUser.username
+      : getSavedUsername();
+
+  if (!username) return;
+
+  try {
+
+    const data =
+      await apiRequest(
+        "/profile?username=" +
+        encodeURIComponent(
+          username
+        )
+      );
+
+    const user =
+      data.user ||
+      data.profile ||
+      data;
+
+    const points =
+      Number(
+        user.points || 0
+      );
+
+    const rank =
+      user.rank ||
+      user.position ||
+      "—";
+
+    $("profileName").textContent =
+      user.username ||
+      username;
+
+    $("profilePoints").textContent =
+      points.toLocaleString();
+
+    $("profileRankText").textContent =
+      "rank #" + rank;
+
+    $("profileSub").textContent =
+      "emLee community member";
+
+    const level = Number(user.level || user.rankLevel || 1);
+    const xp = Number(user.xp || user.experience || 0);
+    $("profileLevel").textContent = "level " + level;
+    $("profileXP").textContent = xp.toLocaleString() + " xp";
+
+    currentUser = {
+      ...currentUser,
+      username:
+        user.username ||
+        username,
+      points: points,
+      rank: rank
+    };
+
+    localStorage.setItem(
+      "emlee_user",
+      currentUser.username
+    );
+
+  } catch (error) {
+
+    console.log(
+      "Profile unavailable:",
+      error
+    );
+
+  }
+
+}
+
+/* =========================================================
+   DAILY REWARD
+========================================================= */
+
+async function claimReward() {
+
+  const target =
+    $("rewardResult");
+
+  const button =
+    $("claimButton");
+
+  const username =
+    currentUser
+      ? currentUser.username
+      : getSavedUsername();
+
+  if (!username) {
+
+    showEntry();
+
+    return;
+  }
+
+  button.disabled =
+    true;
+
+  target.textContent =
+    "claiming your reward...";
+
+  try {
+
+    const data =
+      await apiRequest(
+        "/reward",
+        {
+          method: "POST",
+
+          body:
+            JSON.stringify({
+              username:
+                username
+            })
+        }
+      );
+
+    target.textContent =
+      data.message ||
+      "daily reward claimed! 🎉";
+
+    await loadProfile();
+    await loadLeaderboard();
+
+  } catch (error) {
+
+    target.textContent =
+      error.message ||
+      "reward unavailable right now.";
+
+  } finally {
+
+    button.disabled =
+      false;
+
+  }
+
+}
+
+/* =========================================================
+   LIMITED GAME SYSTEM
+========================================================= */
+
+function todayKey() {
+
+  const date =
+    new Date();
+
+  return (
+    date.getFullYear() +
+    "-" +
+    String(
+      date.getMonth() + 1
+    ).padStart(2,"0") +
+    "-" +
+    String(
+      date.getDate()
+    ).padStart(2,"0")
+  );
+
+}
+
+function getGameUsage() {
+
+  const username =
+    getSavedUsername() ||
+    "guest";
+
+  const key =
+    "emlee_game_usage_" +
+    username +
+    "_" +
+    todayKey();
+
+  try {
+
+    return JSON.parse(
+      localStorage.getItem(
+        key
+      ) || "{}"
+    );
+
+  } catch {
+
+    return {};
+
+  }
+
+}
+
+function saveGameUsage(
+  usage
+) {
+
+  const username =
+    getSavedUsername() ||
+    "guest";
+
+  const key =
+    "emlee_game_usage_" +
+    username +
+    "_" +
+    todayKey();
+
+  localStorage.setItem(
+    key,
+    JSON.stringify(
+      usage
+    )
+  );
+
+}
+
+function canPlayGame(
+  game
+) {
+
+  const usage =
+    getGameUsage();
+
+  const used =
+    Number(
+      usage[game] || 0
+    );
+
+  const limit =
+    GAME_LIMITS[game];
+
+  if (
+    typeof limit ===
+    "undefined"
+  ) {
+
+    return true;
+
+  }
+
+  if (used >= limit) {
+
+    $("gameResult").textContent =
+      "daily limit reached. come back tomorrow ✨";
+
+    return false;
+
+  }
+
+  usage[game] =
+    used + 1;
+
+  saveGameUsage(
+    usage
+  );
+
+  return true;
+
+}
+
+/* =========================================================
+   COIN FLIP
+========================================================= */
+
+function playFlip() {
+
+  if (!canPlayGame("flip"))
+    return;
+
+  const result =
+    Math.random() > .5
+      ? "heads"
+      : "tails";
+
+  $("gameResult").textContent =
+    "🪙 " + result + "!";
+
+}
+
+/* =========================================================
+   GUESS NUMBER
+========================================================= */
+
+function playGuess() {
+
+  if (!canPlayGame("guess"))
+    return;
+
+  guessNumber =
+    Math.floor(
+      Math.random() * 10
+    ) + 1;
+
+  openGameModal(
+    "🔢 Guess Number",
+
+    `
+      <div>
+        <p class="modal-text">
+          guess a number between 1 and 10.
+        </p>
+
+        <input
+          id="guessInput"
+          type="number"
+          min="1"
+          max="10"
+          placeholder="your guess"
+          style="
+            width:100%;
+            padding:13px;
+            border-radius:12px;
+            border:1px solid rgba(255,255,255,.1);
+            background:rgba(255,255,255,.06);
+            color:white;
+            outline:none;
+            text-align:center;
+          "
+        >
+
+        <button
+          class="enter-btn"
+          onclick="checkGuess()"
+        >
+          Guess
+        </button>
+      </div>
+    `
+  );
+
+}
+
+function checkGuess() {
+
+  const value =
+    Number(
+      $("guessInput").value
+    );
+
+  if (!value) return;
+
+  if (value === guessNumber) {
+
+    openGameModal(
+      "🎉 Correct!",
+      `
+        <p class="modal-text">
+          perfect guess! nice one.
+        </p>
+      `
+    );
+
+  } else {
+
+    openGameModal(
+      "😅 Not quite",
+      `
+        <p class="modal-text">
+          the number was ${guessNumber}.
+          try again tomorrow!
+        </p>
+      `
+    );
+
+  }
+
+}
+
+/* =========================================================
+   MANGlish QUIZ
+========================================================= */
+
+const QUIZ_QUESTIONS = [
+
+  {
+    q: "emLee community inte creator aara?",
+    options: [
+      "lee",
+      "emlieey",
+      "srrghhae"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "emlieey evide aanu live aayi chat cheyyunne?",
+    options: [
+      "emLee community",
+      "moon",
+      "school"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "emLee website inte main vibe entha?",
+    options: [
+      "community",
+      "shopping",
+      "news"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "daily reward ethra pravashyam claim cheyyam?",
+    options: [
+      "once a day",
+      "10 times",
+      "never"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "emLee il points enthinu use cheyyum?",
+    options: [
+      "community ranking",
+      "wifi",
+      "bus ticket"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "emlieeyude vibe engane aanu?",
+    options: [
+      "cool & cheeky",
+      "boring",
+      "super formal"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "emLee il games undoo?",
+    options: [
+      "yes",
+      "illa",
+      "ariyilla"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "top community members evide kaanam?",
+    options: [
+      "leaderboard",
+      "footer",
+      "privacy page"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "emLee website inte short name entha?",
+    options: [
+      "emLee",
+      "xyz",
+      "chatbox"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "emlieey oru formal customer support bot aano?",
+    options: [
+      "alla",
+      "athe",
+      "maybe"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "community chat room il entha cheyyan pattum?",
+    options: [
+      "chat cheyyam",
+      "sleep cheyyam",
+      "exam ezhutham"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "rank nokkan mukalile badge click cheythal?",
+    options: [
+      "leaderboard open aavum",
+      "music play aavum",
+      "logout aavum"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "emLee il username enthinu aanu?",
+    options: [
+      "personalize cheyyan",
+      "wifi connect cheyyan",
+      "camera open cheyyan"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "emlieeyude replies engane aavanam?",
+    options: [
+      "natural & casual",
+      "long essay",
+      "formal letter"
+    ],
+    answer: 0
+  },
+
+  {
+    q: "emLee il daily bonus undoo?",
+    options: [
+      "yes",
+      "illa",
+      "only sunday"
+    ],
+    answer: 0
+  }
+
+];
+
+let currentQuiz =
+  null;
+
+function playQuiz() {
+
+  if (!canPlayGame("quiz"))
+    return;
+
+  currentQuiz =
+    QUIZ_QUESTIONS[
+      Math.floor(
+        Math.random() *
+        QUIZ_QUESTIONS.length
+      )
+    ];
+
+  const buttons =
+    currentQuiz.options
+      .map(
+        (option,index) => `
+          <button
+            class="modal-option"
+            onclick="quizAnswer(${index})"
+          >
+            ${escapeHTML(
+              option
+            )}
+          </button>
+        `
+      )
+      .join("");
+
+  openGameModal(
+
+    "🧠 Manglish Quiz",
+
+    `
+      <p class="modal-text">
+        ${escapeHTML(
+          currentQuiz.q
+        )}
+      </p>
+
+      ${buttons}
+    `
+  );
+
+}
+
+function quizAnswer(
+  index
+) {
+
+  if (!currentQuiz)
+    return;
+
+  if (
+    index ===
+    currentQuiz.answer
+  ) {
+
+    openGameModal(
+      "🎉 correct!",
+      `
+        <p class="modal-text">
+          pwoli! correct answer 🔥
+        </p>
+      `
+    );
+
+  } else {
+
+    openGameModal(
+      "😅 wrong!",
+      `
+        <p class="modal-text">
+          close aayirunnu 😭 pinne try cheyyam.
+        </p>
+      `
+    );
+
+  }
+
+  currentQuiz =
+    null;
+
+}
+
+/* =========================================================
+   SPIN WHEEL
+========================================================= */
+
+function spinWheel() {
+
+  if (!canPlayGame("wheel"))
+    return;
+
+  const rewards = [
+    "+10 points",
+    "+25 points",
+    "+50 points",
+    "+100 points",
+    "good luck next time"
+  ];
+
+  const reward =
+    rewards[
+      Math.floor(
+        Math.random() *
+        rewards.length
+      )
+    ];
+
+  $("gameResult").textContent =
+    "🎡 " + reward;
+
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function openGameModal(
+  title,
+  contentHTML
+) {
+
+  $("modalTitle")
+    .textContent =
+    title;
+
+  $("modalContent")
+    .innerHTML =
+    contentHTML;
+
+  $("gameModal")
+    .style.display =
+    "flex";
+
+}
+
+function closeGameModal() {
+
+  $("gameModal")
+    .style.display =
+    "none";
+
+}
+
+/* =========================================================
+   LEADERBOARD
+========================================================= */
+
+async function loadLeaderboard() {
+
+  const container =
+    $("leaderboardList");
+
+  try {
+
+    const data =
+      await apiRequest(
+        "/leaderboard",
+        {
+          method: "GET"
+        }
+      );
+
+    const list =
+      data.leaderboard ||
+      data.users ||
+      [];
+
+    leaderboardCache =
+      Array.isArray(list)
+        ? list
+        : [];
+
+    if (
+      leaderboardCache.length ===
+      0
+    ) {
+
+      container.innerHTML =
+        `
+          <div style="
+            text-align:center;
+            color:#817788;
+            padding:15px;
+            font-size:12px;
+          ">
+            no leaderboard data yet
+          </div>
+        `;
+
+      $("topRank").textContent =
+        "#—";
+
+      return;
+
+    }
+
+    container.innerHTML =
+      "";
+
+    let foundRank =
+      false;
+
+    leaderboardCache
+      .slice(0, 10)
+      .forEach(
+        (player,index) => {
+
+          const rank =
+            index + 1;
+
+          const row =
+            document.createElement(
+              "div"
+            );
+
+          row.className =
+            "leader-row rank-click-row";
+
+          row.onclick = function() {
+            openViewerProfile(player.username || "unknown");
+          };
+
+          let badge =
+            "#" + rank;
+
+          if (rank === 1)
+            badge = "🥇";
+
+          if (rank === 2)
+            badge = "🥈";
+
+          if (rank === 3)
+            badge = "🥉";
+
+          row.innerHTML = `
+
+            <div class="leader-left">
+
+              <div class="rank-badge">
+                ${badge}
+              </div>
+
+              <div class="leader-name">
+                ${escapeHTML(
+                  player.username ||
+                  "unknown"
+                )}
+              </div>
+
+            </div>
+
+            <div class="leader-points">
+              ${Number(
+                player.points || 0
+              ).toLocaleString()}
+              PTS
+            </div>
+
+          `;
+
+          container.appendChild(
+            row
+          );
+
+          if (
+            currentUser &&
+            String(
+              player.username || ""
+            ).toLowerCase() ===
+            String(
+              currentUser.username
+            ).toLowerCase()
+          ) {
+
+            $("topRank").textContent =
+              "#" + rank;
+
+            $("profileRankText").textContent =
+              "rank #" + rank;
+
+            foundRank =
+              true;
+
+          }
+
+        }
+      );
+
+    if (!foundRank) {
+
+      try {
+
+        const profile =
+          await apiRequest(
+            "/profile?username=" +
+            encodeURIComponent(
+              currentUser.username
+            )
+          );
+
+        const rank =
+          profile.user?.rank ||
+          profile.rank;
+
+        if (rank) {
+
+          $("topRank").textContent =
+            "#" + rank;
+
+          $("profileRankText").textContent =
+            "rank #" + rank;
+
+        }
+
+      } catch {}
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Leaderboard Error:",
+      error
+    );
+
+    container.innerHTML =
+      `
+        <div style="
+          text-align:center;
+          color:#ef4444;
+          padding:15px;
+          font-size:12px;
+        ">
+          failed to load leaderboard
+        </div>
+      `;
+
+  }
+
+}
+
+/* =========================================================
+   FULL RANK MODAL
+========================================================= */
+
+async function openRankModal() {
+
+  $("rankModal")
+    .style.display =
+    "flex";
+
+  const container =
+    $("fullRankList");
+
+  container.innerHTML =
+    `
+      <div style="
+        color:#817788;
+        font-size:12px;
+        padding:15px;
+      ">
+        loading ranks...
+      </div>
+    `;
+
+  try {
+
+    if (
+      !leaderboardCache.length
+    ) {
+
+      await loadLeaderboard();
+
+    }
+
+    const list =
+      leaderboardCache;
+
+    if (!list.length) {
+
+      container.innerHTML =
+        `
+          <div style="
+            color:#817788;
+            font-size:12px;
+            padding:15px;
+          ">
+            no community ranks yet.
+          </div>
+        `;
+
+      return;
+
+    }
+
+    container.innerHTML =
+      "";
+
+    list.forEach(
+      (player,index) => {
+
+        const rank =
+          index + 1;
+
+        let medal =
+          "#" + rank;
+
+        if (rank === 1)
+          medal = "🥇";
+
+        if (rank === 2)
+          medal = "🥈";
+
+        if (rank === 3)
+          medal = "🥉";
+
+        const row =
+          document.createElement(
+            "div"
+          );
+
+        row.className =
+          "rank-modal-row rank-click-row";
+
+        row.onclick = function() {
+          openViewerProfile(player.username || "unknown");
+        };
+
+        row.innerHTML = `
+
+          <div class="rank-modal-left">
+
+            <div class="rank-modal-position">
+              ${medal}
+            </div>
+
+            <div class="rank-modal-name">
+              ${escapeHTML(
+                player.username ||
+                "unknown"
+              )}
+            </div>
+
+          </div>
+
+          <div class="rank-modal-points">
+            ${Number(
+              player.points || 0
+            ).toLocaleString()}
+            PTS
+          </div>
+
+        `;
+
+        container.appendChild(
+          row
+        );
+
+      }
+    );
+
+  } catch (error) {
+
+    container.innerHTML =
+      `
+        <div style="
+          color:#ef4444;
+          font-size:12px;
+          padding:15px;
+        ">
+          leaderboard unavailable.
+        </div>
+      `;
+
+  }
+
+}
+
+function closeRankModal() {
+
+  $("rankModal")
+    .style.display =
+    "none";
+
+}
+
+/* =========================================================
+   LIVE COMMUNITY CHAT
+========================================================= */
+
+let liveMessagesLoaded =
+  false;
+
+let liveMessageIds =
+  new Set();
+
+let liveLoadBusy =
+  false;
+
+let fakeTypingTimer =
+  null;
+
+function getLiveMessageKey(
+  message
+) {
+
+  if (message.id) {
+    return String(
+      message.id
+    );
+  }
+
+  return (
+    String(
+      message.username || "guest"
+    ) +
+    "|" +
+    String(
+      message.message ||
+      message.text ||
+      ""
+    ) +
+    "|" +
+    String(
+      message.createdAt || ""
+    )
+  );
+
+}
+
+function findExistingLiveMessage(
+  message
+) {
+
+  const container =
+    $("liveMessages");
+
+  const id =
+    message.id
+      ? String(message.id)
+      : "";
+
+  const username =
+    String(
+      message.username ||
+      "guest"
+    );
+
+  const text =
+    String(
+      message.message ||
+      message.text ||
+      ""
+    );
+
+  const nodes =
+    container.querySelectorAll(
+      ".live-message:not(.system)"
+    );
+
+  for (
+    const node of nodes
+  ) {
+
+    if (
+      id &&
+      node.dataset.messageId ===
+      id
+    ) {
+
+      return node;
+
+    }
+
+    if (
+      node.dataset.username ===
+        username &&
+      node.dataset.message ===
+        text
+    ) {
+
+      return node;
+
+    }
+
+  }
+
+  return null;
+
+}
+
+function showFakeTyping(
+  username
+) {
+
+  const typing =
+    $("liveTyping");
+
+  const name =
+    $("liveTypingName");
+
+  if (!typing || !name)
+    return;
+
+  name.textContent =
+    username || "someone";
+
+  typing.classList.add(
+    "active"
+  );
+
+  clearTimeout(
+    fakeTypingTimer
+  );
+
+  fakeTypingTimer =
+    setTimeout(
+      function() {
+
+        typing.classList.remove(
+          "active"
+        );
+
+      },
+      1400
+    );
+
+}
+
+function hideFakeTyping() {
+
+  clearTimeout(
+    fakeTypingTimer
+  );
+
+  const typing =
+    $("liveTyping");
+
+  if (typing) {
+
+    typing.classList.remove(
+      "active"
+    );
+
+  }
+
+}
+
+async function loadLiveChat() {
+
+  if (liveLoadBusy)
+    return;
+
+  liveLoadBusy =
+    true;
+
+  try {
+
+    const data =
+      await apiRequest(
+        "/live-chat",
+        {
+          method: "GET"
+        }
+      );
+
+    const messages =
+      data.messages ||
+      data.chat ||
+      [];
+
+    const container =
+      $("liveMessages");
+
+    if (
+      !Array.isArray(messages)
+    ) {
+
+      return;
+
+    }
+
+    /*
+      First load:
+      build the existing room.
+    */
+
+    if (!liveMessagesLoaded) {
+
+      container.innerHTML =
+        "";
+
+      liveMessageIds =
+        new Set();
+
+      if (!messages.length) {
+
+        appendLiveSystem(
+          "be the first one to say something ✨"
+        );
+
+      } else {
+
+        messages.forEach(
+          message => {
+
+            appendLiveMessage(
+              message.username ||
+              "guest",
+
+              message.message ||
+              message.text ||
+              "",
+
+              message.id ||
+              ""
+            );
+
+          }
+        );
+
+      }
+
+      liveMessagesLoaded =
+        true;
+
+      scrollLiveBottom();
+
+      return;
+
+    }
+
+    /*
+      Later polling:
+      only add messages that are
+      not already visible.
+    */
+
+    let addedNewMessage =
+      false;
+
+    messages.forEach(
+      message => {
+
+        const messageId =
+          message.id
+            ? String(message.id)
+            : getLiveMessageKey(
+                message
+              );
+
+        if (
+          liveMessageIds.has(
+            messageId
+          )
+        ) {
+
+          return;
+
+        }
+
+        const existing =
+          findExistingLiveMessage(
+            message
+          );
+
+        if (existing) {
+
+          existing.dataset.messageId =
+            messageId;
+
+          liveMessageIds.add(
+            messageId
+          );
+
+          return;
+
+        }
+
+        /*
+          Show fake typing immediately
+          before adding the incoming message.
+        */
+
+        showFakeTyping(
+          message.username ||
+          "someone"
+        );
+
+        setTimeout(
+          function() {
+
+            appendLiveMessage(
+              message.username ||
+              "guest",
+
+              message.message ||
+              message.text ||
+              "",
+
+              message.id ||
+              messageId
+            );
+
+            hideFakeTyping();
+
+            scrollLiveBottom();
+
+          },
+          900
+        );
+
+        liveMessageIds.add(
+          messageId
+        );
+
+        addedNewMessage =
+          true;
+
+      }
+    );
+
+    if (addedNewMessage) {
+
+      scrollLiveBottom();
+
+    }
+
+    /*
+      Keep the ID set small.
+    */
+
+    if (
+      liveMessageIds.size > 200
+    ) {
+
+      liveMessageIds =
+        new Set(
+          Array.from(
+            liveMessageIds
+          ).slice(-100)
+        );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Live Chat Error:",
+      error
+    );
+
+    if (!liveMessagesLoaded) {
+
+      const container =
+        $("liveMessages");
+
+      container.innerHTML =
+        `
+          <div class="live-message system">
+            live room connection unavailable...
+          </div>
+        `;
+
+    }
+
+  } finally {
+
+    liveLoadBusy =
+      false;
+
+  }
+
+}
+
+async function sendLiveMessage() {
+
+  if (isLiveSending)
+    return;
+
+  const input =
+    $("liveChatInput");
+
+  const message =
+    input.value.trim();
+
+  const username =
+    getSavedUsername();
+
+  if (!username) {
+
+    showEntry();
+
+    return;
+
+  }
+
+  if (!message)
+    return;
+
+  isLiveSending =
+    true;
+
+  input.value = "";
+
+  /*
+    Show own message immediately.
+  */
+
+  const optimistic =
+    appendLiveMessage(
+      username,
+      message,
+      "temp-" +
+      Date.now(),
+      true
+    );
+
+  scrollLiveBottom();
+
+  try {
+
+    const data =
+      await apiRequest(
+        "/live-chat",
+        {
+          method: "POST",
+
+          body:
+            JSON.stringify({
+
+              username:
+                username,
+
+              message:
+                message
+
+            })
+        }
+      );
+
+    if (
+      data.message ||
+      data.success
+    ) {
+
+      const serverMessage =
+        data.message || {
+          username:
+            username,
+          message:
+            message,
+          id:
+            "sent-" +
+            Date.now()
+        };
+
+      /*
+        Convert optimistic message
+        into the real server message.
+      */
+
+      if (optimistic) {
+
+        optimistic.dataset.messageId =
+          serverMessage.id || "";
+
+        optimistic.dataset.username =
+          serverMessage.username ||
+          username;
+
+        optimistic.dataset.message =
+          serverMessage.message ||
+          message;
+
+        optimistic.dataset.optimistic =
+          "false";
+
+      }
+
+      if (
+        serverMessage.id
+      ) {
+
+        liveMessageIds.add(
+          String(
+            serverMessage.id
+          )
+        );
+
+      }
+
+      liveMessagesLoaded =
+        true;
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Live send error:",
+      error
+    );
+
+    /*
+      Remove optimistic message
+      if sending failed.
+    */
+
+    if (optimistic) {
+
+      optimistic.remove();
+
+    }
+
+    appendLiveSystem(
+      "message send aayilla... pinne try cheyy"
+    );
+
+  } finally {
+
+    isLiveSending =
+      false;
+
+  }
+
+}
+
+function appendLiveMessage(
+  username,
+  message,
+  messageId = "",
+  optimistic = false
+) {
+
+  const container =
+    $("liveMessages");
+
+  /*
+    Avoid duplicate messages.
+  */
+
+  if (
+    messageId &&
+    !String(
+      messageId
+    ).startsWith("temp-") &&
+    liveMessageIds.has(
+      String(messageId)
+    )
+  ) {
+
+    return findExistingLiveMessage({
+      id: messageId,
+      username: username,
+      message: message
+    });
+
+  }
+
+  const existing =
+    findExistingLiveMessage({
+      id: messageId,
+      username: username,
+      message: message
+    });
+
+  if (
+    existing &&
+    !optimistic
+  ) {
+
+    return existing;
+
+  }
+
+  const element =
+    document.createElement(
+      "div"
+    );
+
+  element.className =
+    "live-message";
+
+  element.dataset.messageId =
+    messageId || "";
+
+  element.dataset.username =
+    username || "guest";
+
+  element.dataset.message =
+    message || "";
+
+  if (optimistic) {
+
+    element.dataset.optimistic =
+      "true";
+
+  }
+
+  element.innerHTML =
+    `
+      <img class="live-pfp" src="./pfp.JPG" alt="profile picture">
+      <button class="live-name-btn" onclick="openViewerProfile(${JSON.stringify(username || "guest")})">
+        ${escapeHTML(username)}
+      </button>
+      ${escapeHTML(message)}
+    `;
+
+  container.appendChild(
+    element
+  );
+
+  if (
+    messageId &&
+    !String(
+      messageId
+    ).startsWith("temp-")
+  ) {
+
+    liveMessageIds.add(
+      String(messageId)
+    );
+
+  }
+
+  return element;
+
+}
+
+let activePrivateChatUser = "";
+let privateChatMessages = [];
+let privateChatLoadBusy = false;
+let privateChatTimer = null;
+
+function normalizePrivateMessage(message) {
+  return {
+    id: message?.id || ("local-" + Date.now() + "-" + Math.random().toString(36).slice(2,7)),
+    from: message?.from || message?.username || "",
+    to: message?.to || "",
+    message: message?.message || message?.text || "",
+    createdAt: message?.createdAt || new Date().toISOString()
+  };
+}
+
+async function openViewerProfile(username) {
+  const name = String(username || "guest");
+  $("viewerProfileName").textContent = name;
+  $("viewerProfilePfp").src = "./pfp.JPG";
+  $("viewerProfileRank").textContent = "#—";
+  $("viewerProfileLevel").textContent = "1";
+  $("viewerProfileXP").textContent = "0";
+  $("viewerProfilePoints").textContent = "0";
+  $("viewerProfileModal").style.display = "flex";
+
+  const chatButton = $("viewerPersonalChatBtn");
+  if (chatButton) {
+    chatButton.onclick = function() {
+      closeViewerProfile();
+      openPersonalChat(name);
+    };
+  }
+
+  try {
+    const data = await apiRequest("/profile?username=" + encodeURIComponent(name));
+    const user = data.user || data.profile || data;
+    $("viewerProfileName").textContent = user.username || name;
+    $("viewerProfileRank").textContent = "#" + (user.rank || user.position || "—");
+    $("viewerProfileLevel").textContent = Number(user.level || user.rankLevel || 1);
+    $("viewerProfileXP").textContent = Number(user.xp || user.experience || 0).toLocaleString();
+    $("viewerProfilePoints").textContent = Number(user.points || 0).toLocaleString();
+    if (user.pfp || user.avatar || user.avatarUrl || user.photoURL) {
+      $("viewerProfilePfp").src = user.pfp || user.avatar || user.avatarUrl || user.photoURL;
+    }
+  } catch (error) {
+    console.log("Viewer profile unavailable:", error);
+  }
+}
+
+function renderPrivateChatMessages(messages) {
+  const container = $("personalChatMessages");
+  if (!container) return;
+  container.innerHTML = "";
+
+  if (!messages.length) {
+    const empty = document.createElement("div");
+    empty.className = "private-empty";
+    empty.textContent = "start a private conversation...";
+    container.appendChild(empty);
+    return;
+  }
+
+  const me = getSavedUsername();
+  messages.forEach(function(raw) {
+    const message = normalizePrivateMessage(raw);
+    const el = document.createElement("div");
+    el.className = "private-message " + (String(message.from).toLowerCase() === String(me).toLowerCase() ? "me" : "them");
+    el.textContent = message.message;
+    container.appendChild(el);
+  });
+  container.scrollTop = container.scrollHeight;
+}
+
+async function loadPersonalChat() {
+  if (!activePrivateChatUser || privateChatLoadBusy) return;
+  const me = getSavedUsername();
+  if (!me) return;
+  privateChatLoadBusy = true;
+  try {
+    const data = await apiRequest(
+      "/private-chat?from=" + encodeURIComponent(me) + "&to=" + encodeURIComponent(activePrivateChatUser),
+      { method: "GET" }
+    );
+    const incoming = Array.isArray(data.messages) ? data.messages.map(normalizePrivateMessage) : [];
+    const byId = new Map();
+    privateChatMessages.forEach(function(m){ byId.set(String(m.id), m); });
+    incoming.forEach(function(m){ byId.set(String(m.id), m); });
+    privateChatMessages = Array.from(byId.values()).sort(function(a,b){ return new Date(a.createdAt) - new Date(b.createdAt); });
+    renderPrivateChatMessages(privateChatMessages);
+  } catch (error) {
+    console.log("Private chat unavailable:", error);
+  } finally {
+    privateChatLoadBusy = false;
+  }
+}
+
+function openPersonalChat(username) {
+  const name = String(username || "").trim();
+  const me = getSavedUsername();
+  if (!name || !me) {
+    showEntry();
+    return;
+  }
+  if (String(name).toLowerCase() === String(me).toLowerCase()) {
+    return;
+  }
+
+  activePrivateChatUser = name;
+  privateChatMessages = [];
+  $("personalChatTitle").textContent = "chat with " + name;
+  $("personalChatScreen").classList.add("active");
+  document.body.classList.add("feature-open");
+  renderPrivateChatMessages([]);
+  loadPersonalChat();
+  clearInterval(privateChatTimer);
+  privateChatTimer = setInterval(loadPersonalChat, 1000);
+  setTimeout(function(){ $("personalChatInput").focus(); }, 50);
+}
+
+function closePersonalChat() {
+  $("personalChatScreen").classList.remove("active");
+  activePrivateChatUser = "";
+  privateChatMessages = [];
+  clearInterval(privateChatTimer);
+  privateChatTimer = null;
+  if (!activeFeature) document.body.classList.remove("feature-open");
+}
+
+async function sendPersonalChatMessage() {
+  const input = $("personalChatInput");
+  const button = $("personalChatSendButton");
+  const message = input.value.trim();
+  const from = getSavedUsername();
+  const to = activePrivateChatUser;
+  if (!message || !from || !to) return;
+
+  input.value = "";
+  const optimistic = normalizePrivateMessage({
+    id: "temp-" + Date.now(),
+    from: from,
+    to: to,
+    message: message,
+    createdAt: new Date().toISOString()
+  });
+  privateChatMessages.push(optimistic);
+  renderPrivateChatMessages(privateChatMessages);
+  button.disabled = true;
+
+  try {
+    const data = await apiRequest("/private-chat", {
+      method: "POST",
+      body: JSON.stringify({ from: from, to: to, message: message })
+    });
+    const sent = data.message ? normalizePrivateMessage(data.message) : null;
+    if (sent) {
+      privateChatMessages = privateChatMessages.map(function(m){
+        return String(m.id) === String(optimistic.id) ? sent : m;
+      });
+      renderPrivateChatMessages(privateChatMessages);
+    }
+  } catch (error) {
+    console.error("Private chat send error:", error);
+    privateChatMessages = privateChatMessages.filter(function(m){ return String(m.id) !== String(optimistic.id); });
+    renderPrivateChatMessages(privateChatMessages);
+  } finally {
+    button.disabled = false;
+    input.focus();
+  }
+}
+
+$("personalChatInput").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") sendPersonalChatMessage();
+});
+
+function closeViewerProfile() {
+  $("viewerProfileModal").style.display = "none";
+}
+
+function appendLiveSystem(
+  message
+) {
+
+  const container =
+    $("liveMessages");
+
+  const element =
+    document.createElement(
+      "div"
+    );
+
+  element.className =
+    "live-message system";
+
+  element.textContent =
+    message;
+
+  container.appendChild(
+    element
+  );
+
+}
+
+function scrollLiveBottom() {
+
+  const container =
+    $("liveMessages");
+
+  container.scrollTop =
+    container.scrollHeight;
+
+}
+
+$("liveChatInput").addEventListener(
+  "keydown",
+  function(e) {
+
+    if (e.key === "Enter") {
+      sendLiveMessage();
+    }
+
+  }
+);
+
+/*
+  Poll the shared room every 1 second.
+  Incoming messages get a short fake
+  typing animation before appearing.
+*/
+
+setInterval(
+  function() {
+
+    if (
+      $("app").style.display ===
+      "block"
+    ) {
+
+      loadLiveChat();
+
+    }
+
+  },
+  1000
+);
+
+/* =========================================================
+   BACKEND STATUS
+========================================================= */
+
+async function checkBackendStatus() {
+
+  try {
+
+    const res =
+      await apiRequest(
+        "/health",
+        {
+          method: "GET"
+        }
+      );
+
+    console.log(
+      "emlieey worker online:",
+      res
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Worker connection failed:",
+      error
+    );
+
+  }
+
+}
+
+/* =========================================================
+   ENTRY HELPER
+========================================================= */
+
+function showEntry() {
+
+  $("entryScreen")
+    .style.display =
+    "flex";
+
+  $("app")
+    .style.display =
+    "none";
+
+  document.body.style.overflow =
+    "hidden";
+
+  $("usernameInput").focus();
+
+}
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+const pfpInput = $("pfpInput");
+if (pfpInput) {
+  pfpInput.addEventListener("change", function() {
+    const file = this.files && this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      selectedPfp = e.target.result;
+      localStorage.setItem("emlee_pfp", selectedPfp);
+      if ($("entryPfpPreview")) $("entryPfpPreview").src = selectedPfp;
+      if ($("profileAvatar")) $("profileAvatar").src = selectedPfp;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    $("currentYear")
+      .textContent =
+      new Date()
+        .getFullYear();
+
+    const saved =
+      getSavedUsername();
+
+    /*
+      If username already exists,
+      do NOT ask again.
+    */
+
+    if (saved) {
+
+      currentUser = {
+        username:
+          saved
+      };
+
+      openApp();
+
+    } else {
+
+      $("entryScreen")
+        .style.display =
+        "flex";
+
+      $("app")
+        .style.display =
+        "none";
+
+      document.body.style.overflow =
+        "hidden";
+
+    }
+
+  }
+);
+
+/* =========================================================
+   MODAL BACKDROP CLOSE
+========================================================= */
+
+$("gameModal").addEventListener(
+  "click",
+  function(e) {
+
+    if (
+      e.target ===
+      $("gameModal")
+    ) {
+
+      closeGameModal();
+
+    }
+
+  }
+);
+
+$("rankModal").addEventListener(
+  "click",
+  function(e) {
+
+    if (
+      e.target ===
+      $("rankModal")
+    ) {
+
+      closeRankModal();
+
+    }
+
+  }
+);
+
+</script>
+
+</body>
+</html>
