@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>emLee Web App</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090a0f;
+      --card: #12151e;
+      --card-hover: #1a1e2b;
+      --accent: #7c3aed;
+      --accent-light: #a78bfa;
+      --pink: #ec4899;
+      --purple: #8b5cf6;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border: #1f293d;
+      --glass: rgba(18, 21, 30, 0.75);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.12) 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+
+    /* Screen Wrappers */
+    .screen {
+      display: none;
+      width: 100%;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+    .screen.active {
+      display: flex;
+    }
+
+    /* Entry Screen */
+    #entryScreen {
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+    }
+    .welcome-card {
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      padding: 32px 24px;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+    .app-logo {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 32px;
+      color: white;
+      box-shadow: 0 10px 25px rgba(236, 72, 153, 0.3);
+    }
+    .welcome-card h1 {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(to right, #fff, var(--text-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .welcome-card p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .input-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .input-field {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: white;
+      font-size: 15px;
+      outline: none;
+      transition: 0.2s;
+    }
+    .input-field:focus {
+      border-color: var(--purple);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: 0.2s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      color: white;
+      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+    }
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    /* Main Dashboard Header */
+    header {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 2px solid var(--purple);
+      object-fit: cover;
+    }
+    .user-details h2 {
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .user-details span {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .coins-badge {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: var(--warning);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Content Area */
+    main {
+      flex: 1;
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin: 20px 0 12px;
+    }
+
+    /* Grid Options */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 18px;
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card:active {
+      transform: scale(0.97);
+      background: var(--card-hover);
+    }
+    .icon-box {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: white;
+    }
+    .feature-card h3 {
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .feature-card p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Modals / Full Sub-Screens */
+    .feature-screen {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg);
+      z-index: 200;
+      flex-direction: column;
+    }
+    .feature-screen.active {
+      display: flex;
+    }
+
+    .screen-header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .back-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .back-btn:active {
+      background: rgba(255,255,255,0.1);
+    }
+    .screen-title {
+      font-size: 16px;
+      font-weight: 700;
+      flex: 1;
+    }
+
+    /* Chat Messages Window */
+    .chat-messages {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .msg {
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+    .msg-incoming {
+      background: var(--card);
+      border: 1px solid var(--border);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+    .msg-outgoing {
+      background: linear-gradient(135deg, var(--purple), var(--accent));
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    .msg-meta {
+      font-size: 10px;
+      opacity: 0.7;
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    .chat-input-bar {
+      padding: 12px 16px;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* Modal / Popups */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(5px);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-content {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Entry Screen -->
+  <div id="entryScreen" class="screen active">
+    <div class="welcome-card">
+      <div class="app-logo">
+        <i class="fa-solid fa-bolt"></i>
+      </div>
+      <h1>Welcome to emLee</h1>
+      <p>Your interactive live stream companion app</p>
+      
+      <div class="input-group">
+        <label>Your Username</label>
+        <input type="text" id="usernameInput" class="input-field" placeholder="Enter username...">
+      </div>
+      
+      <button class="btn btn-primary" onclick="handleLogin()">
+        Get Started <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main App Screen -->
+  <div id="mainAppScreen" class="screen">
+    <header>
+      <div class="user-info" onclick="openProfileModal()">
+        <img src="https://via.placeholder.com/150" id="userPfp" class="avatar" alt="Avatar">
+        <div class="user-details">
+          <h2 id="displayUsername">User</h2>
+          <span>Level 1 Member</span>
+        </div>
+      </div>
+      <div class="coins-badge">
+        <i class="fa-solid fa-coins"></i>
+        <span id="userCoins">100</span>
+      </div>
+    </header>
+
+    <main>
+      <div class="section-title">Features & Games</div>
+      <div class="grid-container">
+        <!-- Live Chat -->
+        <div class="feature-card" onclick="openScreen('liveChatScreen')">
+          <div class="icon-box" style="background: #ef4444;"><i class="fa-solid fa-comments"></i></div>
+          <div>
+            <h3>Live Chat</h3>
+            <p>Interactive stream room</p>
+          </div>
+        </div>
+
+        <!-- AI Assistant -->
+        <div class="feature-card" onclick="openScreen('aiChatScreen')">
+          <div class="icon-box" style="background: #8b5cf6;"><i class="fa-solid fa-robot"></i></div>
+          <div>
+            <h3>AI Bot</h3>
+            <p>Smart stream AI helper</p>
+          </div>
+        </div>
+
+        <!-- Private Chat -->
+        <div class="feature-card" onclick="openScreen('privateChatScreen')">
+          <div class="icon-box" style="background: #3b82f6;"><i class="fa-solid fa-paper-plane"></i></div>
+          <div>
+            <h3>Inbox</h3>
+            <p>Private peer messaging</p>
+          </div>
+        </div>
+
+        <!-- Rewards / Daily Bonus -->
+        <div class="feature-card" onclick="claimDailyReward()">
+          <div class="icon-box" style="background: #f59e0b;"><i class="fa-solid fa-gift"></i></div>
+          <div>
+            <h3>Daily Bonus</h3>
+            <p>Claim daily coins</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">Mini Games</div>
+      <div class="grid-container">
+        <div class="feature-card" onclick="playCoinFlip()">
+          <div class="icon-box" style="background: #10b981;"><i class="fa-solid fa-coins"></i></div>
+          <div>
+            <h3>Coin Flip</h3>
+            <p>Double your bet</p>
+          </div>
+        </div>
+
+        <div class="feature-card" onclick="playGuessNumber()">
+          <div class="icon-box" style="background: #ec4899;"><i class="fa-solid fa-hashtag"></i></div>
+          <div>
+            <h3>Guess Number</h3>
+            <p>Win coin multipliers</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      emLee Web App &copy; <span id="currentYear">2026</span> | Developed with passion
+    </footer>
+  </div>
+
+  <!-- Live Chat Sub-Screen -->
+  <div id="liveChatScreen" class="feature-screen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="closeScreen('liveChatScreen')"><i class="fa-solid fa-arrow-left"></i></button>
+      <div class="screen-title">Live Stream Chat</div>
+    </div>
+    <div class="chat-messages" id="liveChatBox">
+      <div class="msg msg-incoming">
+        <b>System:</b> Welcome to the live chat room!
+        <div class="msg-meta">12:00 PM</div>
+      </div>
+    </div>
+    <div class="chat-input-bar">
+      <input type="text" id="liveMsgInput" class="input-field" placeholder="Send a message...">
+      <button class="btn btn-primary" style="width: auto; padding: 12px 18px;" onclick="sendLiveMsg()">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- AI Chat Sub-Screen -->
+  <div id="aiChatScreen" class="feature-screen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="closeScreen('aiChatScreen')"><i class="fa-solid fa-arrow-left"></i></button>
+      <div class="screen-title">AI Assistant</div>
+    </div>
+    <div class="chat-messages" id="aiChatBox">
+      <div class="msg msg-incoming">
+        <b>Emlieey AI:</b> Hi! How can I assist you with the stream today?
+        <div class="msg-meta">Just now</div>
+      </div>
+    </div>
+    <div class="chat-input-bar">
+      <input type="text" id="aiMsgInput" class="input-field" placeholder="Ask AI anything...">
+      <button class="btn btn-primary" style="width: auto; padding: 12px 18px;" onclick="sendAiMsg()">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Private Chat Sub-Screen -->
+  <div id="privateChatScreen" class="feature-screen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="closeScreen('privateChatScreen')"><i class="fa-solid fa-arrow-left"></i></button>
+      <div class="screen-title">Private Chat</div>
+    </div>
+    <div class="chat-messages" id="privateChatBox">
+      <div class="msg msg-incoming">
+        <b>System:</b> Private peer-to-peer session initialized.
+        <div class="msg-meta">Active</div>
+      </div>
+    </div>
+    <div class="chat-input-bar">
+      <input type="text" id="privateMsgInput" class="input-field" placeholder="Private message...">
+      <button class="btn btn-primary" style="width: auto; padding: 12px 18px;" onclick="sendPrivateMsg()">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Profile Edit Modal -->
+  <div id="profileModal" class="modal-overlay">
+    <div class="modal-content">
+      <h3>Edit Profile</h3>
+      <div class="input-group">
+        <label>Update Avatar</label>
+        <input type="file" id="editPfpInput" accept="image/*" class="input-field">
+      </div>
+      <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+      <button class="btn" style="background: rgba(255,255,255,0.05); color: white;" onclick="closeProfileModal()">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    // State management
+    let currentUser = { username: "", coins: 100, pfp: "https://via.placeholder.com/150" };
+    let livePollInterval = null;
+
+    const $ = id => document.getElementById(id);
+
+    // Helpers
+    function getSavedUsername() { return localStorage.getItem("emlee_user"); }
+    function setSavedUsername(name) { localStorage.setItem("emlee_user", name); }
+
+    function showEntry() {
+      $("entryScreen").classList.add("active");
+      $("mainAppScreen").classList.remove("active");
+    }
+
+    function openApp() {
+      $("entryScreen").classList.remove("active");
+      $("mainAppScreen").classList.add("active");
+      $("displayUsername").textContent = currentUser.username;
+      
+      const savedPfp = localStorage.getItem("emlee_pfp");
+      if (savedPfp) currentUser.pfp = savedPfp;
+      $("userPfp").src = currentUser.pfp;
+
+      const savedCoins = localStorage.getItem("emlee_coins");
+      if (savedCoins) currentUser.coins = parseInt(savedCoins, 10);
+      $("userCoins").textContent = currentUser.coins;
+    }
+
+    function handleLogin() {
+      const input = $("usernameInput").value.trim();
+      if (!input) return alert("Please enter a username!");
+      currentUser.username = input;
+      setSavedUsername(input);
+      openApp();
+    }
+
+    /* Screen Navigation & Mobile Back Button History Handling */
+    function openScreen(screenId) {
+      $(screenId).classList.add("active");
+      window.history.pushState({ activeScreen: screenId }, "", `#${screenId}`);
+
+      if (screenId === "liveChatScreen") {
+        startLivePolling();
+      }
+    }
+
+    function closeScreen(screenId) {
+      $(screenId).classList.remove("active");
+      if (screenId === "liveChatScreen") {
+        stopLivePolling();
+      }
+      if (window.location.hash) {
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+    }
+
+    window.onpopstate = function(event) {
+      document.querySelectorAll(".feature-screen.active").forEach(sc => {
+        sc.classList.remove("active");
+      });
+      stopLivePolling();
+    };
+
+    /* Base64 Canvas Image Compression for LocalStorage Safety */
+    $("editPfpInput").addEventListener("change", function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 150;
+          const MAX_HEIGHT = 150;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+          currentUser.pfp = compressedBase64;
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function openProfileModal() { $("profileModal").classList.add("active"); }
+    function closeProfileModal() { $("profileModal").classList.remove("active"); }
+
+    function saveProfile() {
+      localStorage.setItem("emlee_pfp", currentUser.pfp);
+      $("userPfp").src = currentUser.pfp;
+      closeProfileModal();
+    }
+
+    /* Live Chat & Background Optimization */
+    function sendLiveMsg() {
+      const text = $("liveMsgInput").value.trim();
+      if (!text) return;
+      appendMsg("liveChatBox", currentUser.username, text, "outgoing");
+      $("liveMsgInput").value = "";
+    }
+
+    function startLivePolling() {
+      if (livePollInterval) clearInterval(livePollInterval);
+      livePollInterval = setInterval(() => {
+        if (!document.hidden && $("liveChatScreen").classList.contains("active")) {
+          // Simulated active stream chat polling
+        }
+      }, 5000);
+    }
+
+    function stopLivePolling() {
+      if (livePollInterval) {
+        clearInterval(livePollInterval);
+        livePollInterval = null;
+      }
+    }
+
+    /* AI Messaging */
+    function sendAiMsg() {
+      const text = $("aiMsgInput").value.trim();
+      if (!text) return;
+      appendMsg("aiChatBox", currentUser.username, text, "outgoing");
+      $("aiMsgInput").value = "";
+
+      setTimeout(() => {
+        appendMsg("aiChatBox", "Emlieey AI", "Got it! Thanks for contacting the AI helper.", "incoming");
+      }, 1000);
+    }
+
+    /* Private Chat */
+    function sendPrivateMsg() {
+      const text = $("privateMsgInput").value.trim();
+      if (!text) return;
+      appendMsg("privateChatBox", currentUser.username, text, "outgoing");
+      $("privateMsgInput").value = "";
+    }
+
+    function appendMsg(boxId, sender, text, type) {
+      const box = $(boxId);
+      const msgDiv = document.createElement("div");
+      msgDiv.className = `msg msg-${type}`;
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      msgDiv.innerHTML = `<b>${sender}:</b> ${text}<div class="msg-meta">${timeStr}</div>`;
+      box.appendChild(msgDiv);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    /* Gamification & Daily Bonus */
+    function claimDailyReward() {
+      const lastClaim = localStorage.getItem("emlee_last_claim");
+      const today = new Date().toDateString();
+
+      if (lastClaim === today) {
+        alert("You have already claimed today's bonus! Come back tomorrow.");
+        return;
+      }
+
+      currentUser.coins += 50;
+      localStorage.setItem("emlee_coins", currentUser.coins);
+      localStorage.setItem("emlee_last_claim", today);
+      $("userCoins").textContent = currentUser.coins;
+      alert("🎉 Claimed 50 Daily Coins!");
+    }
+
+    function playCoinFlip() {
+      if (currentUser.coins < 10) return alert("You need at least 10 coins to play!");
+      const win = Math.random() > 0.5;
+      if (win) {
+        currentUser.coins += 10;
+        alert("🪙 You won! +10 Coins");
+      } else {
+        currentUser.coins -= 10;
+        alert("❌ You lost! -10 Coins");
+      }
+      localStorage.setItem("emlee_coins", currentUser.coins);
+      $("userCoins").textContent = currentUser.coins;
+    }
+
+    function playGuessNumber() {
+      if (currentUser.coins < 10) return alert("You need at least 10 coins to play!");
+      const guess = prompt("Guess a number between 1 and 3:");
+      if (!guess) return;
+      
+      const target = Math.floor(Math.random() * 3) + 1;
+      if (parseInt(guess, 10) === target) {
+        currentUser.coins += 20;
+        alert(`🎯 Correct! Number was ${target}. Won +20 Coins!`);
+      } else {
+        currentUser.coins -= 10;
+        alert(`❌ Wrong! Number was ${target}. -10 Coins`);
+      }
+      localStorage.setItem("emlee_coins", currentUser.coins);
+      $("userCoins").textContent = currentUser.coins;
+    }
+
+    /* Full Dom Event Listeners & Clean Init */
+    document.addEventListener("DOMContentLoaded", () => {
+      $("currentYear").textContent = new Date().getFullYear();
+      const saved = getSavedUsername();
+      if (saved) {
+        currentUser.username = saved;
+        openApp();
+      } else {
+        showEntry();
+      }
+    });
+  </script>
+</body>
+</html>
