@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#12091d">
+<title>emLee · Emlieey Live</title>
+<style>
+:root{
+  --bg:#0b0711;--card:#15101d;--card2:#1b1425;--line:rgba(255,255,255,.09);
+  --text:#fff;--muted:#9d91a8;--pink:#ff5bbd;--purple:#9b6cff;
+  --green:#55e6a5;--danger:#ef4444;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{overflow-x:hidden}
+button,input{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+#entryScreen{position:fixed;inset:0;z-index:9999;display:flex;align-items:flex-end;justify-content:center;padding:22px;overflow:hidden;background:#09050e}
+#entryScreen::before{content:"";position:absolute;inset:0;background:url("./emlee-character.PNG") center center/cover no-repeat;transform:scale(1.015);filter:saturate(1.12) brightness(1.02);}
+#entryScreen::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,3,10,.02) 0%,rgba(7,4,13,.08) 38%,rgba(7,4,13,.58) 68%,rgba(7,4,13,.96) 100%);pointer-events:none}
+.entry-box{position:relative;z-index:2;width:min(430px,100%);padding:18px 18px 20px;border:1px solid rgba(255,255,255,.12);border-radius:24px;background:rgba(12,7,18,.68);backdrop-filter:blur(12px);text-align:center;box-shadow:0 25px 80px #0008,inset 0 1px rgba(255,255,255,.08)}
+.entry-logo{width:58px;height:58px;margin:auto;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--pink),var(--purple));font-weight:900;font-size:23px}
+.entry-box h1{font-size:42px;margin:8px 0 3px;font-weight:950;letter-spacing:-1.5px;background:linear-gradient(135deg,#fff,#ffd5ef 48%,#ff63c2 78%,#9b6cff);-webkit-background-clip:text;background-clip:text;color:transparent}.entry-box h1 span,.brand span{color:var(--pink)}
+.entry-sub,.entry-note{color:var(--muted);font-size:12px}.entry-note{margin-top:12px}
+.entry-pfp-wrap{margin:22px 0}.entry-pfp{width:90px;height:90px;border-radius:50%;object-fit:cover;border:2px solid #ffffff25}
+.pfp-upload{display:block;width:max-content;max-width:100%;margin:10px auto 0;color:#eab7dd;font-size:11px;cursor:pointer}
+.entry-input,.chat-input,.live-input{width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:#ffffff08;color:#fff;outline:none}
+.entry-input:focus,.chat-input:focus,.live-input:focus{border-color:#ff5bbd88}
+.enter-btn,.send-btn,.live-send,.claim-btn{border:0;border-radius:13px;padding:12px 17px;background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;font-weight:800}
+.enter-btn{width:100%;margin-top:12px}
+#app{display:none}
+.container{width:min(760px,100%);margin:auto;padding:16px 14px 45px}
+.top-nav{display:flex;align-items:center;justify-content:space-between;padding:8px 2px 15px}
+.brand{font-weight:900;font-size:22px}.nav-actions{display:flex;align-items:center;gap:8px}
+.nav-rank,.nav-profile{border:1px solid var(--line);background:#ffffff07;border-radius:13px;color:#ddd;padding:8px 10px;font-size:11px}.nav-chat{position:relative;display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:#ffffff07;border-radius:13px;color:#ddd;padding:8px 10px;font-size:11px}.chat-nav-badge{display:none;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;font-size:8px;font-weight:900;align-items:center;justify-content:center;line-height:16px}.chat-nav-badge.show{display:inline-flex}.chat-list-item{width:100%;display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:15px;background:#ffffff05;color:#fff;text-align:left;margin-bottom:8px}.chat-list-item img{width:42px;height:42px;border-radius:13px;object-fit:cover;flex:0 0 auto}.chat-list-item>div{min-width:0;flex:1}.chat-list-item strong{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-list-item small{display:block;color:var(--muted);font-size:9px;margin-top:3px}.chat-badge{flex:0 0 auto;border-radius:999px;padding:5px 7px;background:#ff5bbd18;border:1px solid #ff5bbd35;color:#ff9bda;font-size:8px;font-weight:900}.chat-live-icon{display:grid!important;place-items:center;background:linear-gradient(135deg,#ff5bbd,#9b6cff)!important;color:#fff;font-size:17px;font-weight:900}
+.rank-number{color:var(--pink);margin-left:4px}
+.nav-profile{display:flex;align-items:center;gap:7px}.nav-profile img{width:26px;height:26px;border-radius:50%;object-fit:cover}
+.hero{position:relative;overflow:hidden;min-height:72vh;padding:34px 24px;margin-bottom:14px;border:1px solid rgba(255,255,255,.12);border-radius:30px;background:#0b0711 url("./emlee-character.PNG") center center/cover no-repeat;display:flex;align-items:flex-end;box-shadow:0 25px 80px rgba(0,0,0,.42),inset 0 1px rgba(255,255,255,.06)}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,5,14,.03) 0%,rgba(9,5,14,.05) 38%,rgba(9,5,14,.28) 58%,rgba(9,5,14,.92) 100%);pointer-events:none}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 75% 34%,rgba(255,91,189,.13),transparent 30%),linear-gradient(90deg,rgba(10,6,15,.72),rgba(10,6,15,.12) 62%,rgba(10,6,15,.28));pointer-events:none}
+.hero-glow{position:absolute;width:260px;height:260px;border-radius:50%;background:#ff5bbd22;filter:blur(65px);right:8%;top:10%;z-index:1}
+.hero-content{position:relative;z-index:3;max-width:88%;padding:18px 18px 4px;border-radius:22px;background:linear-gradient(180deg,rgba(10,6,15,.08),rgba(10,6,15,.48));backdrop-filter:blur(2px)}.live-pill{display:inline-flex;gap:7px;align-items:center;padding:7px 10px;border-radius:999px;background:#ff4fa320;border:1px solid #ff9bda20;color:#ffb0df;font-size:10px;font-weight:800;text-transform:lowercase}
+.live-dot,.live-status-dot{width:7px;height:7px;border-radius:50%;background:#ff477f;display:inline-block;box-shadow:0 0 10px #ff477f}
+.hero h1{font-size:clamp(54px,14vw,82px);line-height:.9;margin:14px 0 9px;font-weight:950;letter-spacing:-3px;background:linear-gradient(135deg,#fff 15%,#ffd8f3 45%,#ff63c2 75%,#9b6cff);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 12px 35px rgba(255,91,189,.16)}
+.hero-premium{display:block;margin-top:3px;color:#cbb8d4;font-size:9px;font-weight:800;letter-spacing:4px;text-transform:uppercase}.hero-tagline{color:var(--muted);font-size:13px}.creator-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:22px;position:relative;z-index:3}.creator{font-size:11px;color:#d8cfdd}.socials{display:flex;gap:7px}.social{min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 9px;color:#e9dce9;border:1px solid rgba(255,255,255,.11);border-radius:11px;background:rgba(255,255,255,.055);backdrop-filter:blur(10px);transition:.2s}.social:hover{transform:translateY(-2px);border-color:#ff5bbd55;background:#ff5bbd12}.social svg{width:16px;height:16px;fill:currentColor;flex:0 0 auto}.social-handle{font-size:9px;font-weight:800;letter-spacing:.1px}
+.feature-launcher{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:12px 0}
+.feature-tile{min-width:0;padding:0 0 10px;border:1px solid rgba(255,255,255,.105);border-radius:16px;background:linear-gradient(145deg,rgba(29,20,40,.98),rgba(17,11,25,.98));overflow:hidden;color:#fff;text-align:left;box-shadow:0 12px 35px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.04);transition:transform .2s,border-color .2s,box-shadow .2s}
+.feature-tile:hover{transform:translateY(-3px);border-color:#ff5bbd45;box-shadow:0 16px 42px rgba(0,0,0,.3),0 0 24px rgba(255,91,189,.07)}
+.feature-icon{display:block;width:100%;aspect-ratio:1.45/1;background:#21172a center/cover no-repeat}.feature-name{display:block;padding:8px 9px 2px;font-size:10px;font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.feature-sub{display:block;padding:0 9px;color:var(--muted);font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card{margin:14px 0;padding:17px;border:1px solid var(--line);border-radius:22px;background:var(--card)}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}.section-title h2{margin:0;font-size:15px}.section-title span{color:var(--muted);font-size:10px}
+.profile-box{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:13px;border-radius:17px;background:#ffffff05}
+.profile-box>div{min-width:0}.profile-avatar{width:55px;height:55px;border-radius:50%;object-fit:cover}.profile-name{font-size:14px;font-weight:800}.profile-sub{color:var(--muted);font-size:10px;margin-top:3px}.profile-level-row{display:flex;gap:10px;margin-top:7px;color:#d9cbe0;font-size:10px}.profile-stat{text-align:right}.profile-points{font-size:20px;font-weight:900;color:#ff9bda}.profile-stat small{color:var(--muted);font-size:9px}.personal-chat-btn{width:100%;margin-top:11px;padding:11px;border:1px solid #ff5bbd35;border-radius:13px;background:#ff5bbd0d;color:#ff9bda;font-weight:800}
+/* premium unified chat app */
+.chat-app-shell{background:radial-gradient(circle at 85% 8%,rgba(255,91,189,.09),transparent 28%),#08050d}
+.chat-app-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:22px 18px;margin-bottom:12px;border:1px solid rgba(255,255,255,.09);border-radius:24px;background:linear-gradient(145deg,rgba(34,19,43,.98),rgba(14,9,21,.98));box-shadow:0 20px 60px rgba(0,0,0,.28)}
+.chat-app-kicker{display:flex;align-items:center;gap:7px;color:#ff9bda;font-size:9px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase}.chat-app-head h2{margin:8px 0 5px;font-size:31px;letter-spacing:-1.2px}.chat-app-head p{margin:0;color:var(--muted);font-size:11px;line-height:1.55;max-width:390px}.chat-online-pill{flex:0 0 auto;padding:7px 9px;border-radius:999px;border:1px solid #ff5bbd25;background:#ff5bbd0c;color:#ff9bda;font-size:8px;font-weight:900}.chat-app-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}.chat-tab{padding:10px 7px;border:1px solid var(--line);border-radius:12px;background:#ffffff05;color:#b9aebe;font-size:9px;font-weight:850;text-transform:lowercase}.chat-tab.active,.chat-tab:hover{color:#fff;border-color:#ff5bbd40;background:#ff5bbd12}.chat-list-card{margin:0}.chat-app-tip{margin-top:10px;padding:11px 13px;border:1px solid #ff5bbd16;border-radius:14px;background:#ff5bbd08;color:var(--muted);font-size:9px}.chat-app-tip strong{color:#ffb0df}
+.chat-list-item{position:relative}.chat-list-item:hover{border-color:#ff5bbd35;background:#ff5bbd08;transform:translateY(-1px)}.chat-live-icon{width:42px!important;height:42px!important;border-radius:13px!important;flex:0 0 auto}
+.feature-screen{display:none;position:fixed;inset:0;z-index:5000;background:rgba(8,5,12,.98);overflow:auto}.feature-screen.active{display:block}.feature-screen-inner{width:min(760px,100%);min-height:100%;margin:auto;padding:16px 14px 30px}
+.feature-back,.profile-screen-back{border:1px solid var(--line);background:#ffffff08;color:#fff;width:40px;height:40px;border-radius:13px;font-size:21px;margin-bottom:12px}
+#chatScreen #chatSection,#liveChatScreen .live-room-panel{min-height:calc(100vh - 100px);display:flex;flex-direction:column}
+#messages,#liveMessages,#personalChatMessages{flex:1;min-height:300px;overflow:auto;padding:5px 0}
+.message{max-width:82%;padding:10px 12px;border-radius:15px;margin:7px 0;font-size:12px;line-height:1.45;white-space:pre-wrap}
+.message.user{margin-left:auto;background:linear-gradient(135deg,#ff5bbd30,#9b6cff30);border:1px solid #ff5bbd20}.message.bot{background:#ffffff08;border:1px solid var(--line)}.message.typing{opacity:.6}
+.chat-input-group,.live-input-group{display:flex;gap:8px;margin-top:10px}.chat-input-group input,.live-input-group input{flex:1}.send-btn:disabled{opacity:.5}
+.live-room-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.live-room-sub{color:var(--muted);font-size:9px}.live-refresh{border:1px solid var(--line);background:#ffffff06;color:#cdbed2;border-radius:10px;padding:7px 9px;font-size:8px}.live-room-actions{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 2px}.live-room-actions span{padding:6px 8px;border-radius:999px;background:#ffffff05;border:1px solid #ffffff09;color:#95879a;font-size:8px}
+.live-status{display:flex;align-items:center;gap:6px;color:#ff779b!important}.live-message{position:relative;padding:10px 8px;font-size:12px;border-bottom:1px solid #ffffff05;line-height:1.5}.live-message.system{color:var(--muted);text-align:center}.live-pfp{width:27px;height:27px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px}.live-name-btn{border:0;background:none;color:#ff9bda;font-weight:800;padding:0}.live-owner-badge{font-size:8px;background:#ff5bbd22;color:#ff8ccc;border-radius:5px;padding:3px 5px;margin-right:5px}.live-typing{display:none;color:var(--muted);font-size:10px;padding:4px}.live-typing.active{display:block}.typing-dots span{display:inline-block;width:3px;height:3px;background:#aaa;border-radius:50%;margin-left:3px}
+.games-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.game-btn{padding:18px 10px;border:1px solid var(--line);border-radius:17px;background:#ffffff06;color:#fff;text-align:center}.game-icon{display:block;font-size:25px}.game-name{display:block;margin-top:7px;font-size:12px;font-weight:800}.game-limit{display:block;color:var(--muted);font-size:9px;margin-top:3px}.game-result{min-height:25px;margin-top:12px;text-align:center;color:#ff9bda;font-size:12px}
+.reward-box{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border-radius:17px;background:#ffffff05}.reward-info strong{display:block;font-size:12px}.reward-info span{display:block;color:var(--muted);font-size:10px;margin-top:4px}.reward-box button{flex:none}.reward-result{font-size:11px}
+.leader-row,.rank-modal-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 7px;border-bottom:1px solid #ffffff06}.leader-left,.rank-modal-left{display:flex;align-items:center;gap:10px;min-width:0}.rank-badge,.rank-modal-position{width:30px;text-align:center}.leader-name,.rank-modal-name{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.leader-points,.rank-modal-points{font-size:10px;color:#ff9bda}.rank-click{cursor:pointer}.legal{display:grid;gap:8px}.legal-card{padding:13px;border:1px solid var(--line);border-radius:14px;background:#ffffff04}.legal-card strong,.legal-card span{display:block}.legal-card strong{font-size:11px}.legal-card span{color:var(--muted);font-size:9px;margin-top:4px}footer{text-align:center;color:var(--muted);font-size:10px;padding:20px 0}footer strong{color:#fff}
+.modal{display:none;position:fixed;inset:0;z-index:8000;background:#000b;align-items:center;justify-content:center;padding:16px}.modal-content{width:min(440px,100%);max-height:90vh;overflow:auto;padding:20px;border:1px solid var(--line);border-radius:22px;background:#15101d;box-shadow:0 20px 70px #000}.modal-content h3{margin:0 0 8px}.modal-text{color:#c9bdce;font-size:12px;line-height:1.6}.modal-option{display:block;width:100%;padding:12px;margin:7px 0;border:1px solid var(--line);border-radius:12px;background:#ffffff07;color:#fff;text-align:left}.close-btn{width:100%;margin-top:13px;padding:11px;border:1px solid var(--line);border-radius:12px;background:#ffffff08;color:#fff}
+.viewer-profile-fullscreen{text-align:center}.viewer-profile-pfp{width:95px;height:95px;border-radius:50%;object-fit:cover;border:2px solid #ff5bbd55}.viewer-profile-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:18px 0}.viewer-profile-grid div{padding:10px 4px;border-radius:12px;background:#ffffff06}.viewer-profile-grid strong,.viewer-profile-grid span{display:block}.viewer-profile-grid strong{font-size:13px}.viewer-profile-grid span{font-size:8px;color:var(--muted);margin-top:3px}
+.personal-chat-fullscreen{width:min(760px,100%);min-height:100%;margin:auto;padding:16px 14px 30px;display:flex;flex-direction:column}.personal-chat-title{display:flex;align-items:center;justify-content:space-between}.personal-chat-title h2{font-size:16px}.private-message{max-width:78%;padding:10px 12px;border-radius:14px;margin:7px 0;font-size:12px}.private-message.me{margin-left:auto;background:#ff5bbd28}.private-message.them{background:#ffffff08}.chat-message-time{display:inline-block;color:var(--muted);font-size:8px;margin-left:6px;white-space:nowrap;opacity:.8}.private-message .chat-message-time{display:block;margin:5px 0 0;text-align:right}.private-empty{text-align:center;color:var(--muted);font-size:11px;padding:25px}
+.profile-edit{display:grid;gap:10px}.profile-edit .entry-input{width:150px;max-width:100%;padding:8px 10px;font-size:11px}.profile-edit-avatar{width:76px;height:76px;border-radius:50%;object-fit:cover;margin:auto}.profile-edit label{font-size:10px;color:var(--muted)}
+.chat-list{display:grid;gap:8px}.chat-list-item{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:15px;background:#ffffff05;color:#fff;text-align:left}.chat-list-item img{width:40px;height:40px;border-radius:50%;object-fit:cover}.chat-list-item strong{font-size:12px}.chat-list-item small{display:block;color:var(--muted);font-size:9px;margin-top:3px}.chat-badge{margin-left:auto;color:#ff9bda;font-size:10px;font-weight:800}
+
+.profile-save-status{min-height:18px;margin-top:7px;text-align:center;color:#55e6a5;font-size:10px;font-weight:800;opacity:0;transform:translateY(-3px);transition:.2s}.profile-save-status.show{opacity:1;transform:none}
+button,.feature-tile,.social{transition:transform .16s,opacity .16s,border-color .2s,box-shadow .2s}.chat-list-item:active,.game-btn:active,.personal-chat-btn:active,.enter-btn:active,.claim-btn:active,.send-btn:active,.live-send:active,.feature-tile:active{transform:scale(.985);opacity:.92}
+.mood-card{position:relative;overflow:hidden;background:radial-gradient(circle at 90% 10%,rgba(255,91,189,.12),transparent 34%),var(--card)}.mood-label{color:#ff9bda;font-size:9px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase}.mood-text{font-size:19px;font-weight:900;margin-top:7px}.mood-sub{color:var(--muted);font-size:10px;margin-top:4px}.moment-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.moment{padding:11px;border-radius:14px;background:#ffffff05;border:1px solid #ffffff08}.moment strong{display:block;font-size:10px}.moment span{display:block;color:var(--muted);font-size:9px;margin-top:4px;line-height:1.4}.memory-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.memory{padding:10px 6px;text-align:center;border-radius:13px;background:#ffffff05}.memory b{display:block;color:#ff9bda;font-size:14px}.memory span{display:block;color:var(--muted);font-size:8px;margin-top:3px}.profile-title{display:inline-flex;margin-top:6px;padding:4px 7px;border-radius:999px;background:#ff5bbd12;border:1px solid #ff5bbd22;color:#ff9bda;font-size:8px;font-weight:900}.mystery-drop{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border-radius:15px;background:linear-gradient(135deg,#ff5bbd0b,#9b6cff0b);border:1px solid #ff5bbd18}.mystery-drop strong{font-size:11px}.mystery-drop span{display:block;color:var(--muted);font-size:9px;margin-top:3px}.drop-btn{border:1px solid #ff5bbd35;background:#ff5bbd12;color:#ff9bda;border-radius:11px;padding:9px 11px;font-size:9px;font-weight:900}.streak-pill{color:#ff9bda;font-size:9px;font-weight:900}.reaction-row{display:flex;gap:5px;margin-top:6px}.reaction-btn{border:1px solid #ffffff09;background:#ffffff05;color:#cdbed2;border-radius:999px;padding:3px 6px;font-size:9px}
+@media(max-width:520px){.feature-launcher{grid-template-columns:1fr 1fr}.feature-launcher .feature-tile:last-child{grid-column:1/-1}.hero h1{font-size:40px}.creator-row{align-items:flex-start;flex-direction:column}.viewer-profile-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* emLee visual refresh — glass neon layout */
+body{background:radial-gradient(circle at 50% -10%,rgba(155,108,255,.12),transparent 34%),radial-gradient(circle at 90% 20%,rgba(255,91,189,.08),transparent 28%),#07040d}
+.container{width:min(980px,100%);padding:18px 18px 52px}
+.top-nav{padding:6px 0 16px;position:relative;z-index:10}
+.brand{font-size:30px;letter-spacing:-1.5px;background:linear-gradient(135deg,#fff,#ff63c2 60%,#9b6cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav-actions{gap:9px}.nav-chat,.nav-rank,.nav-profile{height:42px;padding:0 13px;border-radius:15px;border-color:#a66cff45;background:rgba(255,255,255,.045);backdrop-filter:blur(16px);box-shadow:inset 0 1px rgba(255,255,255,.07),0 8px 25px rgba(0,0,0,.18);font-size:10px}.nav-chat{color:#fff}.nav-profile img{width:25px;height:25px}
+.hero{min-height:500px;margin-bottom:18px;border-radius:28px;padding:40px 34px 34px;background-position:center;box-shadow:0 30px 90px rgba(0,0,0,.55),inset 0 1px rgba(255,255,255,.09)}
+.hero::after{background:linear-gradient(180deg,rgba(5,3,10,.02) 0%,rgba(7,4,13,.12) 34%,rgba(7,4,13,.36) 55%,rgba(7,4,13,.92) 100%)}
+.hero::before{background:radial-gradient(circle at 76% 35%,rgba(255,91,189,.18),transparent 32%),linear-gradient(90deg,rgba(7,4,13,.76),rgba(7,4,13,.12) 65%,rgba(7,4,13,.28))}
+.hero-content{max-width:58%;padding:22px 20px 5px;background:linear-gradient(180deg,rgba(10,6,15,.04),rgba(10,6,15,.56));backdrop-filter:blur(5px)}
+.hero h1{font-size:clamp(62px,10vw,106px);margin:14px 0 12px}.hero-tagline{font-size:14px}.creator-row{margin-top:26px}
+.feature-launcher{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0 22px;padding:13px;border:1px solid rgba(255,255,255,.12);border-radius:27px;background:rgba(13,8,23,.58);backdrop-filter:blur(18px);box-shadow:0 22px 70px rgba(0,0,0,.35),inset 0 1px rgba(255,255,255,.07)}
+.feature-tile.glass-feature{position:relative;display:flex;align-items:center;gap:12px;min-height:112px;padding:12px;border-radius:21px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.025));backdrop-filter:blur(15px);box-shadow:inset 0 1px rgba(255,255,255,.1),0 14px 35px rgba(0,0,0,.22);overflow:hidden}
+.feature-tile.glass-feature::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,91,189,.12),transparent 45%,rgba(155,108,255,.08));pointer-events:none}
+.feature-tile.glass-feature:hover{transform:translateY(-3px);border-color:#ff5bbd70;box-shadow:0 18px 42px rgba(0,0,0,.32),0 0 28px rgba(255,91,189,.1)}
+.feature-icon{position:relative;z-index:1;width:62px;height:62px;flex:0 0 62px;aspect-ratio:auto;border-radius:18px;border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px rgba(255,255,255,.14),0 10px 25px rgba(0,0,0,.25);background-size:cover;background-position:center}.feature-glass-icon{display:grid;place-items:center;background:linear-gradient(135deg,rgba(255,91,189,.35),rgba(155,108,255,.3));font-size:27px;backdrop-filter:blur(8px)}
+.feature-copy{position:relative;z-index:1;min-width:0;flex:1}.feature-name{padding:0;font-size:14px}.feature-sub{padding:5px 0 0;font-size:9px}.feature-arrow{position:relative;z-index:1;font-size:30px;line-height:1;color:#d6b7ff;font-weight:300}.live-feature{border-color:#ff5bbd55!important}.emlee-feature{border-color:#9b6cff55!important}.games-feature{border-color:#687dff55!important}
+.card{background:rgba(18,11,27,.72);border-color:rgba(255,255,255,.1);backdrop-filter:blur(16px);box-shadow:0 18px 50px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.05)}
+.chat-app-shell{background:radial-gradient(circle at 85% 8%,rgba(255,91,189,.12),transparent 28%),#08050d}.chat-app-head{background:rgba(18,10,29,.72);backdrop-filter:blur(18px);border-color:rgba(255,255,255,.11)}
+.chat-list-item{background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.1);backdrop-filter:blur(12px)}
+.profile-save-btn{margin-top:12px}.profile-logout-btn{width:100%;margin-top:9px;padding:10px 12px;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(255,255,255,.04);color:#b9aebe;font-size:10px;font-weight:800}.profile-save-status{min-height:18px;text-align:center;color:#8ff0c1;font-size:10px;font-weight:800;opacity:0;transition:.2s;padding-top:6px}.profile-save-status.show{opacity:1}
+@media(max-width:700px){.container{padding:12px 12px 40px}.hero{min-height:470px;padding:28px 20px 24px}.hero-content{max-width:72%}.feature-launcher{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:8px;border-radius:21px}.feature-tile.glass-feature{min-height:96px;gap:7px;padding:9px;border-radius:16px}.feature-icon{width:45px;height:45px;flex-basis:45px;border-radius:14px;font-size:21px}.feature-name{font-size:10px}.feature-sub{font-size:7px}.feature-arrow{font-size:23px}.brand{font-size:25px}.nav-chat,.nav-rank,.nav-profile{padding:0 8px;font-size:9px}}
+@media(max-width:430px){.hero{min-height:440px}.hero-content{max-width:100%}.hero h1{font-size:58px}.creator-row{flex-direction:row;align-items:center}.feature-launcher{gap:5px;padding:7px}.feature-tile.glass-feature{min-height:90px;padding:7px}.feature-icon{width:38px;height:38px;flex-basis:38px}.feature-copy{overflow:hidden}.feature-name{font-size:9px}.feature-sub{font-size:6.5px}.feature-arrow{font-size:20px}.nav-rank .rank-number{display:none}.nav-chat{font-size:0}.nav-chat .chat-nav-badge{font-size:8px}.nav-chat::before{content:"💬";font-size:15px}}
+
+.auth-field{margin-top:9px}.auth-switch{margin-top:12px;border:0;background:transparent;color:#e9b6dc;font-size:11px;text-decoration:underline;text-underline-offset:3px}.entry-error{display:none;color:#ff8dbd;font-size:11px;text-align:left;margin-top:8px}.entry-box .entry-input{display:block;margin-top:9px}.entry-box #usernameInput{margin-top:0}
+</style>
+
+<style id="mobile-first-layout">
+/* mobile-first layout only: keeps all existing content and functionality unchanged */
+.feature-launcher{grid-template-columns:1fr!important;gap:10px!important}
+.feature-launcher .feature-tile{grid-column:auto!important;width:100%;box-sizing:border-box}
+@media (min-width:521px){
+  .feature-launcher{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media (min-width:901px){
+  .feature-launcher{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media (max-width:520px){
+  .container{padding-left:12px!important;padding-right:12px!important}
+  .hero{width:100%;box-sizing:border-box}
+  .hero-content{max-width:100%!important}
+  .feature-launcher{padding:7px!important}
+  .feature-tile.glass-feature{min-height:90px}
+}
+</style>
+<style>
+/* emLee 4-page split + chat improvements */
+.entry-error{display:none;color:#ff8b9f;font-size:11px;margin-top:8px;line-height:1.45}
+.page-shortcuts{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 12px}
+.page-shortcuts a{padding:8px 10px;border:1px solid #ffffff18;border-radius:11px;background:#ffffff08;color:#f2d8f0;font-size:10px}
+.live-message{max-width:88%;margin:7px 0;padding:10px;border:1px solid #ffffff0c;border-radius:14px;background:#ffffff05;overflow-wrap:anywhere}
+.live-message.live-message-mine{margin-left:auto;margin-right:0;text-align:left;background:linear-gradient(135deg,#ff5bbd24,#9b6cff20);border-color:#ff5bbd2c}
+.live-message:not(.live-message-mine):not(.system){margin-right:auto}
+.live-message-actions{display:flex;gap:7px;margin-top:7px;justify-content:flex-end}
+.live-message-actions button,.private-message-actions button{border:1px solid #ffffff16;border-radius:8px;padding:4px 7px;background:#ffffff08;color:#d8c6df;font-size:9px}
+.live-message-mine .live-message-actions button,.private-message.me .private-message-actions button{border-color:#ff5bbd30}
+.reply-preview{display:none;margin-top:8px;padding:8px 10px;border-left:3px solid var(--pink);border-radius:8px;background:#ff5bbd10;color:#e9d6ec;font-size:10px;line-height:1.4}
+.reply-preview.show{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.reply-preview button{border:0;background:transparent;color:#ff9bda;font-size:12px}
+.live-bottom-back{position:sticky;bottom:8px;z-index:3;width:100%;margin-top:10px;padding:11px;border:1px solid #ffffff20;border-radius:12px;background:rgba(17,10,25,.94);color:#fff;backdrop-filter:blur(12px)}
+body[data-page="emlee"] #app,body[data-page="live"] #app,body[data-page="messages"] #app{display:none!important}
+body[data-page="emlee"] .feature-screen:not(#chatScreen),body[data-page="live"] .feature-screen:not(#liveChatScreen),body[data-page="messages"] .feature-screen:not(#chatListScreen):not(#personalChatScreen){display:none!important}
+body[data-page="emlee"] #chatScreen .feature-back,body[data-page="live"] #liveChatScreen .feature-back,body[data-page="messages"] #chatListScreen .feature-back{display:none}
+@media(max-width:520px){.live-message{max-width:94%}.page-shortcuts a{font-size:9px;padding:7px 8px}}
+
+/* live chat standalone page */
+body[data-page="live"]{overflow:hidden!important}
+body[data-page="live"] #entryScreen{z-index:9999}
+body[data-page="live"] #app{height:100dvh!important;overflow:hidden!important}
+body[data-page="live"] .feature-screen#liveChatScreen{position:fixed!important;inset:0!important;display:block!important;overflow:hidden!important;background:transparent!important}
+body[data-page="live"] #liveChatScreen .feature-screen-inner{width:100%!important;height:100dvh!important;min-height:100dvh!important;padding:0!important;margin:0!important;display:block!important}
+body[data-page="live"] #liveChatScreen .live-room-panel{height:100dvh!important;min-height:100dvh!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:radial-gradient(circle at 85% 5%,rgba(255,91,189,.08),transparent 30%),#08050d!important;box-shadow:none!important;backdrop-filter:none!important}
+.live-standalone-head{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 12px) 14px 10px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(8,5,13,.52);backdrop-filter:blur(16px);z-index:5}
+.live-standalone-title{min-width:0;flex:1}
+.live-standalone-title strong{display:block;font-size:14px}
+.live-standalone-title small{display:block;color:var(--muted);font-size:9px;margin-top:2px}
+.live-standalone-head .live-refresh{margin-left:auto}
+.live-standalone-head .live-status{font-size:9px;white-space:nowrap}
+.live-standalone-messages{height:calc(100dvh - 116px);min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;padding:12px 12px calc(18px + env(safe-area-inset-bottom))!important;display:flex;flex-direction:column;justify-content:flex-start;scroll-behavior:auto}
+.live-standalone-messages > .live-message.system:first-child{margin-top:auto}
+.live-standalone-bottom{flex:0 0 auto;padding:8px 10px calc(10px + env(safe-area-inset-bottom));border-top:1px solid rgba(255,255,255,.08);background:rgba(8,5,13,.60);backdrop-filter:blur(18px);z-index:5}
+.live-standalone-bottom .reply-preview{margin:0 0 7px}
+.live-standalone-input{display:flex;gap:7px;align-items:center}
+.live-standalone-input .live-input{min-width:0;flex:1}
+.live-bottom-back{position:static!important;width:auto!important;flex:0 0 42px!important;height:42px!important;margin:0!important;padding:0!important;border-radius:12px!important;display:grid!important;place-items:center!important;background:#ffffff08!important;border:1px solid rgba(255,255,255,.12)!important;font-size:0!important}
+.live-bottom-back::before{content:"‹";font-size:27px;line-height:1;color:#fff}
+.live-standalone-input .live-send{height:42px;flex:0 0 auto}
+body[data-page="live"] .live-typing{padding:0 4px 6px}
+body[data-page="live"] .live-message{max-width:94%;}
+
+/* live chat final ui adjustments */
+#liveChatScreen{background-image:linear-gradient(rgba(11,7,17,.45),rgba(11,7,17,.58)),url("./wlp.jpeg"),url("/wlp.jpeg") !important;background-size:cover !important;background-position:center !important;background-repeat:no-repeat !important;}
+#liveChatScreen .live-room-panel{background:transparent !important;}
+#liveChatScreen #liveMessages{padding:8px 6px 10px;}
+#liveChatScreen .live-message{width:fit-content;max-width:78%;padding:7px 9px;margin:5px 0;border-radius:12px;}
+#liveChatScreen .live-message-text{font-size:12px;line-height:1.35;word-break:break-word;}
+#liveChatScreen .live-message-actions{display:flex;gap:7px;justify-content:flex-start;align-items:center;margin-top:5px;}
+#liveChatScreen .live-message-actions button{font-size:9px;padding:2px 5px;border:0;background:transparent;color:var(--muted);}
+#liveChatScreen .chat-message-time{display:block;margin:4px 0 0;font-size:8px;}
+#liveChatScreen .live-message-actions + .chat-message-time{margin-top:4px;}
+#liveChatScreen .live-standalone-input{gap:6px;}
+#liveChatScreen .live-input{min-width:0;height:42px;padding:0 11px;}
+#liveChatScreen .live-send{height:42px;padding:0 12px;}
+#liveChatScreen .live-bottom-back{flex:0 0 42px;width:42px;height:42px;}
+/* final live chat layout */
+#liveChatScreen{background-color:#08050d !important;background-image:linear-gradient(rgba(8,5,13,.30),rgba(8,5,13,.46)),url("./wlp.jpeg"),url("/wlp.jpeg") !important;background-size:cover !important;background-position:center !important;background-repeat:no-repeat !important;background-attachment:fixed !important;}
+#liveChatScreen .live-room-panel{background:transparent !important;}
+#liveChatScreen .live-message{width:fit-content;max-width:82%;padding:6px 8px;margin:5px 0;border-radius:11px;background:rgba(255,255,255,.045)!important;border:1px solid rgba(255,255,255,.09)!important;backdrop-filter:blur(12px);box-shadow:0 5px 18px rgba(0,0,0,.12);}
+#liveChatScreen .live-message-mine{background:rgba(255,91,189,.10)!important;}
+#liveChatScreen .live-message-meta{display:flex;align-items:center;gap:7px;min-height:17px;white-space:nowrap;}
+#liveChatScreen .live-message-meta .live-name-btn{font-size:10px;color:#ffb0df;font-weight:800;}
+#liveChatScreen .live-message-meta .chat-message-time{font-size:7.5px;color:rgba(235,220,239,.55);margin:0;}
+#liveChatScreen .live-message-meta .live-message-actions{display:flex;align-items:center;gap:5px;margin:0 0 0 auto;}
+#liveChatScreen .live-message-actions button{font-size:8px;padding:1px 2px;border:0;background:transparent;color:rgba(235,220,239,.62);}
+#liveChatScreen .live-message-text{font-size:11px;line-height:1.3;margin-top:2px;word-break:break-word;}
+#liveChatScreen .live-reply-user{display:block;font-size:8px;color:rgba(230,214,232,.46);font-weight:650;margin-bottom:2px;}
+#liveChatScreen .live-reply-text{display:block;}
+#liveChatScreen .live-owner-badge{font-size:7px;padding:2px 4px;margin:0;}
+#liveChatScreen .live-input{height:38px!important;padding:0 10px!important;border-radius:11px!important;background:rgba(255,255,255,.055)!important;backdrop-filter:blur(12px);}
+</style>
+</head>
+<body data-page="live">
+
+<div id="entryScreen">
+  <div class="entry-box">
+    <div class="entry-logo">eM</div>
+    <h1>em<span>Lee</span></h1>
+    <p class="entry-sub">your little corner of the internet</p>
+    <div class="entry-pfp-wrap" id="signupPfpWrap">
+      <img id="entryPfpPreview" class="entry-pfp" src="./pfp.JPG" alt="profile picture">
+      <label class="pfp-upload">choose profile picture
+        <input id="pfpInput" type="file" accept="image/*" hidden>
+      </label>
+    </div>
+    <input class="entry-input" id="usernameInput" type="text" maxlength="24" minlength="3" placeholder="choose a username" autocomplete="username">
+    <input class="entry-input auth-field" id="emailInput" type="email" maxlength="254" placeholder="email address" autocomplete="email">
+    <input class="entry-input auth-field" id="passwordInput" type="password" minlength="8" placeholder="password (at least 8 characters)" autocomplete="new-password">
+    <div id="usernameError" class="entry-error" role="alert"></div>
+    <button class="enter-btn" id="authSubmitButton" onclick="submitAuth()">create account</button>
+    <button class="auth-switch" id="authSwitchButton" type="button" onclick="toggleAuthMode()">already have an account? log in</button>
+    <div class="entry-note" id="authNote">use an email you can access. passwords are handled by supabase authentication.</div>
+  </div>
+</div>
+
+<div id="app">
+<div class="container">
+
+<nav class="top-nav">
+  <div class="brand" onclick="secretEmLee()">em<span>Lee</span></div>
+  <div class="nav-actions">
+    <button class="nav-chat" onclick="location.href='messages.html'" title="chats">💬 chat <span class="chat-nav-badge" id="chatNavBadge">0</span></button>
+    <button class="nav-rank rank-click" onclick="openRankModal()">🏆 rank <span class="rank-number" id="topRank">#—</span></button>
+    <button class="nav-profile" onclick="openOwnProfile()" title="your profile">
+      <img id="topProfilePfp" src="./pfp.JPG" alt="">
+      <span>profile</span>
+    </button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <span class="live-pill"><i class="live-dot"></i> emlieey live community</span>
+    <span class="hero-premium">premium community space</span>
+    <h1>emLee</h1>
+    <div class="hero-tagline">chat · games · rewards · community</div>
+    <div class="creator-row">
+      <div class="creator">created by Lee</div>
+      <div class="socials">
+        <a class="social" href="https://instagram.com/liyasmv" target="_blank" aria-label="Instagram" title="Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm9.75 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg><span class="social-handle">liyasmv</span>
+        </a>
+        <a class="social" href="https://youtube.com/@liyaasmv" target="_blank" aria-label="YouTube" title="YouTube">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.12C19.55 3.5 12 3.5 12 3.5s-7.55 0-9.4.58A3 3 0 0 0 .5 6.2 31.5 31.5 0 0 0 0 12a31.5 31.5 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.12C4.45 20.5 12 20.5 12 20.5s7.55 0 9.4-.58a3 3 0 0 0 2.1-2.12A31.5 31.5 0 0 0 24 12a31.5 31.5 0 0 0-.5-5.8ZM9.6 15.7V8.3l6.2 3.7-6.2 3.7Z"/></svg><span class="social-handle">liyaasmv</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="feature-launcher">
+  <button class="feature-tile glass-feature live-feature" onclick="location.href='live-chat.html'">
+    <span class="feature-icon feature-image" style="background-image:url('./live.jpg'),url('./emlee-character.PNG')"></span>
+    <span class="feature-copy"><span class="feature-name">live chat</span><span class="feature-sub">join the conversation</span></span><span class="feature-arrow">›</span>
+  </button>
+
+  <button class="feature-tile glass-feature emlee-feature" onclick="location.href='emlee.html'">
+    <span class="feature-icon feature-image" style="background-image:url('./emlee-character.PNG')"></span>
+    <span class="feature-copy"><span class="feature-name">emLee chat</span><span class="feature-sub">talk with emLee</span></span><span class="feature-arrow">›</span>
+  </button>
+
+  <button class="feature-tile glass-feature games-feature" onclick="openFeature('gamesScreen')">
+    <span class="feature-icon feature-image" style="background-image:url('./game.jpg')"></span>
+    <span class="feature-copy"><span class="feature-name">games</span><span class="feature-sub">play &amp; earn points</span></span><span class="feature-arrow">›</span>
+  </button>
+</section>
+
+<section class="card mood-card">
+  <div class="mood-label">emLee's mood today</div>
+  <div class="mood-text" id="dailyMoodText">🌙 soft & sleepy</div>
+  <div class="mood-sub" id="dailyMoodSub">late night energy, calm chats & tiny chaos</div>
+</section>
+
+<section class="card">
+  <div class="section-title"><h2>🪄 mystery daily drop</h2><span id="streakPill" class="streak-pill">🔥 0 day streak</span></div>
+  <div class="mystery-drop"><div><strong id="dropTitle">today's drop is waiting</strong><span id="dropText">open it once today for a tiny surprise.</span></div><button class="drop-btn" id="dropButton" onclick="claimMysteryDrop()">open</button></div>
+</section>
+
+<section class="card">
+  <div class="section-title"><h2>💫 community moments</h2><span>little emLee things</span></div>
+  <div class="moment-grid">
+    <div class="moment"><strong>💬 live room</strong><span>everyone can drop in and make the room feel alive.</span></div>
+    <div class="moment"><strong>🎮 game nights</strong><span>play, earn points and climb the community ranks.</span></div>
+    <div class="moment"><strong>🌙 late nights</strong><span>quiet chats, random jokes and relaxing stream energy.</span></div>
+    <div class="moment"><strong>✨ your space</strong><span>your profile, title, rank and memories grow with you.</span></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="section-title"><h2>🧠 emLee memories</h2><span>your journey</span></div>
+  <div class="memory-grid">
+    <div class="memory"><b id="memoryDays">1</b><span>days here</span></div>
+    <div class="memory"><b id="memoryGames">0</b><span>games played</span></div>
+    <div class="memory"><b id="memoryStreak">0</b><span>day streak</span></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="section-title"><h2>🎁 daily reward</h2><span>once a day</span></div>
+  <div class="reward-box">
+    <div class="reward-info"><strong>daily community bonus</strong><span>claim your daily points and keep your streak alive.</span></div>
+    <button class="claim-btn" id="claimButton" onclick="claimReward()">Claim</button>
+  </div>
+  <div id="rewardResult"></div><div id="rewardCountdown" style="color:var(--muted);font-size:9px;margin-top:7px"></div>
+</section>
+
+<section class="card">
+  <div class="section-title"><h2>🏆 leaderboard</h2><span class="rank-click" onclick="openRankModal()">view all →</span></div>
+  <div id="leaderboardList"><div style="text-align:center;color:#817788;font-size:12px;padding:15px">loading ranks...</div></div>
+</section>
+
+<section class="card">
+  <div class="section-title"><h2>✨ emLee</h2><span>community space</span></div>
+  <p style="color:var(--muted);font-size:12px;line-height:1.7">emLee is the community space around Emlieey Live — a place for live conversations, games, rewards, rankings and community interaction.</p>
+</section>
+
+<section class="card">
+  <div class="section-title"><h2>📄 information</h2><span>emLee</span></div>
+  <div class="legal">
+    <a class="legal-card" href="privacy.html"><strong>Privacy Policy</strong><span>how emLee handles information</span></a>
+    <a class="legal-card" href="terms.html"><strong>Terms & Conditions</strong><span>rules for using emLee</span></a>
+  </div>
+</section>
+
+<footer><strong>emLee</strong> · created by Lee<br>© <span id="currentYear"></span> emLee · liyaasmv Live</footer>
+</div>
+</div>
+
+<!-- emLee AI chat -->
+<div class="feature-screen" id="chatScreen"><div class="feature-screen-inner">
+<button class="feature-back" onclick="closeFeature('chatScreen')">←</button>
+<section class="card" id="chatSection">
+<div class="section-title"><h2>💬 chat with emLee</h2><span id="chatUser">guest</span></div>
+<div id="messages"></div>
+<div class="chat-input-group"><input class="chat-input" id="chatInput" type="text" placeholder="message emLee..." autocomplete="off"><button class="send-btn" id="sendButton" onclick="sendMessage()">Send</button></div>
+</section>
+</div></div>
+
+<!-- viewer personal messages -->
+<div class="feature-screen" id="chatListScreen"><div class="feature-screen-inner chat-app-shell">
+<button class="feature-back" onclick="closeFeature('chatListScreen')">←</button>
+<section class="chat-app-head">
+  <div>
+    <span class="chat-app-kicker"><i class="live-dot"></i> emLee community</span>
+    <h2>messages</h2>
+    <p>message people who have joined the emLee community.</p>
+  </div>
+  <span class="chat-online-pill">● online</span>
+</section>
+<section class="card chat-list-card">
+  <div class="section-title"><h2>viewers</h2><span id="chatListCount">0</span></div>
+  <div id="chatList" class="chat-list"></div>
+</section>
+<section class="chat-app-tip">✨ <strong>private messages</strong> tap a viewer to start chatting.</section>
+</div></div>
+
+<!-- live chat -->
+<div class="feature-screen" id="liveChatScreen">
+  <div class="feature-screen-inner">
+    <section class="live-room-panel">
+      <div class="live-standalone-head">
+        <div class="live-standalone-title">
+          <strong>live chat</strong>
+          <small>everyone in the emLee community can talk here</small>
+        </div>
+        <span class="live-status"><i class="live-status-dot"></i> live</span>
+        <button class="live-refresh" onclick="loadLiveChat()">↻</button>
+      </div>
+      <div id="liveMessages" class="live-standalone-messages"><div class="live-message system">emLee community room is live...</div></div>
+      <div class="live-standalone-bottom">
+        <div class="live-typing" id="liveTyping"><span id="liveTypingName">someone</span> is typing <span class="typing-dots"><span></span><span></span><span></span></span></div>
+        <div id="liveReplyPreview" class="reply-preview"></div>
+        <div class="live-standalone-input">
+          <button class="live-bottom-back" type="button" onclick="location.href='index.html'" aria-label="back to emLee"></button>
+          <input class="live-input" id="liveChatInput" maxlength="300" placeholder="say something to the community..." autocomplete="off">
+          <button class="live-send" onclick="sendLiveMessage()">Send</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- games, now opened from profile -->
+<div class="feature-screen" id="gamesScreen"><div class="feature-screen-inner">
+<button class="feature-back" onclick="closeFeature('gamesScreen')">←</button>
+<section class="card">
+<div class="section-title"><h2>🎮 games</h2><span>limited plays</span></div>
+<div class="games-grid">
+<button class="game-btn" onclick="playQuiz()"><span class="game-icon">🧠</span><span class="game-name">Quiz</span><span class="game-limit">2 / day</span></button>
+<button class="game-btn" onclick="playFlip()"><span class="game-icon">🪙</span><span class="game-name">Coin Flip</span><span class="game-limit">3 / day</span></button>
+<button class="game-btn" onclick="playGuess()"><span class="game-icon">🔢</span><span class="game-name">Guess Number</span><span class="game-limit">2 / day</span></button>
+<button class="game-btn" onclick="spinWheel()"><span class="game-icon">🎡</span><span class="game-name">Spin Wheel</span><span class="game-limit">1 / day</span></button>
+</div>
+<div class="game-result" id="gameResult"></div>
+</section>
+</div></div>
+
+<!-- own profile -->
+<div class="feature-screen" id="ownProfileScreen"><div class="feature-screen-inner">
+<button class="feature-back" onclick="closeFeature('ownProfileScreen')">←</button>
+<section class="card">
+<div class="section-title"><h2>your profile</h2><span id="ownProfileRank">rank #—</span></div>
+<div class="profile-edit">
+<img id="ownProfileAvatar" class="profile-edit-avatar" src="./pfp.JPG" alt="">
+<input class="entry-input" id="editUsernameInput" maxlength="24" placeholder="username">
+<label>change profile picture</label>
+<input id="editPfpInput" type="file" accept="image/*">
+</div>
+<button class="enter-btn profile-save-btn" id="profileSaveButton" onclick="saveOwnProfile()">Save profile</button>
+<div class="profile-save-status" id="profileSaveStatus" aria-live="polite"></div>
+    <button class="profile-logout-btn" id="profileLogoutButton" type="button" onclick="logoutEmLee()">log out</button>
+<div class="profile-box" style="margin-top:15px">
+<img id="ownStatsPfp" class="profile-avatar" src="./pfp.JPG" alt="">
+<div><div class="profile-name" id="ownStatsName">guest</div><div class="profile-sub">emLee community member</div><span class="profile-title" id="ownProfileTitle">newcomer</span><div class="profile-level-row"><span id="ownStatsLevel">level 1</span><span id="ownStatsXP">0 xp</span></div></div>
+<div class="profile-stat"><div class="profile-points" id="ownStatsPoints">0</div><small>points</small></div>
+</div>
+<button class="personal-chat-btn" onclick="openFeature('gamesScreen')">🎮 Games</button>
+</section>
+</div></div>
+
+<!-- game modal -->
+<div class="modal" id="gameModal"><div class="modal-content"><h3 id="modalTitle">Game</h3><div class="modal-text" id="modalContent"></div><button class="close-btn" onclick="closeGameModal()">Close</button></div></div>
+
+<!-- viewer profile -->
+<div class="modal" id="viewerProfileModal"><div class="modal-content viewer-profile-fullscreen">
+<button class="profile-screen-back" onclick="closeViewerProfile()">←</button>
+<img id="viewerProfilePfp" class="viewer-profile-pfp" src="./pfp.JPG" alt="">
+<h3 id="viewerProfileName">viewer</h3><div class="profile-title" id="viewerProfileTitle">newcomer</div>
+<div class="viewer-profile-grid">
+<div><strong id="viewerProfileRank">#—</strong><span>rank</span></div><div><strong id="viewerProfileLevel">1</strong><span>level</span></div><div><strong id="viewerProfileXP">0</strong><span>xp</span></div><div><strong id="viewerProfilePoints">0</strong><span>points</span></div>
+</div>
+<button class="personal-chat-btn" id="viewerPersonalChatBtn">Personal Chat</button>
+</div></div>
+
+<!-- personal chat -->
+<div class="feature-screen" id="personalChatScreen"><div class="personal-chat-fullscreen">
+<button class="profile-screen-back" onclick="closePersonalChat()">←</button>
+<div class="personal-chat-title"><h2 id="personalChatTitle">personal chat</h2><span id="personalChatStatus" style="color:var(--muted);font-size:10px">online chat</span></div>
+<div id="personalChatMessages"><div class="private-empty">start a private conversation...</div></div>
+<div id="privateReplyPreview" class="reply-preview"></div><div class="chat-input-group"><input class="chat-input" id="personalChatInput" maxlength="500" placeholder="message..." autocomplete="off"><button class="send-btn" id="personalChatSendButton" onclick="sendPersonalChatMessage()">Send</button></div>
+</div></div>
+
+<!-- ranks -->
+<div class="modal" id="rankModal"><div class="modal-content">
+<h3>🏆 community ranks</h3><div class="modal-text" style="margin-bottom:10px">top emLee community members</div>
+<div id="fullRankList"><div style="color:#817788;font-size:12px;padding:15px">loading...</div></div>
+<button class="close-btn" onclick="closeRankModal()">Close</button>
+</div></div>
+
+<script>
+const PAGE_MODE=document.body.dataset.page||"home";
+const WORKER_URL="https://emlieey-ai.liyasmuhammedmv.workers.dev";
+const $=id=>document.getElementById(id);
+let currentUser=null,isSending=false,isLiveSending=false,guessNumber=null;
+let selectedPfp=localStorage.getItem("emlee_pfp")||"./pfp.JPG";
+let leaderboardCache=[],activeFeature=null;
+let liveMessagesLoaded=false,liveMessageIds=new Set(),liveLoadBusy=false,fakeTypingTimer=null;
+let activePrivateChatUser="",privateChatMessages=[],privateChatLoadBusy=false,privateChatTimer=null;
+let knownChats=JSON.parse(localStorage.getItem("emlee_chat_contacts")||"[]");
+let unreadChats=JSON.parse(localStorage.getItem("emlee_chat_unread")||"{}");
+const GAME_LIMITS={quiz:2,flip:3,guess:2,wheel:1};
+
+function openFeature(id){
+  const s=$(id);if(!s)return;
+  if(activeFeature&&activeFeature!==id)$(activeFeature)?.classList.remove("active");
+  s.classList.add("active");activeFeature=id;document.body.style.overflow="hidden";
+  const inner=s.querySelector(".feature-screen-inner");if(inner)inner.scrollTop=0;
+  if(id==="chatListScreen"){
+    renderChatList();
+  }
+}
+function closeFeature(id){
+  $(id)?.classList.remove("active");
+  if(activeFeature===id)activeFeature=null;
+  if(!activeFeature&&!("personalChatScreen"===id))document.body.style.overflow="auto";
+}
+document.addEventListener("keydown",e=>{
+  if(e.key!=="Escape")return;
+  if($("personalChatScreen").classList.contains("active"))return closePersonalChat();
+  if(activeFeature)closeFeature(activeFeature);
+});
+
+function getSavedUsername(){return localStorage.getItem("emlee_user")||""}
+function getAccessToken(){return localStorage.getItem("emlee_access_token")||""}
+function normalizeUsername(n){return(n||"").trim().replace(/\s+/g," ").slice(0,24)}
+let authMode="signup";
+function setAuthError(message){const e=$("usernameError");if(e){e.textContent=message||"";e.style.display=message?"block":"none"}}
+function toggleAuthMode(){
+  authMode=authMode==="signup"?"login":"signup";
+  $("usernameInput").style.display=authMode==="signup"?"block":"none";
+  $("signupPfpWrap").style.display=authMode==="signup"?"block":"none";
+  $("passwordInput").autocomplete=authMode==="signup"?"new-password":"current-password";
+  $("authSubmitButton").textContent=authMode==="signup"?"create account":"log in to emLee";
+  $("authSwitchButton").textContent=authMode==="signup"?"already have an account? log in":"new here? create an account";
+  $("authNote").textContent=authMode==="signup"?"use an email you can access. passwords are handled by supabase authentication.":"log in with the email and password you used when signing up.";
+  setAuthError("");
+}
+async function submitAuth(){
+  const username=normalizeUsername($("usernameInput").value),email=$("emailInput").value.trim().toLowerCase(),password=$("passwordInput").value;
+  const button=$("authSubmitButton");
+  setAuthError("");
+  if(!email||!email.includes("@")){setAuthError("please enter a valid email address.");return}
+  if(password.length<8){setAuthError("password must be at least 8 characters.");return}
+  if(authMode==="signup"&&username.length<3){setAuthError("please choose a username with at least 3 characters.");return}
+  button.disabled=true;button.textContent=authMode==="signup"?"creating account…":"logging in…";
+  try{
+    if(authMode==="signup"){
+      const result=await apiRequest("/auth/signup",{method:"POST",body:JSON.stringify({username,email,password,pfp:selectedPfp})});
+      if(result.access_token){localStorage.setItem("emlee_access_token",result.access_token);if(result.refresh_token)localStorage.setItem("emlee_refresh_token",result.refresh_token);localStorage.setItem("emlee_user",result.user.username);currentUser=result.user;openApp();return;}
+      const notice=result.message||"account created. check your email to confirm it, then log in.";
+      authMode="signup";toggleAuthMode();
+      setAuthError(notice);
+    }else{
+      const result=await apiRequest("/auth/login",{method:"POST",body:JSON.stringify({email,password})});
+      if(!result.access_token||!result.user?.username)throw new Error("login response was incomplete");
+      localStorage.setItem("emlee_access_token",result.access_token);if(result.refresh_token)localStorage.setItem("emlee_refresh_token",result.refresh_token);localStorage.setItem("emlee_user",result.user.username);currentUser=result.user;openApp();return;
+    }
+  }catch(err){
+    const msg=String(err?.message||err);
+    setAuthError(msg.includes("username_exists")||msg.toLowerCase().includes("already exists")?"this username already exists. please choose another.":msg.toLowerCase().includes("invalid login credentials")?"email or password is incorrect.":msg.toLowerCase().includes("email not confirmed")?"please confirm your email before logging in.":msg.replaceAll("_"," ").slice(0,180));
+  }finally{button.disabled=false;button.textContent=authMode==="signup"?"create account":"log in to emLee";}
+}
+async function enterApp(){return submitAuth()}
+function logoutEmLee(){localStorage.removeItem("emlee_access_token");localStorage.removeItem("emlee_refresh_token");localStorage.removeItem("emlee_user");currentUser=null;location.reload()}
+function openApp(){
+  if(!getAccessToken()){showEntry();return}
+  if(!currentUser){const saved=getSavedUsername();if(!saved)return;currentUser={username:saved}}
+  $("chatUser").textContent=currentUser.username;
+  $("entryScreen").style.display="none";$("app").style.display="block";document.body.style.overflow="auto";
+  updatePfpUI();dailyMood();updateUniqueUI();updateRewardCountdown();setInterval(updateRewardCountdown,1000);loadProfile();loadLeaderboard();loadLiveChat();checkBackendStatus();renderChatList();startPrivateUnreadPolling();if(PAGE_MODE==="emlee")openFeature("chatScreen");else if(PAGE_MODE==="live")openFeature("liveChatScreen");else if(PAGE_MODE==="messages")openFeature("chatListScreen");
+}
+function showEntry(){$("entryScreen").style.display="flex";$("app").style.display="none";document.body.style.overflow="hidden";if(authMode==="login")$("emailInput").focus();else $("usernameInput").focus()}
+function escapeHTML(str){return String(str??"").replace(/[&<>'"]/g,t=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[t]))}
+
+async function restoreSession(){
+  const refresh=getRefreshToken();
+  if(!refresh)return false;
+  try{
+    const res=await fetch(WORKER_URL+"/auth/refresh",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({refresh_token:refresh})});
+    const raw=await res.text();let data={};try{data=raw?JSON.parse(raw):{}}catch{}
+    if(!res.ok||!data.access_token||!data.user?.username)return false;
+    localStorage.setItem("emlee_access_token",data.access_token);
+    if(data.refresh_token)localStorage.setItem("emlee_refresh_token",data.refresh_token);
+    localStorage.setItem("emlee_user",data.user.username);
+    currentUser=data.user;
+    return true;
+  }catch(e){return false}
+}
+function getRefreshToken(){return localStorage.getItem("emlee_refresh_token")||""}
+
+async function apiRequest(path,options={}){
+  const token=getAccessToken();
+  const headers={"Content-Type":"application/json",...(options.headers||{})};
+  if(token)headers.Authorization="Bearer "+token;
+  const res=await fetch(WORKER_URL+path,{...options,headers});
+  const raw=await res.text();let data={};
+  try{data=raw?JSON.parse(raw):{}}catch{data={raw}}
+  if(!res.ok&&res.status===401&&!path.startsWith("/auth/")){
+    const refreshed=await restoreSession();
+    if(refreshed)return apiRequest(path,{...options,headers:{...(options.headers||{}),Authorization:"Bearer "+getAccessToken()}});
+  }
+  if(!res.ok)throw new Error(data.message||data.error||raw||("HTTP "+res.status));
+  return data;
+}
+function pickArray(data,keys){for(const k of keys){if(Array.isArray(data?.[k]))return data[k]}return Array.isArray(data)?data:[]}
+function pickUser(data){return data?.user||data?.profile||data||{}}
+
+async function sendMessage(){
+  if(isSending)return;
+  const input=$("chatInput"),text=input.value.trim(),username=getSavedUsername();
+  if(!username)return showEntry();if(!text)return;
+  input.value="";appendMessage(text,"user");isSending=true;$("sendButton").disabled=true;
+  const typing=appendMessage("emLee is typing...","bot typing");
+  try{
+    const response=await apiRequest("/chat",{method:"POST",body:JSON.stringify({message:text,username})});
+    removeMessage(typing);
+    const reply=response.reply||response.message||response.text||response.data?.reply||"hmm... brain loading 😭";
+    appendMessage(typeof reply==="string"?reply:JSON.stringify(reply),"bot");
+    if(response.user)currentUser={...currentUser,...response.user};
+    await loadProfile();
+  }catch(e){console.error("Emlieey Chat Error:",e);removeMessage(typing);appendMessage("connection scene aan... pinne try cheyy 😭","bot")}
+  finally{isSending=false;$("sendButton").disabled=false;input.focus()}
+}
+function appendMessage(text,cls){
+  const el=document.createElement("div");el.id="msg_"+Date.now()+"_"+Math.random().toString(36).slice(2,6);el.className="message "+cls;el.textContent=String(text);$("messages").appendChild(el);$("messages").scrollTop=$("messages").scrollHeight;return el.id
+}
+function removeMessage(id){$(id)?.remove()}
+
+async function loadProfile(){
+  const username=getSavedUsername();if(!username)return;
+  try{
+    const user=pickUser(await apiRequest("/profile?username="+encodeURIComponent(username)));
+    const points=Number(user.points||0),level=Number(user.level||user.rankLevel||1),xp=Number(user.xp||user.experience||0),rank=user.rank??user.position??"—";
+    currentUser={...currentUser,username:user.username||username,points,rank,level,xp,pfp:user.pfp||user.avatar||user.avatarUrl||user.photoURL||selectedPfp};
+    localStorage.setItem("emlee_user",currentUser.username);
+    if(currentUser.pfp&&!String(currentUser.pfp).startsWith("./"))selectedPfp=currentUser.pfp;
+    updatePfpUI();updateOwnProfileUI();
+  }catch(e){console.log("Profile unavailable:",e);updateOwnProfileUI()}
+}
+function updatePfpUI(){
+  const src=selectedPfp||"./pfp.JPG";
+  ["entryPfpPreview","topProfilePfp","ownProfileAvatar","ownStatsPfp"].forEach(id=>{if($(id))$(id).src=src});
+}
+function updateOwnProfileUI(){
+  const u=currentUser||{},name=u.username||getSavedUsername()||"guest";
+  $("editUsernameInput").value=name;$("ownStatsName").textContent=name;
+  $("ownStatsPoints").textContent=Number(u.points||0).toLocaleString();
+  $("ownStatsLevel").textContent="level "+Number(u.level||1);
+  $("ownStatsXP").textContent=Number(u.xp||0).toLocaleString()+" xp";
+  $("ownProfileRank").textContent="rank #"+(u.rank||"—");updatePfpUI();
+}
+function openOwnProfile(){openFeature("ownProfileScreen");updateOwnProfileUI()}
+async function saveOwnProfile(){
+  const old=getSavedUsername(),name=normalizeUsername($("editUsernameInput").value);
+  if(!name)return;
+  const saveButton=$("profileSaveButton");if(saveButton){saveButton.disabled=true;saveButton.textContent="saving..."}
+  try{
+    if(name!==old){
+      localStorage.setItem("emlee_user",name);currentUser={...currentUser,username:name};
+    }
+    const payload={username:name,pfp:selectedPfp};
+    try{const d=await apiRequest("/profile",{method:"POST",body:JSON.stringify(payload)});if(d.user)currentUser={...currentUser,...d.user}}catch(e){console.log("PFP/profile sync unavailable:",e)}
+    $("chatUser").textContent=name;updateOwnProfileUI();await loadProfile();await loadLeaderboard();
+    const status=$("profileSaveStatus");if(status){status.textContent="saved ✓";status.classList.add("show");setTimeout(()=>status.classList.remove("show"),2200)}
+    if(saveButton){saveButton.textContent="saved ✓";setTimeout(()=>{saveButton.textContent="Save profile";saveButton.disabled=false},1800)}
+  }catch(e){if(saveButton){saveButton.textContent="Save profile";saveButton.disabled=false}console.error(e)}
+}
+
+async function claimReward(){
+  const username=getSavedUsername();if(!username)return showEntry();
+  $("claimButton").disabled=true;$("rewardResult").textContent="claiming your reward...";
+  try{const d=await apiRequest("/reward",{method:"POST",body:JSON.stringify({username})});$("rewardResult").textContent=d.message||"daily reward claimed! 🎉";await loadProfile();await loadLeaderboard()}
+  catch(e){$("rewardResult").textContent=e.message||"reward unavailable right now."}
+  finally{$("claimButton").disabled=false}
+}
+
+function dailyMood(){const moods=[["🌙 soft & sleepy","late night energy, calm chats & tiny chaos"],["⚡ slightly chaotic","good vibes, random jokes and no serious business"],["💗 warm & cozy","slow chats, soft energy and comfy community vibes"],["🎀 cute chaos","tiny drama, big laughs and questionable decisions"],["✨ main character","today feels like a little emLee moment"]];const n=Math.floor(new Date().getDate()/1)%moods.length;$("dailyMoodText").textContent=moods[n][0];$("dailyMoodSub").textContent=moods[n][1]}
+function getStreak(){const key="emlee_streak_"+getSavedUsername(),now=new Date();now.setHours(0,0,0,0);let d={count:0,last:""};try{d=JSON.parse(localStorage.getItem(key)||"{}" )||d}catch{}const last=d.last?new Date(d.last):null;if(last){last.setHours(0,0,0,0);const diff=Math.round((now-last)/86400000);if(diff===0)return d.count||0;if(diff===1)d.count=Number(d.count||0)+1;else d.count=1}else d.count=1;d.last=now.toISOString();localStorage.setItem(key,JSON.stringify(d));return d.count}
+function getTitle(streak){const m=new Date().getMonth();const seasonal=m===11||m===0?"❄️ winter soul":m>=5&&m<=7?"☀️ summer soul":m===9?"🎃 october soul":null;if(streak>=30)return"🌙 night legend";if(streak>=14)return"🔥 regular";if(streak>=7)return"✨ familiar face";if(streak>=3)return"💗 returning";return seasonal||"🌱 newcomer"}
+function updateUniqueUI(){const streak=getStreak(),title=getTitle(streak);$("streakPill").textContent="🔥 "+streak+" day streak";$("memoryStreak").textContent=streak;$("ownProfileTitle").textContent=title;$("viewerProfileTitle").textContent=title;const first=localStorage.getItem("emlee_first_seen");if(!first)localStorage.setItem("emlee_first_seen",Date.now());const days=Math.max(1,Math.floor((Date.now()-Number(localStorage.getItem("emlee_first_seen")))/86400000)+1);$("memoryDays").textContent=days;const usage=getGameUsage();$("memoryGames").textContent=Object.values(usage).reduce((a,b)=>a+Number(b||0),0)}
+function updateRewardCountdown(){const n=new Date(),next=new Date(n);next.setHours(24,0,0,0);const ms=next-n,h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000),sec=Math.floor((ms%60000)/1000);const e=$("rewardCountdown");if(e)e.textContent="next daily reward in "+h+"h "+m+"m "+sec+"s"}
+function claimMysteryDrop(){const key="emlee_drop_"+getSavedUsername()+"_"+todayKey();if(localStorage.getItem(key)){$("dropText").textContent="already opened today — come back tomorrow ✨";return}const drops=[["🌸 tiny blessing","+5 points energy"],["🎀 lucky moment","+10 points energy"],["🌙 sleepy badge","you found today's soft drop"],["🔥 chaos token","today you are officially lucky"]];const d=drops[Math.floor(Math.random()*drops.length)];localStorage.setItem(key,JSON.stringify(d));$("dropTitle").textContent=d[0];$("dropText").textContent=d[1];$("dropButton").textContent="opened ✓";$("dropButton").disabled=true}
+function reactToMessage(btn,emoji){if(!btn)return;btn.textContent=emoji+" ✓";btn.disabled=true}
+function secretEmLee(){const k="emlee_secret_found";if(localStorage.getItem(k))return;localStorage.setItem(k,"1");const t=$("dailyMoodText");if(t){t.textContent="🪄 you found a secret";$("dailyMoodSub").textContent="emLee has a tiny hidden side quest for you ✨"}}
+
+function todayKey(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function getGameUsage(){try{return JSON.parse(localStorage.getItem("emlee_game_usage_"+getSavedUsername()+"_"+todayKey())||"{}")}catch{return {}}}
+function saveGameUsage(u){localStorage.setItem("emlee_game_usage_"+getSavedUsername()+"_"+todayKey(),JSON.stringify(u))}
+function canPlayGame(game){const u=getGameUsage(),used=Number(u[game]||0);if(used>=GAME_LIMITS[game]){$("gameResult").textContent="daily limit reached. come back tomorrow ✨";return false}u[game]=used+1;saveGameUsage(u);return true}
+async function rewardGame(game,reward,description){
+  try{const d=await apiRequest("/game-reward",{method:"POST",body:JSON.stringify({username:getSavedUsername(),game,reward})});$("gameResult").textContent=d.message||description;await loadProfile();await loadLeaderboard()}
+  catch(e){$("gameResult").textContent=description}
+}
+function playFlip(){if(!canPlayGame("flip"))return;const heads=Math.random()>.5,reward=heads?10:0;$("gameResult").textContent="🪙 "+(heads?"heads!":"tails!");if(reward)rewardGame("flip",reward,"🪙 heads! +10 points")}
+function playGuess(){if(!canPlayGame("guess"))return;guessNumber=Math.floor(Math.random()*10)+1;openGameModal("🔢 Guess Number",`<p class="modal-text">guess a number between 1 and 10.</p><input id="guessInput" type="number" min="1" max="10" placeholder="your guess" style="width:100%;padding:13px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:white;outline:none;text-align:center"><button class="enter-btn" onclick="checkGuess()">Guess</button>`)}
+function checkGuess(){const v=Number($("guessInput").value);if(!v)return;if(v===guessNumber){closeGameModal();$("gameResult").textContent="🎉 perfect guess!";rewardGame("guess",25,"🎉 perfect guess! +25 points")}else openGameModal("😅 Not quite",`<p class="modal-text">the number was ${guessNumber}. try again tomorrow!</p>`)}
+const QUIZ_QUESTIONS=[
+["emLee community inte creator aara?",["lee","emlieey","srrghhae"],0],
+["emlieey evide aanu live aayi chat cheyyunne?",["emLee community","moon","school"],0],
+["emLee website inte main vibe entha?",["community","shopping","news"],0],
+["daily reward ethra pravashyam claim cheyyam?",["once a day","10 times","never"],0],
+["emLee il points enthinu use cheyyum?",["community ranking","wifi","bus ticket"],0],
+["emlieeyude vibe engane aanu?",["cool & cheeky","boring","super formal"],0],
+["emLee il games undoo?",["yes","illa","ariyilla"],0],
+["top community members evide kaanam?",["leaderboard","footer","privacy page"],0]
+];
+let currentQuiz=null;
+function playQuiz(){if(!canPlayGame("quiz"))return;const q=QUIZ_QUESTIONS[Math.floor(Math.random()*QUIZ_QUESTIONS.length)];currentQuiz=q;openGameModal("🧠 Manglish Quiz",`<p class="modal-text">${escapeHTML(q[0])}</p>`+q[1].map((x,i)=>`<button class="modal-option" onclick="quizAnswer(${i})">${escapeHTML(x)}</button>`).join(""))}
+function quizAnswer(i){if(!currentQuiz)return;const correct=i===currentQuiz[2];closeGameModal();$("gameResult").textContent=correct?"🎉 correct! +25 points":"😅 wrong!";if(correct)rewardGame("quiz",25,"🎉 correct! +25 points");currentQuiz=null}
+function spinWheel(){if(!canPlayGame("wheel"))return;const rewards=[0,10,25,50,100],r=rewards[Math.floor(Math.random()*rewards.length)];$("gameResult").textContent=r?"🎡 +"+r+" points":"🎡 good luck next time";if(r)rewardGame("wheel",r,"🎡 +"+r+" points")}
+function openGameModal(t,h){$("modalTitle").textContent=t;$("modalContent").innerHTML=h;$("gameModal").style.display="flex"}
+function closeGameModal(){$("gameModal").style.display="none"}
+
+async function loadLeaderboard(){
+  const c=$("leaderboardList");
+  try{
+    const data=await apiRequest("/leaderboard",{method:"GET"});
+    let list=pickArray(data,["leaderboard","users","data","ranks"]);
+    list=list.map((p,i)=>({...p,username:p.username||p.name||"unknown",points:Number(p.points||p.score||0),rank:p.rank||p.position||i+1}));
+    list.sort((a,b)=>Number(b.points)-Number(a.points));
+    leaderboardCache=list;
+    if(!list.length){c.innerHTML='<div style="text-align:center;color:#817788;padding:15px;font-size:12px">no leaderboard data yet</div>';$("topRank").textContent="#—";return}
+    c.innerHTML="";
+    const me=String(getSavedUsername()).toLowerCase();
+    let myRank=null;
+    list.slice(0,10).forEach((p,i)=>{const rank=i+1;if(String(p.username).toLowerCase()===me)myRank=rank;appendRankRow(c,p,rank)});
+    if(myRank){$("topRank").textContent="#"+myRank;$("ownProfileRank").textContent="rank #"+myRank}
+    else{const meObj=list.find(x=>String(x.username).toLowerCase()===me);if(meObj){const idx=list.indexOf(meObj)+1;$("topRank").textContent="#"+idx;$("ownProfileRank").textContent="rank #"+idx}}
+  }catch(e){console.error("Leaderboard Error:",e);c.innerHTML='<div style="text-align:center;color:#ef4444;padding:15px;font-size:12px">failed to load leaderboard</div>'}
+}
+function appendRankRow(c,p,rank){const row=document.createElement("div");row.className="leader-row rank-click-row";row.onclick=()=>openViewerProfile(p.username);const badge=rank===1?"🥇":rank===2?"🥈":rank===3?"🥉":"#"+rank;row.innerHTML=`<div class="leader-left"><div class="rank-badge">${badge}</div><div class="leader-name">${escapeHTML(p.username)}</div></div><div class="leader-points">${p.points.toLocaleString()} PTS</div>`;c.appendChild(row)}
+async function openRankModal(){
+  $("rankModal").style.display="flex";const c=$("fullRankList");c.innerHTML='<div style="color:#817788;font-size:12px;padding:15px">loading ranks...</div>';
+  try{if(!leaderboardCache.length)await loadLeaderboard();if(!leaderboardCache.length){c.innerHTML='<div style="color:#817788;font-size:12px;padding:15px">no community ranks yet.</div>';return}c.innerHTML="";leaderboardCache.forEach((p,i)=>{const r=document.createElement("div");r.className="rank-modal-row rank-click-row";r.onclick=()=>openViewerProfile(p.username);const rank=i+1,medal=rank===1?"🥇":rank===2?"🥈":rank===3?"🥉":"#"+rank;r.innerHTML=`<div class="rank-modal-left"><div class="rank-modal-position">${medal}</div><div class="rank-modal-name">${escapeHTML(p.username)}</div></div><div class="rank-modal-points">${Number(p.points||0).toLocaleString()} PTS</div>`;c.appendChild(r)})}catch(e){c.innerHTML='<div style="color:#ef4444;font-size:12px;padding:15px">leaderboard unavailable.</div>'}
+}
+function closeRankModal(){$("rankModal").style.display="none"}
+
+function isOwnerUsername(u){return["liyas","lee","liysmv","liyaasmv"].includes(String(u||"").trim().toLowerCase())}
+function getLiveMessageKey(m){return m.id?String(m.id):String(m.username||"guest")+"|"+String(m.message||m.text||"")+"|"+String(m.createdAt||"")}
+function findExistingLiveMessage(m){for(const n of $("liveMessages").querySelectorAll(".live-message:not(.system)"))if((m.id&&n.dataset.messageId===String(m.id))||(n.dataset.username===String(m.username||"guest")&&n.dataset.message===String(m.message||m.text||"")))return n;return null}
+function showFakeTyping(u){$("liveTypingName").textContent=u||"someone";$("liveTyping").classList.add("active");clearTimeout(fakeTypingTimer);fakeTypingTimer=setTimeout(()=>$("liveTyping").classList.remove("active"),1200)}
+function appendLiveSystem(t){const e=document.createElement("div");e.className="live-message system";e.textContent=t;$("liveMessages").appendChild(e)}
+function scrollLiveBottom(){$("liveMessages").scrollTop=$("liveMessages").scrollHeight}
+let liveReplyTarget=null,privateReplyTarget=null;
+function chooseLiveReply(username,message){liveReplyTarget={username};const p=$("liveReplyPreview");p.classList.add("show");p.innerHTML=`<span>replying to <b>${escapeHTML(username)}</b></span><button type="button" onclick="clearLiveReply()">×</button>`;$("liveChatInput").focus()}
+function clearLiveReply(){liveReplyTarget=null;const p=$("liveReplyPreview");p.classList.remove("show");p.textContent=""}
+function choosePrivateReply(from,message){privateReplyTarget={from,message};const p=$("privateReplyPreview");p.classList.add("show");p.innerHTML=`<span>replying to <b>${escapeHTML(from)}</b>: ${escapeHTML(message.slice(0,100))}</span><button type="button" onclick="clearPrivateReply()">×</button>`;$("personalChatInput").focus()}
+function clearPrivateReply(){privateReplyTarget=null;const p=$("privateReplyPreview");p.classList.remove("show");p.textContent=""}
+async function unsendLiveMessage(button){const e=button.closest(".live-message"),id=e?.dataset.messageId,username=getSavedUsername();if(!e||!id||id.startsWith("temp-"))return alert("message is still sending; try again in a moment.");if(!confirm("Unsend this message?"))return;try{await apiRequest("/live-chat?id="+encodeURIComponent(id)+"&username="+encodeURIComponent(username),{method:"DELETE"});e.remove();liveMessageIds.delete(String(id))}catch(err){alert("could not unsend this message yet. Worker update may be needed.")}}
+function appendLiveMessage(username,message,id="",optimistic=false,pfp="",createdAt=""){
+  const existing=findExistingLiveMessage({id,username,message});if(existing&&!optimistic)return existing;
+  const e=document.createElement("div"),owner=isOwnerUsername(username),mine=String(username).toLowerCase()===String(getSavedUsername()).toLowerCase();
+  e.className="live-message"+(owner?" owner-message":"")+(mine?" live-message-mine":"");
+  e.dataset.messageId=id;e.dataset.username=username;e.dataset.message=message;e.dataset.optimistic=optimistic;
+  const safePfp=escapeHTML(pfp||"./pfp.JPG"),safeUser=escapeHTML(username||"guest");
+  let body=escapeHTML(message),replyUser="",replyText=body;
+  const lines=String(message||"").split("\n");
+  if(lines.length>1){
+    const first=lines[0].replace(/^↪\s*/,"").trim();
+    if(first){replyUser=first.replace(/:\s*$/,"");replyText=escapeHTML(lines.slice(1).join("\n"));}
+  }
+  const replyMarkup=replyUser?`<span class="live-reply-user">replying to ${escapeHTML(replyUser)}</span><span class="live-reply-text">${replyText}</span>`:body;
+  e.innerHTML=`<div class="live-message-meta"><img class="live-pfp" src="${safePfp}" alt=""><button class="live-name-btn">${safeUser}</button>${owner?'<span class="live-owner-badge">OWNER</span>':""}<span class="chat-message-time">${formatIndianTime(createdAt||new Date().toISOString())}</span><div class="live-message-actions"><button type="button" class="reply-live-btn">reply</button>${mine?'<button type="button" class="unsend-live-btn">unsend</button>':""}</div></div><div class="live-message-text">${replyMarkup}</div>`;
+  e.querySelector(".live-name-btn").onclick=()=>openViewerProfile(username);
+  e.querySelector(".reply-live-btn").onclick=()=>chooseLiveReply(username,message);
+  e.querySelector(".unsend-live-btn")?.addEventListener("click",ev=>unsendLiveMessage(ev.currentTarget));
+  $("liveMessages").appendChild(e);
+  if(id&&!String(id).startsWith("temp-"))liveMessageIds.add(String(id));
+  return e
+}
+async function loadLiveChat(){
+  if(liveLoadBusy)return;liveLoadBusy=true;
+  try{
+    const data=await apiRequest("/live-chat",{method:"GET"}),messages=pickArray(data,["messages","chat","data"]),c=$("liveMessages");
+    if(!liveMessagesLoaded){c.innerHTML="";liveMessageIds=new Set();if(!messages.length)appendLiveSystem("be the first one to say something ✨");else [...messages].sort((a,b)=>messageTimeMs(a)-messageTimeMs(b)).forEach(m=>appendLiveMessage(m.username||"guest",m.message||m.text||"",m.id||getLiveMessageKey(m),false,m.pfp||m.avatar||m.avatarUrl||"",m.createdAt||m.created_at||""));liveMessagesLoaded=true;requestAnimationFrame(scrollLiveBottom);return}
+    messages.forEach(m=>{const id=m.id?String(m.id):getLiveMessageKey(m);if(liveMessageIds.has(id)||findExistingLiveMessage(m))return;showFakeTyping(m.username);setTimeout(()=>{appendLiveMessage(m.username||"guest",m.message||m.text||"",id,false,m.pfp||m.avatar||m.avatarUrl||"",m.createdAt||m.created_at||"");scrollLiveBottom()},650);liveMessageIds.add(id)})
+  }catch(e){console.error("Live Chat Error:",e);if(!liveMessagesLoaded){$("liveMessages").innerHTML="";appendLiveSystem("live room connection unavailable");}}
+  finally{liveLoadBusy=false}
+}
+async function sendLiveMessage(){
+  if(isLiveSending)return;const input=$("liveChatInput"),typed=input.value.trim(),username=getSavedUsername();if(!username)return showEntry();if(!typed)return;const message=liveReplyTarget?`${liveReplyTarget.username}: ${liveReplyTarget.message.slice(0,100)}\n${typed}`:typed;clearLiveReply();
+  isLiveSending=true;input.value="";const optimistic=appendLiveMessage(username,message,"temp-"+Date.now(),true,selectedPfp,new Date().toISOString());scrollLiveBottom();
+  try{const d=await apiRequest("/live-chat",{method:"POST",body:JSON.stringify({username,message,isOwner:isOwnerUsername(username),pfp:selectedPfp})});const m=d.message||d.data||{};optimistic.dataset.messageId=m.id||optimistic.dataset.messageId;optimistic.dataset.optimistic="false";if(m.id)liveMessageIds.add(String(m.id));liveMessagesLoaded=true}
+  catch(e){optimistic.remove();appendLiveSystem("message send aayilla... pinne try cheyy")}
+  finally{isLiveSending=false}
+}
+
+function formatIndianTime(value){
+  const d=new Date(value);
+  if(Number.isNaN(d.getTime()))return "";
+  return d.toLocaleTimeString("en-IN",{timeZone:"Asia/Kolkata",hour:"2-digit",minute:"2-digit",hour12:true});
+}
+function messageTimeMs(m){
+  const t=new Date(m?.createdAt||m?.created_at||0).getTime();
+  return Number.isFinite(t)?t:0;
+}
+function normalizePrivateMessage(m){return{id:m?.id||("local-"+Date.now()),from:m?.from||m?.username||"",to:m?.to||"",message:m?.message||m?.text||"",createdAt:m?.createdAt||new Date().toISOString()}}
+function registerChat(name){if(!name||name.toLowerCase()===getSavedUsername().toLowerCase())return;if(!knownChats.some(x=>x.toLowerCase()===name.toLowerCase()))knownChats.push(name);localStorage.setItem("emlee_chat_contacts",JSON.stringify(knownChats))}
+function updateUnread(){const total=Object.values(unreadChats).reduce((a,b)=>a+Number(b||0),0);const badge=$("chatNavBadge");if(badge){badge.textContent=total>99?"99+":String(total);badge.classList.toggle("show",total>0)}$("chatListCount").textContent=knownChats.length+2;localStorage.setItem("emlee_chat_unread",JSON.stringify(unreadChats))}
+async function showChatHome(){
+  if($("chatListScreen")?.classList.contains("active")){
+    if(!leaderboardCache.length)await loadLeaderboard();
+    renderChatList();
+  }
+}
+async function renderChatList(){
+  updateUnread();
+  const c=$("chatList");
+  c.innerHTML="";
+  const live=document.createElement("button");live.className="chat-list-item";live.innerHTML=`<img class="chat-live-icon" src="./live.jpg" alt="" onerror="this.onerror=null;this.src='./emlee-character.PNG'"><div><strong>live chat room</strong><small><span class="live-status-dot"></span> everyone can chat here · live now</small></div><span class="chat-badge">open</span>`;live.onclick=()=>openFeature("liveChatScreen");c.appendChild(live);
+  const me=String(getSavedUsername()||"").trim().toLowerCase();
+  const profiles=[];
+  const addProfile=(p)=>{
+    const name=String(p?.username||p?.name||p?.from||"").trim();
+    if(!name||name.toLowerCase()===me)return;
+    const key=name.toLowerCase();
+    const existing=profiles.find(x=>String(x.username).toLowerCase()===key);
+    const merged={username:name,pfp:p?.pfp||p?.avatar||p?.avatarUrl||p?.photoURL||"./pfp.JPG",points:Number(p?.points||p?.score||0),rank:p?.rank||p?.position||0,lastMessageAt:messageTimeMs(p)};
+    if(existing){if(existing.pfp==="./pfp.JPG"&&merged.pfp!=="./pfp.JPG")existing.pfp=merged.pfp;return}
+    profiles.push(merged);
+  };
+  const latestByUser={};
+  try{
+    const names=[...new Set(knownChats.map(x=>String(x||"").trim()).filter(Boolean))];
+    for(const name of names){
+      try{
+        const d=await apiRequest("/private-chat?from="+encodeURIComponent(getSavedUsername())+"&to="+encodeURIComponent(name),{method:"GET"});
+        const msgs=pickArray(d,["messages","chat","data"]).map(normalizePrivateMessage);
+        const latest=msgs.reduce((best,m)=>messageTimeMs(m)>messageTimeMs(best)?m:best,null);
+        if(latest)latestByUser[name.toLowerCase()]=latest;
+      }catch(e){}
+    }
+  }catch(e){}
+  try{
+    if(!leaderboardCache.length){const d=await apiRequest("/leaderboard",{method:"GET"});let list=pickArray(d,["leaderboard","users","data","ranks"]);leaderboardCache=list.map((p,i)=>({...p,username:p.username||p.name||"unknown",points:Number(p.points||p.score||0),rank:p.rank||p.position||i+1}));}
+  }catch(e){}
+  (leaderboardCache||[]).forEach(addProfile);
+  try{
+    const d=await apiRequest("/live-chat",{method:"GET"});
+    pickArray(d,["messages","chat","data"]).forEach(m=>addProfile({username:m.username||m.name,pfp:m.pfp||m.avatar||m.avatarUrl||m.photoURL}));
+  }catch(e){}
+  knownChats.forEach(name=>{
+    const latest=latestByUser[String(name||"").toLowerCase()];
+    addProfile({username:name,createdAt:latest?.createdAt||latest?.created_at||"",message:latest?.message||""});
+  });
+  profiles.forEach(profile=>{
+    const latest=latestByUser[String(profile.username||"").toLowerCase()];
+    profile.lastMessageAt=Math.max(Number(profile.lastMessageAt||0),messageTimeMs(latest));
+  });
+  profiles.sort((a,b)=>Number(b.lastMessageAt||0)-Number(a.lastMessageAt||0)||Number(b.points)-Number(a.points)||a.username.localeCompare(b.username));
+  $("chatListCount").textContent=profiles.length+1;
+  if(!profiles.length){const empty=document.createElement("div");empty.className="private-empty";empty.textContent="no viewers yet...";c.appendChild(empty);return;}
+  profiles.forEach(profile=>{
+    const name=profile.username,pfp=profile.pfp||"./pfp.JPG",unread=Number(unreadChats[name]||0);
+    const row=document.createElement("button");row.className="chat-list-item viewer-message-row";
+    row.innerHTML=`<img src="${escapeHTML(pfp)}" alt="" onerror="this.onerror=null;this.src='./pfp.JPG'"><div><strong>${escapeHTML(name)}</strong><small>tap to message · view profile</small></div>${unread?`<span class="chat-badge">${unread>99?"99+":unread}</span>`:""}`;
+    row.onclick=()=>openPersonalChat(name);
+    c.appendChild(row);
+  });
+}
+
+let privateUnreadPollTimer=null;
+async function pollPrivateUnread(){const me=getSavedUsername();if(!me||!knownChats.length||activePrivateChatUser)return;for(const name of knownChats.slice(0,12)){try{const d=await apiRequest("/private-chat?from="+encodeURIComponent(me)+"&to="+encodeURIComponent(name),{method:"GET"});const msgs=pickArray(d,["messages","chat","data"]).map(normalizePrivateMessage);const incoming=msgs.filter(m=>String(m.from).toLowerCase()===String(name).toLowerCase());const lastSeen=Number(localStorage.getItem("emlee_seen_"+name.toLowerCase())||0);const fresh=incoming.filter(m=>new Date(m.createdAt).getTime()>lastSeen);if(fresh.length){unreadChats[name]=Math.max(Number(unreadChats[name]||0),fresh.length);const newest=Math.max(...incoming.map(m=>new Date(m.createdAt).getTime()));if(newest>lastSeen&&!$("personalChatScreen")?.classList.contains("active"))localStorage.setItem("emlee_pending_"+name.toLowerCase(),String(newest))}}catch(e){}}updateUnread();if($("chatListScreen")?.classList.contains("active"))renderChatList()}
+function startPrivateUnreadPolling(){clearInterval(privateUnreadPollTimer);privateUnreadPollTimer=setInterval(pollPrivateUnread,4000);setTimeout(pollPrivateUnread,1200)}
+async function loadPersonalChat(){
+  if(!activePrivateChatUser||privateChatLoadBusy)return;const me=getSavedUsername();if(!me)return;privateChatLoadBusy=true;
+  try{
+    const d=await apiRequest("/private-chat?from="+encodeURIComponent(me)+"&to="+encodeURIComponent(activePrivateChatUser),{method:"GET"}),incoming=pickArray(d,["messages","chat","data"]).map(normalizePrivateMessage),map=new Map(privateChatMessages.map(m=>[String(m.id),m]));incoming.forEach(m=>map.set(String(m.id),m));privateChatMessages=Array.from(map.values()).sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));renderPrivateChatMessages(privateChatMessages);
+    unreadChats[activePrivateChatUser]=0;const incomingSeen=privateChatMessages.filter(m=>String(m.from).toLowerCase()===activePrivateChatUser.toLowerCase());if(incomingSeen.length)localStorage.setItem("emlee_seen_"+activePrivateChatUser.toLowerCase(),String(Math.max(...incomingSeen.map(m=>new Date(m.createdAt).getTime()))));updateUnread();
+  }catch(e){console.log("Private chat unavailable:",e)}
+  finally{privateChatLoadBusy=false}
+}
+async function unsendPrivateMessage(id){if(!id||String(id).startsWith("temp-"))return;if(!confirm("Unsend this message?"))return;try{await apiRequest("/private-chat?id="+encodeURIComponent(id)+"&from="+encodeURIComponent(getSavedUsername()),{method:"DELETE"});privateChatMessages=privateChatMessages.filter(m=>String(m.id)!==String(id));renderPrivateChatMessages(privateChatMessages)}catch(err){alert("could not unsend this message yet. Worker update may be needed.")}}
+function renderPrivateChatMessages(messages){const c=$("personalChatMessages");c.innerHTML="";if(!messages.length){c.innerHTML='<div class="private-empty">start a private conversation...</div>';return}const me=getSavedUsername();messages.forEach(m=>{const mine=String(m.from).toLowerCase()===me.toLowerCase(),e=document.createElement("div");e.className="private-message "+(mine?"me":"them");e.innerHTML=`<div>${escapeHTML(m.message)}</div><small class="chat-message-time">${formatIndianTime(m.createdAt)}</small><div class="private-message-actions"><button type="button" class="private-reply-btn">reply</button>${mine?'<button type="button" class="private-unsend-btn">unsend</button>':""}</div>`;e.querySelector(".private-reply-btn").onclick=()=>choosePrivateReply(m.from,m.message);e.querySelector(".private-unsend-btn")?.addEventListener("click",()=>unsendPrivateMessage(m.id));c.appendChild(e)});c.scrollTop=c.scrollHeight}
+function openPersonalChat(name){
+  const n=String(name||"").trim(),me=getSavedUsername();if(!n||!me)return showEntry();if(n.toLowerCase()===me.toLowerCase())return;
+  registerChat(n);activePrivateChatUser=n;privateChatMessages=[];$("personalChatTitle").textContent="chat with "+n;$("personalChatScreen").classList.add("active");document.body.style.overflow="hidden";renderPrivateChatMessages([]);loadPersonalChat();clearInterval(privateChatTimer);privateChatTimer=setInterval(loadPersonalChat,1500);setTimeout(()=>$("personalChatInput").focus(),50);unreadChats[n]=0;const incomingNow=privateChatMessages.filter(m=>String(m.from).toLowerCase()===n.toLowerCase());if(incomingNow.length)localStorage.setItem("emlee_seen_"+n.toLowerCase(),String(Math.max(...incomingNow.map(m=>new Date(m.createdAt).getTime()))));updateUnread()
+}
+function closePersonalChat(){$("personalChatScreen").classList.remove("active");activePrivateChatUser="";privateChatMessages=[];clearInterval(privateChatTimer);privateChatTimer=null;document.body.style.overflow="auto";renderChatList()}
+async function sendPersonalChatMessage(){
+  const input=$("personalChatInput"),button=$("personalChatSendButton"),typed=input.value.trim(),from=getSavedUsername(),to=activePrivateChatUser;if(!typed||!from||!to)return;const message=privateReplyTarget?`↪ ${privateReplyTarget.from}: ${privateReplyTarget.message.slice(0,100)}\n${typed}`:typed;clearPrivateReply();
+  input.value="";registerChat(to);const optimistic=normalizePrivateMessage({id:"temp-"+Date.now(),from,to,message});privateChatMessages.push(optimistic);renderPrivateChatMessages(privateChatMessages);button.disabled=true;
+  try{const d=await apiRequest("/private-chat",{method:"POST",body:JSON.stringify({from,to,message})}),sent=d.message?normalizePrivateMessage(d.message):null;if(sent){privateChatMessages=privateChatMessages.map(m=>String(m.id)===String(optimistic.id)?sent:m);renderPrivateChatMessages(privateChatMessages)}}
+  catch(e){privateChatMessages=privateChatMessages.filter(m=>String(m.id)!==String(optimistic.id));renderPrivateChatMessages(privateChatMessages)}
+  finally{button.disabled=false;input.focus()}
+}
+async function openViewerProfile(username){
+  const n=String(username||"guest");$("viewerProfileName").textContent=n;$("viewerProfilePfp").src="./pfp.JPG";$("viewerProfileRank").textContent="#—";$("viewerProfileLevel").textContent="1";$("viewerProfileXP").textContent="0";$("viewerProfilePoints").textContent="0";$("viewerProfileModal").style.display="flex";
+  $("viewerPersonalChatBtn").onclick=()=>{closeViewerProfile();openPersonalChat(n)};
+  try{const u=pickUser(await apiRequest("/profile?username="+encodeURIComponent(n)));$("viewerProfileName").textContent=u.username||n;$("viewerProfileRank").textContent="#"+(u.rank||u.position||"—");$("viewerProfileLevel").textContent=Number(u.level||u.rankLevel||1);$("viewerProfileXP").textContent=Number(u.xp||u.experience||0).toLocaleString();$("viewerProfilePoints").textContent=Number(u.points||0).toLocaleString();$("viewerProfileTitle").textContent=getTitle(Number(u.streak||0));$("viewerProfilePfp").src=u.pfp||u.avatar||u.avatarUrl||u.photoURL||"./pfp.JPG"}catch(e){}
+}
+function closeViewerProfile(){$("viewerProfileModal").style.display="none"}
+
+async function checkBackendStatus(){try{console.log("emlieey worker online:",await apiRequest("/health",{method:"GET"}))}catch(e){console.error("Worker connection failed:",e)}}
+
+$("usernameInput").addEventListener("keydown",e=>{if(e.key==="Enter")enterApp()});
+$("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter")sendMessage()});
+$("liveChatInput").addEventListener("keydown",e=>{if(e.key==="Enter")sendLiveMessage()});
+$("personalChatInput").addEventListener("keydown",e=>{if(e.key==="Enter")sendPersonalChatMessage()});
+$("gameModal").addEventListener("click",e=>{if(e.target===$("gameModal"))closeGameModal()});
+$("rankModal").addEventListener("click",e=>{if(e.target===$("rankModal"))closeRankModal()});
+
+$("pfpInput").addEventListener("change",function(){
+  const file=this.files?.[0];if(!file)return;const reader=new FileReader();
+  reader.onload=e=>{selectedPfp=e.target.result;localStorage.setItem("emlee_pfp",selectedPfp);currentUser={...(currentUser||{}),pfp:selectedPfp};updatePfpUI()};
+  reader.readAsDataURL(file)
+});
+$("editPfpInput").addEventListener("change",function(){
+  const file=this.files?.[0];if(!file)return;const reader=new FileReader();
+  reader.onload=e=>{selectedPfp=e.target.result;localStorage.setItem("emlee_pfp",selectedPfp);currentUser={...(currentUser||{}),pfp:selectedPfp};updatePfpUI()};
+  reader.readAsDataURL(file)
+});
+
+setInterval(()=>{if($("app").style.display==="block")loadLiveChat()},1000);
+setInterval(()=>{if(activePrivateChatUser)loadPersonalChat()},1500);
+
+document.addEventListener("DOMContentLoaded",async()=>{
+  $("currentYear").textContent=new Date().getFullYear();
+  const saved=getSavedUsername(),token=getAccessToken();
+  if(saved&&token){currentUser={username:saved};openApp();return}
+  if(saved&&getRefreshToken()&&await restoreSession()){openApp();return}
+  showEntry();
+});
+</script>
+</body>
+</html>
